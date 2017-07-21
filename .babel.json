@@ -1,5 +1,5 @@
 {
-  "{\"filename\":\"/home/blacktab/src/server.js\",\"env\":{},\"retainLines\":false,\"highlightCode\":true,\"suppressDeprecationMessages\":false,\"presets\":[],\"plugins\":[[[],{\"loose\":false,\"spec\":false}],[[],null],[[],null],[[],{\"spec\":false}],[[],null],[[],{\"loose\":false}],[[],null],[[],null],[[],null],[[],{\"loose\":false}],[[],{\"loose\":false}],[[],null],[[],null],[[],null],[[],{\"loose\":false}],[[],null],[[],{\"loose\":false}],[[],null],[[],null],[[],{\"loose\":false}],[[],{\"async\":false,\"asyncGenerators\":false}]],\"ignore\":[],\"code\":true,\"metadata\":true,\"ast\":true,\"comments\":true,\"compact\":\"auto\",\"minified\":false,\"sourceRoot\":\"/home/blacktab/src\",\"babelrc\":true,\"sourceType\":\"module\",\"moduleIds\":false,\"passPerPreset\":false,\"parserOpts\":false,\"generatorOpts\":false}:6.25.0": {
+  "{\"filename\":\"/home/blacktab/src/server.js\",\"env\":{},\"retainLines\":true,\"highlightCode\":true,\"suppressDeprecationMessages\":false,\"presets\":[],\"plugins\":[[[],{\"loose\":false,\"spec\":false}],[[],null],[[],null],[[],{\"spec\":false}],[[],null],[[],{\"loose\":false}],[[],null],[[],null],[[],null],[[],{\"loose\":false}],[[],{\"loose\":false}],[[],null],[[],null],[[],null],[[],{\"loose\":false}],[[],null],[[],{\"loose\":false}],[[],null],[[],null],[[],{\"loose\":false}],[[],{\"async\":false,\"asyncGenerators\":false}]],\"ignore\":[],\"code\":true,\"metadata\":true,\"ast\":true,\"comments\":true,\"compact\":\"auto\",\"minified\":false,\"sourceMaps\":true,\"sourceRoot\":\"/home/blacktab/src\",\"babelrc\":true,\"sourceType\":\"module\",\"moduleIds\":false,\"passPerPreset\":false,\"parserOpts\":false,\"generatorOpts\":false}:6.25.0": {
     "metadata": {
       "usedHelpers": [
         "interopRequireDefault"
@@ -19,6 +19,45 @@
                 "local": "express"
               }
             ]
+          },
+          {
+            "source": "mongoose",
+            "imported": [
+              "default"
+            ],
+            "specifiers": [
+              {
+                "kind": "named",
+                "imported": "default",
+                "local": "mongoose"
+              }
+            ]
+          },
+          {
+            "source": "multer",
+            "imported": [
+              "default"
+            ],
+            "specifiers": [
+              {
+                "kind": "named",
+                "imported": "default",
+                "local": "multer"
+              }
+            ]
+          },
+          {
+            "source": "fs",
+            "imported": [
+              "default"
+            ],
+            "specifiers": [
+              {
+                "kind": "named",
+                "imported": "default",
+                "local": "fs"
+              }
+            ]
           }
         ],
         "exports": {
@@ -31,7 +70,7 @@
       "filename": "/home/blacktab/src/server.js",
       "filenameRelative": "/home/blacktab/src/server.js",
       "env": {},
-      "retainLines": false,
+      "retainLines": true,
       "highlightCode": true,
       "suppressDeprecationMessages": false,
       "presets": [],
@@ -162,7 +201,7 @@
       "basename": "server"
     },
     "ignored": false,
-    "code": "'use strict';\n\nvar _express = require('express');\n\nvar _express2 = _interopRequireDefault(_express);\n\nfunction _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }\n\nvar app = (0, _express2.default)();\n\napp.get('/', function (req, res) {\n    res.json({\n        message: 'Welcome to the API!'\n    });\n});\napp.listen(3000, function () {\n    console.log('node server running on port 3000');\n});\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNlcnZlci5qcyJdLCJuYW1lcyI6WyJhcHAiLCJnZXQiLCJyZXEiLCJyZXMiLCJqc29uIiwibWVzc2FnZSIsImxpc3RlbiIsImNvbnNvbGUiLCJsb2ciXSwibWFwcGluZ3MiOiI7O0FBQ0E7Ozs7OztBQUVBLElBQU1BLE1BQU0sd0JBQVo7O0FBRUFBLElBQUlDLEdBQUosQ0FBUSxHQUFSLEVBQWEsVUFBQ0MsR0FBRCxFQUFNQyxHQUFOLEVBQWM7QUFDdkJBLFFBQUlDLElBQUosQ0FBUztBQUNMQyxpQkFBUztBQURKLEtBQVQ7QUFHSCxDQUpEO0FBS0FMLElBQUlNLE1BQUosQ0FBVyxJQUFYLEVBQWlCLFlBQU07QUFDbkJDLFlBQVFDLEdBQVI7QUFDSCxDQUZEIiwiZmlsZSI6InNlcnZlci5qcyIsInNvdXJjZVJvb3QiOiIvaG9tZS9ibGFja3RhYi9zcmMiLCJzb3VyY2VzQ29udGVudCI6WyJcbmltcG9ydCBleHByZXNzIGZyb20gJ2V4cHJlc3MnO1xuXG5jb25zdCBhcHAgPSBleHByZXNzKCk7XG5cbmFwcC5nZXQoJy8nLCAocmVxLCByZXMpID0+IHtcbiAgICByZXMuanNvbih7XG4gICAgICAgIG1lc3NhZ2U6ICdXZWxjb21lIHRvIHRoZSBBUEkhJ1xuICAgIH0pO1xufSlcbmFwcC5saXN0ZW4oMzAwMCwgKCkgPT4ge1xuICAgIGNvbnNvbGUubG9nKGBub2RlIHNlcnZlciBydW5uaW5nIG9uIHBvcnQgMzAwMGApO1xufSkiXX0=",
+    "code": "'use strict';\nvar _express = require('express');var _express2 = _interopRequireDefault(_express);\nvar _mongoose = require('mongoose');var _mongoose2 = _interopRequireDefault(_mongoose);\nvar _multer = require('multer');var _multer2 = _interopRequireDefault(_multer);\nvar _fs = require('fs');var _fs2 = _interopRequireDefault(_fs);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}\n\nvar app = (0, _express2.default)();\nvar Schema = _mongoose2.default.Schema;\n\n_mongoose2.default.connect('mongodb://mongo/testdb');\nvar db = _mongoose2.default.connection;\ndb.once('open', function () {\n    console.log('Connected to mongo');\n});\ndb.on('error', console.error.bind(console, 'connection error'));\ndb.on('disconnected', function () {\n    console.log('Mongoose disconnected');\n});\nprocess.on('SIGINT', function () {\n    db.close(function () {\n        console.log('Mongoose default connection closed via app termination');\n        process.exit(0);\n    });\n});\n\nvar avatarSchema = new Schema({\n    fileName: String,\n    contentType: String,\n    data: Buffer,\n    defaultImg: Boolean });\n\n\nvar Avatar = _mongoose2.default.model('Avatar', avatarSchema);\n\nvar upload = (0, _multer2.default)({ dest: './uploads/' });\n\napp.get('/', function (req, res) {\n    res.json({\n        message: 'Welcome to the API!' });\n\n});\n\napp.get('/api/avatar', function (req, res) {\n    Avatar.find({}, '-data', function (err, avatars) {\n        if (err) {\n            console.log(err);\n            return;\n        }\n        res.json({\n            status: true,\n            data: avatars });\n\n    });\n});\n\n\napp.post('/api/avatar', upload.single('avatar'), function (req, res) {\n    console.log(req.file);\n    var avatar = new Avatar();\n    avatar.fileName = req.file.originalname;\n    avatar.contentType = req.file.mimetype;\n    avatar.defaultImg = true;\n    avatar.data = _fs2.default.readFileSync(req.file.path);\n    avatar.save(function (err, img) {\n        if (err) {\n            console.log(err);\n            return;\n        }\n        _fs2.default.unlinkSync(req.file.path);\n        res.json({ message: 'avatar uploaded and saved...' });\n\n    });\n});\n\napp.get('/api/avatar/:id', function (req, res) {\n    Avatar.findById(req.params.id, function (err, avatar) {\n        if (err) {\n            console.log(err);\n            return;\n        }\n        res.contentType(avatar.contentType);\n        res.write(avatar.data);\n        res.end();\n    });\n});\n\napp.listen(3000, function () {\n    console.log('node server running on port 3000');\n});\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNlcnZlci5qcyJdLCJuYW1lcyI6WyJhcHAiLCJTY2hlbWEiLCJjb25uZWN0IiwiZGIiLCJjb25uZWN0aW9uIiwib25jZSIsImNvbnNvbGUiLCJsb2ciLCJvbiIsImVycm9yIiwiYmluZCIsInByb2Nlc3MiLCJjbG9zZSIsImV4aXQiLCJhdmF0YXJTY2hlbWEiLCJmaWxlTmFtZSIsIlN0cmluZyIsImNvbnRlbnRUeXBlIiwiZGF0YSIsIkJ1ZmZlciIsImRlZmF1bHRJbWciLCJCb29sZWFuIiwiQXZhdGFyIiwibW9kZWwiLCJ1cGxvYWQiLCJkZXN0IiwiZ2V0IiwicmVxIiwicmVzIiwianNvbiIsIm1lc3NhZ2UiLCJmaW5kIiwiZXJyIiwiYXZhdGFycyIsInN0YXR1cyIsInBvc3QiLCJzaW5nbGUiLCJmaWxlIiwiYXZhdGFyIiwib3JpZ2luYWxuYW1lIiwibWltZXR5cGUiLCJyZWFkRmlsZVN5bmMiLCJwYXRoIiwic2F2ZSIsImltZyIsInVubGlua1N5bmMiLCJmaW5kQnlJZCIsInBhcmFtcyIsImlkIiwid3JpdGUiLCJlbmQiLCJsaXN0ZW4iXSwibWFwcGluZ3MiOiI7QUFDQSxrQztBQUNBLG9DO0FBQ0EsZ0M7QUFDQSx3Qjs7QUFFQSxJQUFNQSxNQUFNLHdCQUFaO0FBQ0EsSUFBTUMsU0FBUyxtQkFBU0EsTUFBeEI7O0FBRUEsbUJBQVNDLE9BQVQsQ0FBaUIsd0JBQWpCO0FBQ0EsSUFBSUMsS0FBSyxtQkFBU0MsVUFBbEI7QUFDQUQsR0FBR0UsSUFBSCxDQUFRLE1BQVIsRUFBZ0IsWUFBWTtBQUN4QkMsWUFBUUMsR0FBUjtBQUNILENBRkQ7QUFHQUosR0FBR0ssRUFBSCxDQUFNLE9BQU4sRUFBZUYsUUFBUUcsS0FBUixDQUFjQyxJQUFkLENBQW1CSixPQUFuQixFQUE0QixrQkFBNUIsQ0FBZjtBQUNBSCxHQUFHSyxFQUFILENBQU0sY0FBTixFQUFzQixZQUFNO0FBQ3hCRixZQUFRQyxHQUFSO0FBQ0gsQ0FGRDtBQUdBSSxRQUFRSCxFQUFSLENBQVcsUUFB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c0NvbnRlbnQiOlsiXG5pbXBvcnQgZXhwcmVzcyBmcm9tICdleHByZXNzJztcbmltcG9ydCBtb25nb29zZSBmcm9tICdtb25nb29zZSc7XG5pbXBvcnQgbXVsdGVyIGZyb20gJ211bHRlcic7XG5pbXBvcnQgZnMgZnJvbSAnZnMnO1xuXG5jb25zdCBhcHAgPSBleHByZXNzKCk7XG5jb25zdCBTY2hlbWEgPSBtb25nb29zZS5TY2hlbWE7XG5cbm1vbmdvb3NlLmNvbm5lY3QoJ21vbmdvZGI6Ly9tb25nby90ZXN0ZGInKTtcbmxldCBkYiA9IG1vbmdvb3NlLmNvbm5lY3Rpb247XG5kYi5vbmNlKCdvcGVuJywgZnVuY3Rpb24gKCkge1xuICAgIGNvbnNvbGUubG9nKGBDb25uZWN0ZWQgdG8gbW9uZ29gKTtcbn0pO1xuZGIub24oJ2Vycm9yJywgY29uc29sZS5lcnJvci5iaW5kKGNvbnNvbGUsICdjb25uZWN0aW9uIGVycm9yJykpO1xuZGIub24oJ2Rpc2Nvbm5lY3RlZCcsICgpID0+IHtcbiAgICBjb25zb2xlLmxvZyhgTW9uZ29vc2UgZGlzY29ubmVjdGVkYCk7XG59KTtcbnByb2Nlc3Mub24oJ1NJR0lOVCcsICgpID0+IHtcbiAgICBkYi5jbG9zZSgoKSA9PiB7XG4gICAgICAgIGNvbnNvbGUubG9nKCdNb25nb29zZSBkZWZhdWx0IGNvbm5lY3Rpb24gY2xvc2VkIHZpYSBhcHAgdGVybWluYXRpb24nKTtcbiAgICAgICAgcHJvY2Vzcy5leGl0KDApO1xuICAgIH0pO1xufSk7XG5cbmNvbnN0IGF2YXRhclNjaGVtYSA9IG5ldyBTY2hlbWEoe1xuICAgIGZpbGVOYW1lOiBTdHJpbmcsXG4gICAgY29udGVudFR5cGU6IFN0cmluZyxcbiAgICBkYXRhOiBCdWZmZXIsXG4gICAgZGVmYXVsdEltZzogQm9vbGVhblxufSk7XG5cbmNvbnN0IEF2YXRhciA9IG1vbmdvb3NlLm1vZGVsKCdBdmF0YXInLCBhdmF0YXJTY2hlbWEpO1xuXG5jb25zdCB1cGxvYWQgPSBtdWx0ZXIoe2Rlc3Q6ICcuL3VwbG9hZHMvJ30pO1xuXG5hcHAuZ2V0KCcvJywgKHJlcSwgcmVzKSA9PiB7XG4gICAgcmVzLmpzb24oe1xuICAgICAgICBtZXNzYWdlOiAnV2VsY29tZSB0byB0aGUgQVBJISdcbiAgICB9KTtcbn0pO1xuXG5hcHAuZ2V0KCcvYXBpL2F2YXRhcicsIChyZXEsIHJlcykgPT4ge1xuICAgIEF2YXRhci5maW5kKHt9LCAnLWRhdGEnLCBmdW5jdGlvbiAoZXJyLCBhdmF0YXJzKSB7XG4gICAgICAgIGlmIChlcnIpIHtcbiAgICAgICAgICAgIGNvbnNvbGUubG9nKGVycik7XG4gICAgICAgICAgICByZXR1cm47XG4gICAgICAgIH1cbiAgICAgICAgcmVzLmpzb24oe1xuICAgICAgICAgICAgc3RhdHVzOiB0cnVlLFxuICAgICAgICAgICAgZGF0YTogYXZhdGFyc1xuICAgICAgICB9KTtcbiAgICB9KTtcbn0pO1xuXG5cbmFwcC5wb3N0KCcvYXBpL2F2YXRhcicsIHVwbG9hZC5zaW5nbGUoJ2F2YXRhcicpLCAocmVxLCByZXMpID0+IHtcbiAgICBjb25zb2xlLmxvZyhyZXEuZmlsZSk7XG4gICAgbGV0IGF2YXRhciA9IG5ldyBBdmF0YXIoKTtcbiAgICBhdmF0YXIuZmlsZU5hbWUgPSByZXEuZmlsZS5vcmlnaW5hbG5hbWU7XG4gICAgYXZhdGFyLmNvbnRlbnRUeXBlID0gcmVxLmZpbGUubWltZXR5cGU7XG4gICAgYXZhdGFyLmRlZmF1bHRJbWcgPSB0cnVlO1xuICAgIGF2YXRhci5kYXRhID0gZnMucmVhZEZpbGVTeW5jKHJlcS5maWxlLnBhdGgpO1xuICAgIGF2YXRhci5zYXZlKGZ1bmN0aW9uIChlcnIsIGltZykge1xuICAgICAgICBpZiAoZXJyKSB7XG4gICAgICAgICAgICBjb25zb2xlLmxvZyhlcnIpO1xuICAgICAgICAgICAgcmV0dXJuO1xuICAgICAgICB9XG4gICAgICAgIGZzLnVubGlua1N5bmMocmVxLmZpbGUucGF0aCk7XG4gICAgICAgIHJlcy5qc29uKHttZXNzYWdlOiAnYXZhdGFyIHVwbG9hZGVkIGFuZCBzYXZlZC4uLid9KTtcblxuICAgIH0pO1xufSk7XG5cbmFwcC5nZXQoJy9hcGkvYXZhdGFyLzppZCcsIChyZXEsIHJlcykgPT4ge1xuICAgIEF2YXRhci5maW5kQnlJZChyZXEucGFyYW1zLmlkLCBmdW5jdGlvbiAoZXJyLCBhdmF0YXIpIHtcbiAgICAgICAgaWYgKGVycikge1xuICAgICAgICAgICAgY29uc29sZS5sb2coZXJyKTtcbiAgICAgICAgICAgIHJldHVybjtcbiAgICAgICAgfVxuICAgICAgICByZXMuY29udGVudFR5cGUoYXZhdGFyLmNvbnRlbnRUeXBlKTtcbiAgICAgICAgcmVzLndyaXRlKGF2YXRhci5kYXRhKTtcbiAgICAgICAgcmVzLmVuZCgpO1xuICAgIH0pO1xufSk7XG5cbmFwcC5saXN0ZW4oMzAwMCwgKCkgPT4ge1xuICAgIGNvbnNvbGUubG9nKGBub2RlIHNlcnZlciBydW5uaW5nIG9uIHBvcnQgMzAwMGApO1xufSk7Il19",
     "ast": null,
     "map": {
       "version": 3,
@@ -171,22 +210,65 @@
       ],
       "names": [
         "app",
+        "Schema",
+        "connect",
+        "db",
+        "connection",
+        "once",
+        "console",
+        "log",
+        "on",
+        "error",
+        "bind",
+        "process",
+        "close",
+        "exit",
+        "avatarSchema",
+        "fileName",
+        "String",
+        "contentType",
+        "data",
+        "Buffer",
+        "defaultImg",
+        "Boolean",
+        "Avatar",
+        "model",
+        "upload",
+        "dest",
         "get",
         "req",
         "res",
         "json",
         "message",
-        "listen",
-        "console",
-        "log"
+        "find",
+        "err",
+        "avatars",
+        "status",
+        "post",
+        "single",
+        "file",
+        "avatar",
+        "originalname",
+        "mimetype",
+        "readFileSync",
+        "path",
+        "save",
+        "img",
+        "unlinkSync",
+        "findById",
+        "params",
+        "id",
+        "write",
+        "end",
+        "listen"
       ],
-      "mappings": ";;AACA;;;;;;AAEA,IAAMA,MAAM,wBAAZ;;AAEAA,IAAIC,GAAJ,CAAQ,GAAR,EAAa,UAACC,GAAD,EAAMC,GAAN,EAAc;AACvBA,QAAIC,IAAJ,CAAS;AACLC,iBAAS;AADJ,KAAT;AAGH,CAJD;AAKAL,IAAIM,MAAJ,CAAW,IAAX,EAAiB,YAAM;AACnBC,YAAQC,GAAR;AACH,CAFD",
+      "mappings": "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",
       "file": "server.js",
       "sourceRoot": "/home/blacktab/src",
       "sourcesContent": [
-        "\nimport express from 'express';\n\nconst app = express();\n\napp.get('/', (req, res) => {\n    res.json({\n        message: 'Welcome to the API!'\n    });\n})\napp.listen(3000, () => {\n    console.log(`node server running on port 3000`);\n})"
+        "\nimport express from 'express';\nimport mongoose from 'mongoose';\nimport multer from 'multer';\nimport fs from 'fs';\n\nconst app = express();\nconst Schema = mongoose.Schema;\n\nmongoose.connect('mongodb://mongo/testdb');\nlet db = mongoose.connection;\ndb.once('open', function () {\n    console.log(`Connected to mongo`);\n});\ndb.on('error', console.error.bind(console, 'connection error'));\ndb.on('disconnected', () => {\n    console.log(`Mongoose disconnected`);\n});\nprocess.on('SIGINT', () => {\n    db.close(() => {\n        console.log('Mongoose default connection closed via app termination');\n        process.exit(0);\n    });\n});\n\nconst avatarSchema = new Schema({\n    fileName: String,\n    contentType: String,\n    data: Buffer,\n    defaultImg: Boolean\n});\n\nconst Avatar = mongoose.model('Avatar', avatarSchema);\n\nconst upload = multer({dest: './uploads/'});\n\napp.get('/', (req, res) => {\n    res.json({\n        message: 'Welcome to the API!'\n    });\n});\n\napp.get('/api/avatar', (req, res) => {\n    Avatar.find({}, '-data', function (err, avatars) {\n        if (err) {\n            console.log(err);\n            return;\n        }\n        res.json({\n            status: true,\n            data: avatars\n        });\n    });\n});\n\n\napp.post('/api/avatar', upload.single('avatar'), (req, res) => {\n    console.log(req.file);\n    let avatar = new Avatar();\n    avatar.fileName = req.file.originalname;\n    avatar.contentType = req.file.mimetype;\n    avatar.defaultImg = true;\n    avatar.data = fs.readFileSync(req.file.path);\n    avatar.save(function (err, img) {\n        if (err) {\n            console.log(err);\n            return;\n        }\n        fs.unlinkSync(req.file.path);\n        res.json({message: 'avatar uploaded and saved...'});\n\n    });\n});\n\napp.get('/api/avatar/:id', (req, res) => {\n    Avatar.findById(req.params.id, function (err, avatar) {\n        if (err) {\n            console.log(err);\n            return;\n        }\n        res.contentType(avatar.contentType);\n        res.write(avatar.data);\n        res.end();\n    });\n});\n\napp.listen(3000, () => {\n    console.log(`node server running on port 3000`);\n});"
       ]
     },
-    "mtime": 1500590975000
+    "mtime": 1500663059000
   }
 }
