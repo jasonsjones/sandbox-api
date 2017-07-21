@@ -1,0 +1,27 @@
+version: '2'
+
+services:
+    node-server:
+        container_name: server
+        build:
+            context: .
+        volumes:
+            - .:/home/blacktab
+            - /home/blacktab/node_modules
+        tty: true
+        ports:
+            - "3000:3000"
+        depends_on:
+            - mongo
+
+    mongo:
+        container_name: database
+        image: mongo
+        volumes:
+            - ./data/db:/data/db
+        ports:
+            - "27017:27017"
+
+networks:
+    local-network:
+        driver: bridge
