@@ -1,11 +1,15 @@
 
 import express from 'express';
+import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import multer from 'multer';
 import fs from 'fs';
 
 const app = express();
 const Schema = mongoose.Schema;
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: false}));
 
 mongoose.connect('mongodb://mongo/testdb');
 let db = mongoose.connection;
@@ -32,6 +36,14 @@ const avatarSchema = new Schema({
 
 const Avatar = mongoose.model('Avatar', avatarSchema);
 
+const userSchema = new Schema({ name: String,
+    email: String,
+    avatar: {type: Schema.Types.ObjectId, ref: 'Avatar'},
+    avatarUrl: String
+});
+
+const User = mongoose.model('User', userSchema);
+
 const upload = multer({dest: './uploads/'});
 
 app.get('/', (req, res) => {
@@ -55,11 +67,10 @@ app.get('/api/avatar', (req, res) => {
 
 
 app.post('/api/avatar', upload.single('avatar'), (req, res) => {
-    console.log(req.file);
     let avatar = new Avatar();
     avatar.fileName = req.file.originalname;
     avatar.contentType = req.file.mimetype;
-    avatar.defaultImg = true;
+    avatar.defaultImg = false;
     avatar.data = fs.readFileSync(req.file.path);
     avatar.save(function (err, img) {
         if (err) {
@@ -73,14 +84,85 @@ app.post('/api/avatar', upload.single('avatar'), (req, res) => {
 });
 
 app.get('/api/avatar/:id', (req, res) => {
-    Avatar.findById(req.params.id, function (err, avatar) {
+    if (req.params.id === 'default') {
+        Avatar.find({defaultImg: true}, '-data', function (err, images) {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            res.json({status: true, data: images});
+        });
+    } else {
+        Avatar.findById(req.params.id, function (err, avatar) {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            res.contentType(avatar.contentType);
+            res.write(avatar.data);
+            res.end();
+        });
+    }
+});
+
+app.get('/api/users', (req, res) => {
+    User.find({}, function (err, users) {
         if (err) {
             console.log(err);
             return;
         }
-        res.contentType(avatar.contentType);
-        res.write(avatar.data);
-        res.end();
+        res.json({staus: true, data: users});
+    });
+});
+
+app.get('/api/user/:id', (req, res) => {
+    User.findOne({_id: req.params.id}, function (err, user) {
+        if (err) {
+            console.log(err);
+            return;
+        }
+        res.json({status: true, data: user});
+    });
+});
+
+app.post('/api/users', (req, res) => {
+    let newUser = new User(req.body);
+    newUser.save(function (err, user) {
+        if (err) {
+            console.log(err);
+            return;
+        }
+        res.json({message: 'new user saved', data: user});
+    });
+});
+
+app.post('/api/user/:userid/avatar', upload.single('avatar'), (req, res) => {
+    User.findOne({_id: req.params.userid}, function (err, user) {
+        if (err) {
+            console.log(err);
+            return;
+        }
+        let avatar = new Avatar();
+        avatar.fileName = req.file.originalname;
+        avatar.contentType = req.file.mimetype;
+        avatar.defaultImg = false;
+        avatar.data = fs.readFileSync(req.file.path);
+        avatar.save(function (err, img) {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            fs.unlinkSync(req.file.path);
+            user.avatar = img._id;
+            user.avatarUrl = `http://localhost:3000/api/avatar/${img._id}`;
+            user.save(function (err, user) {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
+                res.json({message: 'avatar uploaded...', data: user});
+            });
+        });
     });
 });
 
