@@ -8,6 +8,8 @@ import fs from 'fs';
 const app = express();
 const Schema = mongoose.Schema;
 
+const baseUrl = 'http://localhost:3000';
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
@@ -15,6 +17,29 @@ mongoose.connect('mongodb://mongo/testdb');
 let db = mongoose.connection;
 db.once('open', function () {
     console.log(`Connected to mongo`);
+    console.log('cleaning db...');
+    db.dropDatabase();
+    const arrow = new User({
+        name: "Oliver Queen",
+        email: "oliver@qc.com",
+    });
+
+    arrow.save(function (err, user) {
+        if (err) return console.log(err);
+        console.log("default user saved...");
+        console.log(user);
+    });
+
+    const defaultAvatar = new Avatar({
+        fileName: "default_avatar.png",
+        contentType: "image/png",
+        data: fs.readFileSync(__dirname+'/../assets/default_avatar.png'),
+        defaultImg: true
+    });
+
+    defaultAvatar.save(function (err) {
+        if (err) return console.log(err);
+    });
 });
 db.on('error', console.error.bind(console, 'connection error'));
 db.on('disconnected', () => {
@@ -36,10 +61,11 @@ const avatarSchema = new Schema({
 
 const Avatar = mongoose.model('Avatar', avatarSchema);
 
-const userSchema = new Schema({ name: String,
+const userSchema = new Schema({ 
+    name: String,
     email: String,
     avatar: {type: Schema.Types.ObjectId, ref: 'Avatar'},
-    avatarUrl: String
+    avatarUrl: {type: String, default: `${baseUrl}/api/avatar/default`}
 });
 
 const User = mongoose.model('User', userSchema);
@@ -85,12 +111,14 @@ app.post('/api/avatar', upload.single('avatar'), (req, res) => {
 
 app.get('/api/avatar/:id', (req, res) => {
     if (req.params.id === 'default') {
-        Avatar.find({defaultImg: true}, '-data', function (err, images) {
+        Avatar.findOne({defaultImg: true}, function (err, image) {
             if (err) {
                 console.log(err);
                 return;
             }
-            res.json({status: true, data: images});
+            res.contentType(image.contentType);
+            res.write(image.data);
+            res.end();
         });
     } else {
         Avatar.findById(req.params.id, function (err, avatar) {
@@ -168,4 +196,5 @@ app.post('/api/user/:userid/avatar', upload.single('avatar'), (req, res) => {
 
 app.listen(3000, () => {
     console.log(`node server running on port 3000`);
+    console.log('dirname: ' + __dirname);
 });
