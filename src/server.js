@@ -7,14 +7,22 @@ import fs from 'fs';
 
 const app = express();
 const Schema = mongoose.Schema;
-
 const baseUrl = 'http://localhost:3000';
+const env = process.env.NODE_ENV || "development";
+
+const config = {
+    'development': {
+        'dbUrl': 'mongodb://mongo/testdb'
+    }
+}
+mongoose.Promise = global.Promise;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
-mongoose.connect('mongodb://mongo/testdb');
+mongoose.connect(config.development.dbUrl, { useMongoClient: true });
 let db = mongoose.connection;
+
 db.once('open', function () {
     console.log(`Connected to mongo`);
     console.log('cleaning db...');
@@ -27,11 +35,9 @@ db.once('open', function () {
     arrow.save(function (err, user) {
         if (err) return console.log(err);
         console.log("default user saved...");
-        console.log(user);
     });
 
     const defaultAvatar = new Avatar({
-        fileName: "default_avatar.png",
         contentType: "image/png",
         data: fs.readFileSync(__dirname+'/../assets/default_avatar.png'),
         defaultImg: true
@@ -41,10 +47,12 @@ db.once('open', function () {
         if (err) return console.log(err);
     });
 });
+
 db.on('error', console.error.bind(console, 'connection error'));
 db.on('disconnected', () => {
     console.log(`Mongoose disconnected`);
 });
+
 process.on('SIGINT', () => {
     db.close(() => {
         console.log('Mongoose default connection closed via app termination');
@@ -52,10 +60,17 @@ process.on('SIGINT', () => {
     });
 });
 
+process.once('SIGUSR2', () => {
+    db.close(() => {
+        console.log('Mongoose default connection closed via nodemon restart');
+        process.kill(process.pid, 'SIGUSR2');
+    });
+});
+
 const avatarSchema = new Schema({
-    fileName: String,
     contentType: String,
     data: Buffer,
+    user: {type: Schema.Types.ObjectId, ref: 'User'},
     defaultImg: Boolean
 });
 
@@ -105,7 +120,6 @@ app.post('/api/avatar', upload.single('avatar'), (req, res) => {
         }
         fs.unlinkSync(req.file.path);
         res.json({message: 'avatar uploaded and saved...'});
-
     });
 });
 
@@ -134,63 +148,64 @@ app.get('/api/avatar/:id', (req, res) => {
 });
 
 app.get('/api/users', (req, res) => {
-    User.find({}, function (err, users) {
-        if (err) {
+    User.find({}).exec()
+        .then(users => {
+            res.json({staus: true, data: users});
+        })
+        .catch(err => {
             console.log(err);
-            return;
-        }
-        res.json({staus: true, data: users});
-    });
+        });
 });
 
 app.get('/api/user/:id', (req, res) => {
-    User.findOne({_id: req.params.id}, function (err, user) {
-        if (err) {
+    User.findOne({_id: req.params.id}).exec()
+        .then(user => {
+            res.json({status: 'success', data: user});
+        })
+        .catch(err => {
             console.log(err);
-            return;
-        }
-        res.json({status: true, data: user});
-    });
+        });
 });
 
 app.post('/api/users', (req, res) => {
     let newUser = new User(req.body);
-    newUser.save(function (err, user) {
-        if (err) {
+    newUser.save()
+        .then(user => {
+            res.json({
+                status: 'succuess', 
+                message: 'new user saved', 
+                data: user
+            })
+        })
+        .catch(err => {
             console.log(err);
-            return;
-        }
-        res.json({message: 'new user saved', data: user});
-    });
+        });
 });
 
 app.post('/api/user/:userid/avatar', upload.single('avatar'), (req, res) => {
-    User.findOne({_id: req.params.userid}, function (err, user) {
-        if (err) {
-            console.log(err);
-            return;
-        }
+    let userPromise = User.findOne({_id: req.params.userid}).exec();
+
+    let avatarPromise = userPromise.then(user => {
         let avatar = new Avatar();
         avatar.fileName = req.file.originalname;
         avatar.contentType = req.file.mimetype;
         avatar.defaultImg = false;
         avatar.data = fs.readFileSync(req.file.path);
-        avatar.save(function (err, img) {
-            if (err) {
-                console.log(err);
-                return;
-            }
-            fs.unlinkSync(req.file.path);
-            user.avatar = img._id;
-            user.avatarUrl = `http://localhost:3000/api/avatar/${img._id}`;
-            user.save(function (err, user) {
-                if (err) {
-                    console.log(err);
-                    return;
-                }
-                res.json({message: 'avatar uploaded...', data: user});
-            });
-        });
+        avatar.user = user._id;
+        return avatar.save();
+    });
+
+    Promise.all([userPromise, avatarPromise]).then(values => {
+        let [user, img] = values;
+        fs.unlinkSync(req.file.path);
+        user.avatar = img._id;
+        user.avatarUrl = `http://localhost:3000/api/avatar/${img._id}`;
+        return user.save();
+    }).then(user => {
+        res.json({message: 'avatar uploaded...', data: user});
+    })
+    .catch(err => {
+        console.log(err);
     });
 });
 

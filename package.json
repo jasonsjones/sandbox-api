@@ -4,7 +4,7 @@
   "description": "A sandbox API built on microservices",
   "main": "index.js",
   "scripts": {
-    "dev": "babel-node src/server.js",
+    "dev": "nodemon src/server.js --watch src/ --exec babel-node",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -36,6 +36,7 @@
     "babel-cli": "^6.24.1",
     "babel-eslint": "^7.2.3",
     "babel-preset-es2015": "^6.24.1",
-    "babel-register": "^6.24.1"
+    "babel-register": "^6.24.1",
+    "nodemon": "^1.11.0"
   }
 }
