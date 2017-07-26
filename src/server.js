@@ -48,16 +48,16 @@ app.get('/', (req, res) => {
 });
 
 app.get('/api/avatar', (req, res) => {
-    Avatar.find({}, '-data', function (err, avatars) {
-        if (err) {
+    Avatar.find({}, '-data').exec()
+        .then(avatars => {
+            res.json({
+                status: true,
+                data: avatars
+            });
+        })
+        .catch(err => {
             console.log(err);
-            return;
-        }
-        res.json({
-            status: true,
-            data: avatars
         });
-    });
 });
 
 
@@ -67,37 +67,35 @@ app.post('/api/avatar', upload.single('avatar'), (req, res) => {
     avatar.contentType = req.file.mimetype;
     avatar.defaultImg = false;
     avatar.data = fs.readFileSync(req.file.path);
-    avatar.save(function (err, img) {
-        if (err) {
+    avatar.save()
+        .then(img => {
+            fs.unlinkSync(req.file.path);
+            res.json({message: 'avatar uploaded and saved...'});
+        })
+        .catch(err => {
             console.log(err);
-            return;
-        }
-        fs.unlinkSync(req.file.path);
-        res.json({message: 'avatar uploaded and saved...'});
-    });
+        });
 });
 
 app.get('/api/avatar/:id', (req, res) => {
     if (req.params.id === 'default') {
-        Avatar.findOne({defaultImg: true}, function (err, image) {
-            if (err) {
+        Avatar.findOne({defaultImg: true}).exec()
+            .then(sendImage)
+            .catch(err => {
                 console.log(err);
-                return;
-            }
-            res.contentType(image.contentType);
-            res.write(image.data);
-            res.end();
-        });
+            });
     } else {
-        Avatar.findById(req.params.id, function (err, avatar) {
-            if (err) {
+        Avatar.findById(req.params.id).exec()
+            .then(sendImage)
+            .catch(err => {
                 console.log(err);
-                return;
-            }
-            res.contentType(avatar.contentType);
-            res.write(avatar.data);
-            res.end();
-        });
+            });
+    }
+
+    function sendImage(image) {
+        res.contentType(image.contentType);
+        res.write(image.data);
+        res.end();
     }
 });
 
