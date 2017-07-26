@@ -1,4 +1,3 @@
-
 import express from 'express';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
@@ -20,52 +19,7 @@ mongoose.Promise = global.Promise;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
-mongoose.connect(config.development.dbUrl, { useMongoClient: true });
-let db = mongoose.connection;
-
-db.once('open', function () {
-    console.log(`Connected to mongo`);
-    console.log('cleaning db...');
-    db.dropDatabase();
-    const arrow = new User({
-        name: "Oliver Queen",
-        email: "oliver@qc.com",
-    });
-
-    arrow.save(function (err, user) {
-        if (err) return console.log(err);
-        console.log("default user saved...");
-    });
-
-    const defaultAvatar = new Avatar({
-        contentType: "image/png",
-        data: fs.readFileSync(__dirname+'/../assets/default_avatar.png'),
-        defaultImg: true
-    });
-
-    defaultAvatar.save(function (err) {
-        if (err) return console.log(err);
-    });
-});
-
-db.on('error', console.error.bind(console, 'connection error'));
-db.on('disconnected', () => {
-    console.log(`Mongoose disconnected`);
-});
-
-process.on('SIGINT', () => {
-    db.close(() => {
-        console.log('Mongoose default connection closed via app termination');
-        process.exit(0);
-    });
-});
-
-process.once('SIGUSR2', () => {
-    db.close(() => {
-        console.log('Mongoose default connection closed via nodemon restart');
-        process.kill(process.pid, 'SIGUSR2');
-    });
-});
+const db = setUpDbConnection(config);
 
 const avatarSchema = new Schema({
     contentType: String,
@@ -213,3 +167,54 @@ app.listen(3000, () => {
     console.log(`node server running on port 3000`);
     console.log('dirname: ' + __dirname);
 });
+
+function setUpDbConnection(config) {
+    mongoose.connect(config.development.dbUrl, { useMongoClient: true });
+    let db = mongoose.connection;
+
+    db.once('open', function () {
+        console.log(`Connected to mongo`);
+        console.log('cleaning db...');
+        db.dropDatabase();
+        const arrow = new User({
+            name: "Oliver Queen",
+            email: "oliver@qc.com",
+        });
+
+        arrow.save(function (err, user) {
+            if (err) return console.log(err);
+            console.log("default user saved...");
+        });
+
+        const defaultAvatar = new Avatar({
+            contentType: "image/png",
+            data: fs.readFileSync(__dirname+'/../assets/default_avatar.png'),
+            defaultImg: true
+        });
+
+        defaultAvatar.save(function (err) {
+            if (err) return console.log(err);
+        });
+    });
+
+    db.on('error', console.error.bind(console, 'connection error'));
+    db.on('disconnected', () => {
+        console.log(`Mongoose disconnected`);
+    });
+
+    process.on('SIGINT', () => {
+        db.close(() => {
+            console.log('Mongoose default connection closed via app termination');
+            process.exit(0);
+        });
+    });
+
+    process.once('SIGUSR2', () => {
+        db.close(() => {
+            console.log('Mongoose default connection closed via nodemon restart');
+            process.kill(process.pid, 'SIGUSR2');
+        });
+    });
+
+    return db;
+}
