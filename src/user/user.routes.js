@@ -1,4 +1,5 @@
 import multer from 'multer';
+import fs from 'fs';
 import User from './user.model';
 import Avatar from '../avatar/avatar.model';
 
