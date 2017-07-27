@@ -1,4 +1,7 @@
+import fs from 'fs';
 import mongoose from 'mongoose';
+import User from '../user/user.model';
+import Avatar from '../avatar/avatar.model';
 
 export default (config) => {
     console.log('setting up mongodb...');
@@ -10,6 +13,27 @@ export default (config) => {
         console.log(`Connected to mongo`);
         console.log('cleaning db...');
         db.dropDatabase();
+
+        const arrow = new User({
+            name: "Oliver Queen",
+            email: "oliver@qc.com",
+            password: "arrow"
+        });
+
+        arrow.save(function (err, user) {
+            if (err) return console.log(err);
+            console.log("default user saved...");
+        });
+
+        const defaultAvatar = new Avatar({
+            contentType: "image/png",
+            data: fs.readFileSync(__dirname+'/../../assets/default_avatar.png'),
+            defaultImg: true
+        });
+
+        defaultAvatar.save(function (err) {
+            if (err) return console.log(err);
+        });
     });
 
     db.on('error', console.error.bind(console, 'connection error'));

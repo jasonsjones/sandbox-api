@@ -1,53 +1,15 @@
-import mongoose from 'mongoose';
 import multer from 'multer';
 import fs from 'fs';
 import app from './config/app';
 import config from './config/config';
 import db from './config/db';
+import User from './user/user.model';
+import Avatar from './avatar/avatar.model';
 
 const env = process.env.NODE_ENV || "development";
-const Schema = mongoose.Schema;
 const baseUrl = 'http://localhost:3000';
 
 db(config[env]);
-
-const avatarSchema = new Schema({
-    contentType: String,
-    data: Buffer,
-    user: {type: Schema.Types.ObjectId, ref: 'User'},
-    defaultImg: Boolean
-});
-
-const Avatar = mongoose.model('Avatar', avatarSchema);
-
-const userSchema = new Schema({ 
-    name: String,
-    email: String,
-    avatar: {type: Schema.Types.ObjectId, ref: 'Avatar'},
-    avatarUrl: {type: String, default: `${baseUrl}/api/avatar/default`}
-});
-
-const User = mongoose.model('User', userSchema);
-
-const arrow = new User({
-    name: "Oliver Queen",
-    email: "oliver@qc.com",
-});
-
-arrow.save(function (err, user) {
-    if (err) return console.log(err);
-    console.log("default user saved...");
-});
-
-const defaultAvatar = new Avatar({
-    contentType: "image/png",
-    data: fs.readFileSync(__dirname+'/../assets/default_avatar.png'),
-    defaultImg: true
-});
-
-defaultAvatar.save(function (err) {
-    if (err) return console.log(err);
-});
 
 const upload = multer({dest: './uploads/'});
 
