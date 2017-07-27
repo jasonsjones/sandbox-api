@@ -8,11 +8,11 @@ export default (config) => {
     mongoose.Promise = global.Promise;
     mongoose.connect(config.dbUrl, { useMongoClient: true });
     let db = mongoose.connection;
+    db.dropDatabase();
 
     db.once('open', function () {
         console.log(`Connected to mongo`);
         console.log('cleaning db...');
-        db.dropDatabase();
 
         const arrow = new User({
             name: "Oliver Queen",
