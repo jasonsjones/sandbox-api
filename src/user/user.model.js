@@ -12,8 +12,7 @@ const userSchema = new Schema({
 });
 
 userSchema.pre('save', function (next) {
-    console.log('In the user pre-save hook....the this context is ');
-    console.log(this);
+    console.log('In the user pre-save hook....');
     console.log('this is where we will hash the password if it changed');
     console.log('is password modified: ' + this.isModified('password'));
     next();
