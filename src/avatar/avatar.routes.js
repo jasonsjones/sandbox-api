@@ -10,7 +10,7 @@ export default (app) => {
         Avatar.find({}, '-data').exec()
             .then(avatars => {
                 res.json({
-                    status: true,
+                    success: true,
                     data: avatars
                 });
             })
@@ -28,10 +28,17 @@ export default (app) => {
         avatar.save()
             .then(img => {
                 fs.unlinkSync(req.file.path);
-                res.json({message: 'avatar uploaded and saved...'});
+                res.json({
+                    success: true,
+                    message: 'avatar uploaded and saved'
+                });
             })
             .catch(err => {
                 console.log(err);
+                res.json({
+                    success: false,
+                    message: 'error saving avatar'
+                });
             });
     });
 
@@ -41,12 +48,20 @@ export default (app) => {
                 .then(sendImage)
                 .catch(err => {
                     console.log(err);
+                    res.json({
+                        success: false,
+                        message: 'error sending avatar'
+                    });
                 });
         } else {
             Avatar.findById(req.params.id).exec()
                 .then(sendImage)
                 .catch(err => {
                     console.log(err);
+                    res.json({
+                        success: false,
+                        message: 'error sending avatar'
+                    });
                 });
         }
 

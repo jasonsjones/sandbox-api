@@ -10,15 +10,15 @@ export default (app) => {
         User.find({}).exec()
             .then(users => {
                 res.json({
-                    staus: 'success',
+                    success: true,
                     payload: users
                 });
             })
             .catch(err => {
                 console.log(err);
                 res.json({
-                    status: 'error',
-                    message: 'error getting users'
+                    success: false,
+                    message: 'error getting user'
                 });
             });
     });
@@ -27,14 +27,14 @@ export default (app) => {
         User.findOne({_id: req.params.id}).exec()
             .then(user => {
                 res.json({
-                    status: 'success',
+                    success: true,
                     payload: user
                 });
             })
             .catch(err => {
                 console.log(err);
                 res.json({
-                    status: 'error',
+                    success: false,
                     message: 'error getting user'
                 });
             });
@@ -45,7 +45,7 @@ export default (app) => {
         newUser.save()
             .then(user => {
                 res.json({
-                    status: 'success',
+                    success: true,
                     message: 'new user saved',
                     payload: user
                 })
@@ -53,7 +53,7 @@ export default (app) => {
             .catch(err => {
                 console.log(err);
                 res.json({
-                    status: 'error',
+                    success: false,
                     message: 'error saving new user'
                 });
             });
@@ -80,7 +80,7 @@ export default (app) => {
             return user.save();
         }).then(user => {
             res.json({
-                status: 'success',
+                success: true,
                 message: 'avatar uploaded',
                 payload: user
             });
@@ -88,7 +88,7 @@ export default (app) => {
         .catch(err => {
             console.log(err);
             res.json({
-                status: 'error',
+                success: false,
                 message: 'error uploading avatar'
             });
         });
