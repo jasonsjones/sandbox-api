@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import bcrypt from 'bcrypt-nodejs';
 const Schema = mongoose.Schema;
 
 const baseUrl = 'http://localhost:3000';
@@ -12,10 +13,18 @@ const userSchema = new Schema({
 });
 
 userSchema.pre('save', function (next) {
-    console.log('In the user pre-save hook....');
-    console.log('this is where we will hash the password if it changed');
-    console.log('is password modified: ' + this.isModified('password'));
-    next();
+    let user = this;
+    if (!user.isModified('password')) {
+        return next();
+    }
+    bcrypt.genSalt(10, (err, salt) => {
+        if (err) return next(err);
+        bcrypt.hash(user.password, salt, null, (err, hash) => {
+            if (err) return next(err);
+            user.password = hash;
+            next();
+        });
+    });
 });
 
 userSchema.post('save', function (error, user, next) {
@@ -25,6 +34,10 @@ userSchema.post('save', function (error, user, next) {
         next(err);
     }
 });
+
+userSchema.methods.confirmPassword = function (password) {
+    return bcrypt.compareSync(password, this.password);
+}
 
 const User = mongoose.model('User', userSchema);
 export default User;
