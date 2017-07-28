@@ -9,35 +9,53 @@ export default (app) => {
     app.get('/api/users', (req, res) => {
         User.find({}).exec()
             .then(users => {
-                res.json({staus: true, data: users});
+                res.json({
+                    staus: 'success',
+                    payload: users
+                });
             })
             .catch(err => {
                 console.log(err);
+                res.json({
+                    status: 'error',
+                    message: 'error getting users'
+                });
             });
     });
 
     app.get('/api/user/:id', (req, res) => {
         User.findOne({_id: req.params.id}).exec()
             .then(user => {
-                res.json({status: 'success', data: user});
+                res.json({
+                    status: 'success',
+                    payload: user
+                });
             })
             .catch(err => {
                 console.log(err);
+                res.json({
+                    status: 'error',
+                    message: 'error getting user'
+                });
             });
     });
 
-    app.post('/api/users', (req, res) => {
+    app.post('/api/signup', (req, res) => {
         let newUser = new User(req.body);
         newUser.save()
             .then(user => {
                 res.json({
-                    status: 'succuess',
+                    status: 'success',
                     message: 'new user saved',
-                    data: user
+                    payload: user
                 })
             })
             .catch(err => {
                 console.log(err);
+                res.json({
+                    status: 'error',
+                    message: 'error saving new user'
+                });
             });
     });
 
@@ -61,10 +79,18 @@ export default (app) => {
             user.avatarUrl = `http://localhost:3000/api/avatar/${img._id}`;
             return user.save();
         }).then(user => {
-            res.json({message: 'avatar uploaded...', data: user});
+            res.json({
+                status: 'success',
+                message: 'avatar uploaded',
+                payload: user
+            });
         })
         .catch(err => {
             console.log(err);
+            res.json({
+                status: 'error',
+                message: 'error uploading avatar'
+            });
         });
     });
 }
