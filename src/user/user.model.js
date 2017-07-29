@@ -35,7 +35,7 @@ userSchema.post('save', function (error, user, next) {
     }
 });
 
-userSchema.methods.confirmPassword = function (password) {
+userSchema.methods.verifyPassword = function (password) {
     return bcrypt.compareSync(password, this.password);
 }
 

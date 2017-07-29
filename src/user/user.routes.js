@@ -93,4 +93,30 @@ export default (app) => {
             });
         });
     });
+
+    app.post('/api/login', (req, res) => {
+        User.findOne({email: req.body.email}).exec()
+            .then(user => {
+                if (user.verifyPassword(req.body.password)) {
+                    res.json({
+                        success: true,
+                        message: 'user authenticated',
+                        payload: user
+                    });
+                } else {
+                    res.json({
+                        success: false,
+                        message: 'invalid username or password',
+                        payload: null
+                    });
+                }
+            })
+            .catch(err => {
+                res.json({
+                    success: false,
+                    message: 'user not found',
+                    payload: null
+                });
+            });
+    });
 }
