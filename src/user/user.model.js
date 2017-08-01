@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt-nodejs';
+import Avatar from '../avatar/avatar.model';
 const Schema = mongoose.Schema;
 
 const baseUrl = 'http://localhost:3000';
@@ -33,6 +34,18 @@ userSchema.post('save', function (error, user, next) {
     } else {
         next(err);
     }
+});
+
+userSchema.post('remove', function (user) {
+    Avatar.findOne(user.avatar).exec()
+        .then(avatar => {
+            if (avatar && avatar.user.equals(user._id)) {
+                return avatar.remove();
+            }
+        })
+        .catch(err => {
+            console.log(err);
+        });
 });
 
 userSchema.methods.verifyPassword = function (password) {

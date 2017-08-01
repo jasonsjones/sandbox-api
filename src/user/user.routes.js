@@ -1,4 +1,5 @@
 import multer from 'multer';
+import jwt from 'jsonwebtoken';
 import fs from 'fs';
 import User from './user.model';
 import Avatar from '../avatar/avatar.model';
@@ -40,6 +41,27 @@ export default (app) => {
             });
     });
 
+    app.delete('/api/user/:id', (req, res) => {
+        User.findOne({_id: req.params.id}).exec()
+            .then(user => {
+                return user.remove();
+            })
+            .then(user => {
+                res.json({
+                    success: true,
+                    message: 'user removed',
+                    payload: user
+                });
+            })
+            .catch(err => {
+                console.log(err);
+                res.json({
+                    success: false,
+                    message: 'error removing user'
+                });
+            });
+    });
+
     app.post('/api/signup', (req, res) => {
         let newUser = new User(req.body);
         newUser.save()
@@ -59,7 +81,7 @@ export default (app) => {
             });
     });
 
-    app.post('/api/user/:userid/avatar', upload.single('avatar'), (req, res) => {
+    app.post('/api/user/:userid/avatar', authenticate, upload.single('avatar'), (req, res) => {
         let userPromise = User.findOne({_id: req.params.userid}).exec();
 
         let avatarPromise = userPromise.then(user => {
@@ -98,10 +120,16 @@ export default (app) => {
         User.findOne({email: req.body.email}).exec()
             .then(user => {
                 if (user.verifyPassword(req.body.password)) {
+                    let token = jwt.sign(user._id, 'SECRET', {
+                        expiresIn: '24hr'
+                    });
                     res.json({
                         success: true,
                         message: 'user authenticated',
-                        payload: user
+                        payload: {
+                            user,
+                            token
+                        }
                     });
                 } else {
                     res.json({
@@ -119,4 +147,11 @@ export default (app) => {
                 });
             });
     });
+
+    function authenticate(req, res, next) {
+        let token = req.body.token || req.headers['x-token'];
+        console.log('this resource is protected by jwt');
+        console.log(token);
+        next();
+    }
 }
