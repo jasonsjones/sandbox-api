@@ -8,32 +8,10 @@ export default (config) => {
     mongoose.Promise = global.Promise;
     mongoose.connect(config.dbUrl, { useMongoClient: true });
     let db = mongoose.connection;
-    db.dropDatabase();
 
     db.once('open', function () {
         console.log(`Connected to mongo`);
-        console.log('cleaning db...');
-
-        const arrow = new User({
-            name: "Oliver Queen",
-            email: "oliver@qc.com",
-            password: "arrow"
-        });
-
-        arrow.save(function (err, user) {
-            if (err) return console.log(err);
-            console.log("default user saved...");
-        });
-
-        const defaultAvatar = new Avatar({
-            contentType: "image/png",
-            data: fs.readFileSync(__dirname+'/../../assets/default_avatar.png'),
-            defaultImg: true
-        });
-
-        defaultAvatar.save(function (err) {
-            if (err) return console.log(err);
-        });
+        seedDatabase();
     });
 
     db.on('error', console.error.bind(console, 'connection error'));
@@ -54,6 +32,37 @@ export default (config) => {
             process.kill(process.pid, 'SIGUSR2');
         });
     });
-
     return db;
+}
+
+function seedDatabase() {
+    User.find({}).exec()
+        .then(users => {
+            if (users.length === 0) {
+                const arrow = new User({
+                    name: "Oliver Queen",
+                    email: "oliver@qc.com",
+                    password: "arrow"
+                });
+                console.log("default user saved");
+                return arrow.save()
+            }
+        })
+        .then(user => {
+            return Avatar.find({defaultImg: true}).exec()
+        })
+        .then(avatars => {
+            if (avatars.length === 0) {
+                const defaultAvatar = new Avatar({
+                    contentType: "image/png",
+                    data: fs.readFileSync(__dirname + '/../../assets/default_avatar.png'),
+                    defaultImg: true
+                });
+                console.log("default avatar saved");
+                return defaultAvatar.save();
+            }
+        })
+        .catch(err => {
+            return console.log(err);
+        })
 }
