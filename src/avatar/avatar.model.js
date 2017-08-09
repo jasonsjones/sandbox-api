@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 const avatarSchema = new Schema({
     contentType: String,
     data: Buffer,
+    fileSize: Number,
     user: {type: Schema.Types.ObjectId, ref: 'User'},
     defaultImg: Boolean
 });

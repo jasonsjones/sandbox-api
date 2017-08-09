@@ -88,6 +88,7 @@ export default (app) => {
             let avatar = new Avatar();
             avatar.fileName = req.file.originalname;
             avatar.contentType = req.file.mimetype;
+            avatar.fileSize = req.file.size / 1000;
             avatar.defaultImg = false;
             avatar.data = fs.readFileSync(req.file.path);
             avatar.user = user._id;
@@ -103,7 +104,7 @@ export default (app) => {
         }).then(user => {
             res.json({
                 success: true,
-                message: 'avatar uploaded',
+                message: 'avatar uploaded and saved',
                 payload: user
             });
         })

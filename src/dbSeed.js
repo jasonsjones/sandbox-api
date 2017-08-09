@@ -33,6 +33,7 @@ function seedDatabase() {
             if (avatars.length === 0) {
                 const defaultAvatar = new Avatar({
                     contentType: "image/png",
+                    fileSize: fs.statSync(__dirname + '/../assets/default_avatar.png').size / 1000,
                     data: fs.readFileSync(__dirname + '/../assets/default_avatar.png'),
                     defaultImg: true
                 });
