@@ -1,75 +1,14 @@
 import multer from 'multer';
-import fs from 'fs';
-import Avatar from '../avatar/avatar.model';
+import * as AvatarController from './avatar.controller';
 
 export default (app) => {
 
     const upload = multer({dest: './uploads/'});
 
-    app.get('/api/avatar', (req, res) => {
-        Avatar.find({}, '-data').exec()
-            .then(avatars => {
-                res.json({
-                    success: true,
-                    data: avatars
-                });
-            })
-            .catch(err => {
-                console.log(err);
-            });
-    });
+    app.route('/api/avatar')
+        .get(AvatarController.getAvatars)
+        .post(upload.single('avatar'), AvatarController.uploadAvatar);
 
-    app.post('/api/avatar', upload.single('avatar'), (req, res) => {
-        let avatar = new Avatar();
-        avatar.fileName = req.file.originalname;
-        avatar.contentType = req.file.mimetype;
-        avatar.fileSize = req.file.size / 1000;
-        avatar.defaultImg = false;
-        avatar.data = fs.readFileSync(req.file.path);
-        avatar.save()
-            .then(img => {
-                fs.unlinkSync(req.file.path);
-                res.json({
-                    success: true,
-                    message: 'avatar uploaded and saved'
-                });
-            })
-            .catch(err => {
-                console.log(err);
-                res.json({
-                    success: false,
-                    message: 'error saving avatar'
-                });
-            });
-    });
-
-    app.get('/api/avatar/:id', (req, res) => {
-        if (req.params.id === 'default') {
-            Avatar.findOne({defaultImg: true}).exec()
-                .then(sendImage)
-                .catch(err => {
-                    console.log(err);
-                    res.json({
-                        success: false,
-                        message: 'error sending avatar'
-                    });
-                });
-        } else {
-            Avatar.findById(req.params.id).exec()
-                .then(sendImage)
-                .catch(err => {
-                    console.log(err);
-                    res.json({
-                        success: false,
-                        message: 'error sending avatar'
-                    });
-                });
-        }
-
-        function sendImage(image) {
-            res.contentType(image.contentType);
-            res.write(image.data);
-            res.end();
-        }
-    });
+    app.route('/api/avatar/:id')
+        .get(AvatarController.getAvatar);
 }
