@@ -4,10 +4,6 @@
         "eslint:recommended"
     ],
     "parser": "babel-eslint",
-    "parseOptions": {
-        "ecmaVersion": 7,
-        "sourceType": "module"
-    },
     "env": {
         "browser": true,
         "node": true,
