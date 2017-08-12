@@ -1,5 +1,6 @@
 import multer from 'multer';
 import * as UserController from './user.controller';
+import * as AuthController from '../common/auth.controller';
 
 export default (app) => {
 
@@ -13,14 +14,11 @@ export default (app) => {
 
     app.post('/api/signup', UserController.signupUser);
 
-    app.post('/api/user/:userid/avatar', authenticate, upload.single('avatar'), UserController.uploadUserAvatar);
+    app.post('/api/user/:userid/avatar',
+              AuthController.protectRoute,
+              upload.single('avatar'),
+              UserController.uploadUserAvatar
+    );
 
-    app.post('/api/login', UserController.loginUser);
-
-    function authenticate(req, res, next) {
-        let token = req.body.token || req.headers['x-token'];
-        console.log('this resource is protected by jwt');
-        console.log(token);
-        next();
-    }
+    app.post('/api/login', AuthController.loginUser);
 }

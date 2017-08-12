@@ -1,11 +1,6 @@
-import jwt from 'jsonwebtoken';
 import fs from 'fs';
-import Config from '../config/config';
 import User from './user.model';
 import Avatar from '../avatar/avatar.model';
-
-const env = process.env.NODE_ENV || "development";
-const config = Config[env];
 
 export function getUsers(req, res) {
     User.find({}).exec()
@@ -111,38 +106,6 @@ export function signupUser(req, res) {
         });
 }
 
-export function loginUser(req, res) {
-    User.findOne({email: req.body.email}).exec()
-        .then(user => {
-            if (user.verifyPassword(req.body.password)) {
-                let token = jwt.sign(user._id, config.token_secret, {
-                    expiresIn: '24hr'
-                });
-                res.json({
-                    success: true,
-                    message: 'user authenticated',
-                    payload: {
-                        user,
-                        token
-                    }
-                });
-            } else {
-                res.json({
-                    success: false,
-                    message: 'invalid username or password',
-                    payload: null
-                });
-            }
-        })
-        .catch(err => {
-            console.log(err);
-            res.json({
-                success: false,
-                message: 'user not found',
-                payload: null
-            });
-        });
-}
 
 function makeAvatar(req, userId) {
     let avatar = new Avatar();
