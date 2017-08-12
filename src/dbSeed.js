@@ -14,19 +14,30 @@ function seedDatabase() {
     User.find({}).exec()
         .then(users => {
             if (users.length === 0) {
-                const arrow = new User({
-                    name: "Oliver Queen",
-                    email: "oliver@qc.com",
-                    password: "arrow"
-                });
-                console.log("default user saved");
-                return arrow.save()
+                let users = [
+                    {
+                        name: "Oliver Queen",
+                        email: "oliver@qc.com",
+                        password: "arrow"
+                    },
+                    {
+                        name: "John Diggle",
+                        email: "dig@qc.com",
+                        password: "spartan"
+                    },
+                    {
+                        name: "Roy Harper",
+                        email: "roy@qc.com",
+                        password: "arsenal"
+                    }
+                ];
+                return User.create(users);
             } else {
                 dbConn.close();
                 return;
             }
         })
-        .then(user => {
+        .then(() => {
             return Avatar.find({defaultImg: true}).exec()
         })
         .then(avatars => {
