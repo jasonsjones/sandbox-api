@@ -19,6 +19,12 @@ export function protectRoute(req, res, next) {
             if (decoded && decoded.sub === req.params.userid) {
                 req.userId = decoded.sub;
                 next();
+            } else {
+                res.json({
+                    success: false,
+                    message: 'invalid token provided',
+                    payload: null
+                });
             }
         });
     } else {
@@ -37,7 +43,9 @@ export function loginUser(req, res) {
                 let token = jwt.sign({
                     sub: user._id,
                     name: user.name
-                }, config.token_secret, {
+                },
+                config.token_secret,
+                {
                     expiresIn: '24hr'
                 });
                 res.json({
