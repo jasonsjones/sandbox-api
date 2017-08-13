@@ -11,7 +11,7 @@ const userSchema = new Schema({
     password: String,
     avatar: {type: Schema.Types.ObjectId, ref: 'Avatar'},
     avatarUrl: {type: String, default: `${baseUrl}/api/avatar/default`}
-});
+}, {timestamps: true});
 
 userSchema.pre('save', function (next) {
     let user = this;

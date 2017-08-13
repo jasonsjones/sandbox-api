@@ -7,7 +7,7 @@ const avatarSchema = new Schema({
     fileSize: Number,
     user: {type: Schema.Types.ObjectId, ref: 'User'},
     defaultImg: Boolean
-});
+}, {timestamps: true});
 
 const Avatar = mongoose.model('Avatar', avatarSchema);
 export default Avatar;
