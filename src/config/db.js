@@ -1,30 +1,33 @@
 import mongoose from 'mongoose';
+import debug from 'debug';
+
+const log = debug('db:connection');
 
 export default (config) => {
-    console.log('setting up mongodb...');
+    log('setting up mongodb...');
     mongoose.Promise = global.Promise;
     mongoose.connect(config.dbUrl, { useMongoClient: true });
     let db = mongoose.connection;
 
     db.once('open', function () {
-        console.log(`Connected to mongo container`);
+        log(`Connected to ${config.dbUrl} in mongo container`);
     });
 
     db.on('error', console.error.bind(console, 'connection error'));
     db.on('disconnected', () => {
-        console.log(`Mongoose disconnected`);
+        log(`Mongoose disconnected`);
     });
 
     process.on('SIGINT', () => {
         db.close(() => {
-            console.log('Mongoose default connection closed via app termination');
+            log('Mongoose default connection closed via app termination');
             process.exit(0);
         });
     });
 
     process.once('SIGUSR2', () => {
         db.close(() => {
-            console.log('Mongoose default connection closed via nodemon restart');
+            log('Mongoose default connection closed via nodemon restart');
             process.kill(process.pid, 'SIGUSR2');
         });
     });

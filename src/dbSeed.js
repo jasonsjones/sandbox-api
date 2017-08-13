@@ -8,7 +8,7 @@ import Avatar from './avatar/avatar.model';
 const env = process.env.NODE_ENV || "development";
 const config = Config[env];
 
-const log = debug('dbSeed');
+const log = debug('db:seed');
 const dbConn = db(config);
 const initialUsers = [
     {
