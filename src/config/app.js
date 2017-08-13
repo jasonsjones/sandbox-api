@@ -15,7 +15,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use('/graphql', graphqlHTTP({
     schema,
     pretty: true,
-    graphiql: process.env.NODE_ENV === "development"
+    graphiql: true
 }));
 
 avatarRoute(app);
