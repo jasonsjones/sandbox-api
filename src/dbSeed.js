@@ -14,6 +14,7 @@ const initialUsers = [
     {
         name: "Oliver Queen",
         email: "oliver@qc.com",
+        roles: ["admin", "user"],
         password: "arrow"
     },
     {

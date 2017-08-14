@@ -63,5 +63,24 @@ describe('User Model', function () {
             done();
         })();
     });
+
+    it('isAdmin() is true if user has an admin role', function () {
+        let user = new User({
+            name: 'Oliver Queen',
+            email: 'oliver@qc.com',
+            password: 'arrow',
+            roles: ["admin", "user"]
+        });
+        expect(user.isAdmin()).to.be.true;
+    });
+
+    it('isAdmin() is false  if user does not have an  admin role', function () {
+        let user = new User({
+            name: 'Oliver Queen',
+            email: 'oliver@qc.com',
+            password: 'arrow'
+        });
+        expect(user.isAdmin()).to.be.false;
+    });
 });
 
