@@ -5,7 +5,7 @@ export default (app) => {
 
     const upload = multer({dest: './uploads/'});
 
-    app.route('/api/avatar')
+    app.route('/api/avatars')
         .get(AvatarController.getAvatars)
         .post(upload.single('avatar'), AvatarController.uploadAvatar);
 
