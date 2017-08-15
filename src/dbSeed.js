@@ -65,8 +65,8 @@ function seedDatabase() {
 function createDefaultAvatar() {
     const avatar = new Avatar({
         contentType: "image/png",
-        fileSize: fs.statSync(__dirname + '/../assets/default_avatar.png').size / 1000,
-        data: fs.readFileSync(__dirname + '/../assets/default_avatar.png'),
+        fileSize: fs.statSync(__dirname + '/../assets/sfdc_default_avatar.png').size,
+        data: fs.readFileSync(__dirname + '/../assets/sfdc_default_avatar.png'),
         defaultImg: true
     });
     return avatar;

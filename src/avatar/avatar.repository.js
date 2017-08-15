@@ -24,7 +24,7 @@ export function getAvatar(id) {
 export function uploadAvatar(file) {
     let avatar = new Avatar();
     avatar.contentType = file.mimetype;
-    avatar.fileSize = file.size / 1000;
+    avatar.fileSize = file.size;
     avatar.defaultImg = false;
     avatar.data = fs.readFileSync(file.path);
     fs.unlinkSync(file.path);
