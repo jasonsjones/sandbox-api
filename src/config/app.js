@@ -5,7 +5,7 @@ import graphqlHTTP from 'express-graphql';
 import avatarRoute from '../avatar/avatar.routes';
 import userRoute from '../user/user.routes';
 import indexRoute from '../index/index.routes';
-import schema from '../graphqlSchema';
+import schema from '../graphql';
 
 const app = express();
 
