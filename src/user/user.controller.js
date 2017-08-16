@@ -1,9 +1,10 @@
 import fs from 'fs';
 import User from './user.model';
 import Avatar from '../avatar/avatar.model';
+import * as UserRepository from './user.repository';
 
 export function getUsers(req, res) {
-    User.find({}).exec()
+    UserRepository.getUsers()
         .then(users => {
             res.json({
                 success: true,
@@ -20,7 +21,7 @@ export function getUsers(req, res) {
 }
 
 export function getUser(req, res) {
-    User.findOne({_id: req.params.id}).exec()
+    UserRepository.getUser(req.params.id)
         .then(user => {
             res.json({
                 success: true,
@@ -37,7 +38,7 @@ export function getUser(req, res) {
 }
 
 export function deleteUser(req, res) {
-    User.findOne({_id: req.params.id}).exec()
+    UserRepository.deleteUser(req.params.id)
         .then(user => {
             return user.remove();
         })
