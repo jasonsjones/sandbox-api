@@ -6,6 +6,7 @@ import {
     GraphQLList,
     GraphQLSchema
 } from 'graphql';
+
 import User from '../user/user.model';
 import Avatar from '../avatar/avatar.model';
 
@@ -16,6 +17,7 @@ const UserType = new GraphQLObjectType({
         id: {type: GraphQLString},
         name: {type: GraphQLString},
         email: {type: GraphQLString},
+        roles: {type: new GraphQLList(GraphQLString)},
         avatar: {type: GraphQLString},
         avatarUrl: {type: GraphQLString}
     })
@@ -42,25 +44,50 @@ const RootQuery = new GraphQLObjectType({
             args: {
                 id: {type: GraphQLString}
             },
-            resolve(parentValue, args) {
-                return  User.findById(args.id).exec();
-            }
+            resolve: (parentValue, args) =>  User.findById(args.id).exec()
         },
         users: {
             type: new GraphQLList(UserType),
-            resolve() {
-                return User.find({}).exec();
-            }
+            resolve: () =>  User.find({}).exec()
         },
         avatars: {
             type: new GraphQLList(AvatarType),
-            resolve() {
-                return Avatar.find({}).exec();
+            resolve: () => Avatar.find({}).exec()
+        }
+    }
+});
+
+// Root Mutation
+const RootMutation = new GraphQLObjectType({
+    name: 'Mutations',
+    fields: {
+        signup: {
+            type: UserType,
+            args: {
+                name: {type: GraphQLString},
+                email: {type: GraphQLString},
+                password: {type: GraphQLString}
+            },
+            resolve: (parentValue, args) => {
+                let newUser = new User({
+                    name: args.name,
+                    email: args.email,
+                    password: args.password
+                });
+                return newUser.save()
             }
+        },
+        deleteUser: {
+            type: UserType,
+            args: {
+                id: {type: GraphQLString}
+            },
+            resolve: (parent, args) => User.findByIdAndRemove(args.id).exec()
         }
     }
 });
 
 export default new GraphQLSchema({
-    query: RootQuery
+    query: RootQuery,
+    mutation: RootMutation
 });
