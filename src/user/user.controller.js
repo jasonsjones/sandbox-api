@@ -1,4 +1,3 @@
-import User from './user.model';
 import * as UserRepository from './user.repository';
 
 export function getUsers(req, res) {
