@@ -22,14 +22,22 @@ export function getAvatar(id) {
 }
 
 export function uploadAvatar(file) {
+    let avatar = makeAvatarModel(file);
+    return Promise.resolve(avatar.save());
+}
+
+export function makeAvatarModel(file, userId) {
     let avatar = new Avatar();
+    avatar.fileName = file.originalname;
     avatar.contentType = file.mimetype;
     avatar.fileSize = file.size;
     avatar.defaultImg = false;
     avatar.data = fs.readFileSync(file.path);
     fs.unlinkSync(file.path);
-    return Promise.resolve(avatar.save());
-
+    if (userId) {
+        avatar.user = userId;
+    }
+    return avatar;
 }
 
 function getDefaultAvatar() {
