@@ -1,7 +1,7 @@
 import * as AvatarRepository from './avatar.repository';
 
 export function getAvatars(req, res) {
-    AvatarRepository.getAvatars()
+    AvatarRepository.getAvatars({}, '-data')
         .then(avatars => {
             res.json({
                 success: true,

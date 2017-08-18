@@ -1,9 +1,9 @@
 import fs from 'fs';
 import Avatar from './avatar.model';
 
-export function getAvatars(queryConditions = {}) {
+export function getAvatars(queryConditions = {}, selectionStr = '') {
     return new Promise((resolve, reject) => {
-        Avatar.find(queryConditions).exec()
+        Avatar.find(queryConditions, selectionStr).exec()
             .then(avatars => {
                 resolve(avatars);
             })
