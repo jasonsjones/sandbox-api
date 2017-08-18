@@ -21,6 +21,18 @@ export function getAvatar(id) {
     }
 }
 
+export function deleteAvatar(id) {
+    return new Promise((resolve, reject) => {
+        Avatar.findById(id, '-data').exec()
+            .then(avatar => {
+                resolve(avatar.remove());
+            })
+            .catch(err => {
+                reject(err);
+            });
+    });
+}
+
 export function uploadAvatar(file) {
     let avatar = makeAvatarModel(file);
     return Promise.resolve(avatar.save());

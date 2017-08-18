@@ -33,6 +33,24 @@ export function getAvatar(req, res) {
         });
 }
 
+export function deleteAvatar(req, res) {
+    AvatarRepository.deleteAvatar(req.params.id)
+        .then(avatar => {
+            res.json({
+                success: true,
+                message: 'avatar successfully deleted',
+                payload: avatar
+            })
+        })
+        .catch(err => {
+            console.log(err);
+            res.json({
+                success: false,
+                message: 'error deleting avatar'
+            });
+        });
+}
+
 export function uploadAvatar(req, res) {
     AvatarRepository.uploadAvatar(req.file)
         .then((img) => {
