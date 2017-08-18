@@ -9,6 +9,9 @@ services:
             - .:/home/blacktab
             - /home/blacktab/node_modules
         tty: true
+        environment:
+            - NODE_ENV=development
+            - DEBUG=db*
         ports:
             - "3000:3000"
         depends_on:
@@ -17,6 +20,7 @@ services:
     mongo:
         container_name: database
         image: mongo
+        tty: true
         volumes:
             - ./data/db:/data/db
         ports:
