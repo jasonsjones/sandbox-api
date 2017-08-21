@@ -15,7 +15,8 @@ export default (app) => {
     app.post('/api/signup', UserController.signupUser);
 
     app.post('/api/user/:userid/avatar',
-              AuthController.protectRoute,
+              AuthController.verifyToken,
+              AuthController.protectRouteByUser,
               upload.single('avatar'),
               UserController.uploadUserAvatar
     );
