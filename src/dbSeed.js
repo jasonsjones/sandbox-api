@@ -10,6 +10,7 @@ const config = Config[env];
 
 const log = debug('db:seed');
 const dbConn = db(config);
+
 const initialUsers = [
     {
         name: "Oliver Queen",
@@ -29,14 +30,23 @@ const initialUsers = [
     }
 ];
 
-let defaultUserPromise = seedDefaultUsers();
+// seed the db with the default users (above), then get a handle
+// to 'Olive Queen' so we can upload a custom avatar image
+let defaultUserPromise = seedDefaultUsers()
+    .then(() => User.findOne({name: 'Oliver Queen'}).exec());
+
 let defaultAvatarPromise = seedDefaultAvatar();
 
+
 Promise.all([defaultUserPromise, defaultAvatarPromise])
-    .then(() => {
-        // let [users, avatar] = values;
-        dbConn.close();
-    });
+    .then((values) => {
+        let [arrow] = values;
+        return addCustomAvatarToUser(arrow, 'male3.png');
+    })
+    .then(() => dbConn.close())
+    .catch(err => console.log(err));
+
+/****** helper functions ******/
 
 function seedDefaultUsers() {
     return User.find({}).exec()
@@ -67,4 +77,29 @@ function createDefaultAvatar() {
         defaultImg: true
     });
     return avatar;
+}
+
+function makeCustomAvatar(userId, filename) {
+    let filepath = `/../assets/${filename}`
+    const avatar = new Avatar({
+        contentType: "image/png",
+        fileSize: fs.statSync(__dirname + filepath).size,
+        data: fs.readFileSync(__dirname + filepath),
+        user: userId,
+        defaultImg: false
+    });
+    return avatar;
+}
+
+function addCustomAvatarToUser(user, filename) {
+    const avatar = makeCustomAvatar(user._id, filename);
+    return new Promise((resolve, reject) => {
+        avatar.save()
+            .then(a => {
+                user.avatar = a._id,
+                user.avatarUrl = `http://localhost:3000/api/avatar/${a._id}`;
+                resolve(user.save());
+            })
+            .catch(err => reject(err));
+    });
 }
