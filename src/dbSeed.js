@@ -29,36 +29,33 @@ const initialUsers = [
     }
 ];
 
-seedDatabase();
+let defaultUserPromise = seedDefaultUsers();
+let defaultAvatarPromise = seedDefaultAvatar();
 
-function seedDatabase() {
-    User.find({}).exec()
+Promise.all([defaultUserPromise, defaultAvatarPromise])
+    .then(() => {
+        // let [users, avatar] = values;
+        dbConn.close();
+    });
+
+function seedDefaultUsers() {
+    return User.find({}).exec()
         .then(users => {
             if (users.length === 0) {
                 log('db seeded with users');
                 return User.create(initialUsers);
-            } else {
-                dbConn.close();
-                return;
             }
-        })
-        .then(() => {
-            return Avatar.find({defaultImg: true}).exec()
-        })
+        });
+}
+
+function seedDefaultAvatar() {
+    return Avatar.find({defaultImg: true}).exec()
         .then(avatars => {
             if (avatars.length === 0) {
                 let defaultAvatar = createDefaultAvatar();
                 log('default avatar saved');
-                defaultAvatar.save()
-                    .then(img => {
-                        if (img) {
-                            dbConn.close();
-                        }
-                    });
+                return defaultAvatar.save()
             }
-        })
-        .catch(err => {
-            return console.log(err);
         });
 }
 
