@@ -47,14 +47,14 @@ describe('User Model', function () {
 
     it('hashes the password to save in db', function (done) {
         const ORIG_PWD = 'arrow';
-        let user = {
+        let user = new User({
             name: 'Oliver Queen',
             email: 'oliver@qc.com',
             password: ORIG_PWD,
             isModified: function () {
                 return true;
             }
-        };
+        });
         // need to bind the middleware function to the user to ensure the
         // proper 'this' context from within the function
         middleware.hashPassword.bind(user, function (err, user) {
@@ -74,7 +74,7 @@ describe('User Model', function () {
         expect(user.isAdmin()).to.be.true;
     });
 
-    it('isAdmin() is false  if user does not have an  admin role', function () {
+    it('isAdmin() is false if user does not have an admin role', function () {
         let user = new User({
             name: 'Oliver Queen',
             email: 'oliver@qc.com',
@@ -82,5 +82,42 @@ describe('User Model', function () {
         });
         expect(user.isAdmin()).to.be.false;
     });
+
+    it('verifies a correct password', function (done) {
+        const ORIG_PWD = 'arrow';
+        let user = new User({
+            name: 'Oliver Queen',
+            email: 'oliver@qc.com',
+            password: ORIG_PWD,
+            isModified: function () {
+                return true;
+            }
+        });
+        // need to bind the middleware function to the user to ensure the
+        // proper 'this' context from within the function
+        middleware.hashPassword.bind(user, function (err, user) {
+            expect(user.verifyPassword(ORIG_PWD)).to.be.true;
+            done();
+        })();
+    });
+
+    it('does not verify an incorrect password', function (done) {
+        const ORIG_PWD = 'arrow';
+        let user = new User({
+            name: 'Oliver Queen',
+            email: 'oliver@qc.com',
+            password: ORIG_PWD,
+            isModified: function () {
+                return true;
+            }
+        });
+        // need to bind the middleware function to the user to ensure the
+        // proper 'this' context from within the function
+        middleware.hashPassword.bind(user, function (err, user) {
+            expect(user.verifyPassword('wrongPassword')).to.be.false;
+            done();
+        })();
+
+    })
 });
 
