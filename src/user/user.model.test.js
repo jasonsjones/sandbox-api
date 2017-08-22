@@ -14,7 +14,7 @@ describe('User Model', function () {
         });
         user.validate(function (err) {
             expect(err.errors.name).to.exist;
-            expect(err.name).to.equal("ValidationError");
+            expect(err.name).to.equal('ValidationError');
             done()
         });
     });
@@ -27,7 +27,7 @@ describe('User Model', function () {
         });
         user.validate(function (err) {
             expect(err.errors.email).to.exist;
-            expect(err.name).to.equal("ValidationError");
+            expect(err.name).to.equal('ValidationError');
             done()
         });
     });
@@ -40,7 +40,7 @@ describe('User Model', function () {
         });
         user.validate(function (err) {
             expect(err.errors.password).to.exist;
-            expect(err.name).to.equal("ValidationError");
+            expect(err.name).to.equal('ValidationError');
             done()
         });
     });
@@ -69,7 +69,7 @@ describe('User Model', function () {
             name: 'Oliver Queen',
             email: 'oliver@qc.com',
             password: 'arrow',
-            roles: ["admin", "user"]
+            roles: ['admin', 'user']
         });
         expect(user.isAdmin()).to.be.true;
     });
@@ -117,7 +117,44 @@ describe('User Model', function () {
             expect(user.verifyPassword('wrongPassword')).to.be.false;
             done();
         })();
+    });
 
-    })
+    it('adds a valid role to a user', function () {
+        let user = new User({
+            name: 'Oliver Queen',
+            email: 'oliver@qc.com',
+            password: 'arrow',
+            roles: ['user']
+        });
+        user.addRole('admin');
+        expect(user.roles).to.contain('user');
+        expect(user.roles).to.contain('admin');
+        expect(user.roles.length).to.equal(2);
+    });
+
+    it('does not add an invalid role to a user', function () {
+        let user = new User({
+            name: 'Oliver Queen',
+            email: 'oliver@qc.com',
+            password: 'arrow',
+            roles: ['user']
+        });
+        user.addRole('superhero');
+        expect(user.roles).to.contain('user');
+        expect(user.roles).to.not.contain('superhero');
+        expect(user.roles.length).to.equal(1);
+    });
+
+    it('does not add an empty role to a user', function () {
+        let user = new User({
+            name: 'Oliver Queen',
+            email: 'oliver@qc.com',
+            password: 'arrow',
+            roles: ['user']
+        });
+        user.addRole('');
+        expect(user.roles).to.contain('user');
+        expect(user.roles.length).to.equal(1);
+    });
 });
 
