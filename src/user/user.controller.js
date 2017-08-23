@@ -34,6 +34,24 @@ export function getUser(req, res) {
         });
 }
 
+export function updateUser(req, res) {
+    UserRepository.updateUser(req.params.id, req.body)
+        .then(user => {
+            res.json({
+                success: true,
+                message: 'user updated',
+                payload: user
+            });
+        })
+        .catch(err => {
+            console.log(err);
+            res.json({
+                success: false,
+                message: 'error updating user'
+            });
+        });
+}
+
 export function deleteUser(req, res) {
     UserRepository.deleteUser(req.params.id)
         .then(user => {

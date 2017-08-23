@@ -13,6 +13,24 @@ export function deleteUser(id) {
     return Promise.resolve(User.findByIdAndRemove(id).exec());
 }
 
+export function updateUser(id, userData) {
+    return new Promise((resolve, reject) => {
+        User.findById(id).exec()
+            .then(user => {
+                for (let prop in userData) {
+                    if (user[prop]) {
+                        user[prop] = userData[prop];
+                    }
+                }
+                resolve(user.save());
+            })
+            .catch(err => {
+                console.log(err);
+                reject(err);
+            });
+    });
+}
+
 export function uploadUserAvatar(id, file) {
     return new Promise((resolve, reject) => {
         let userPromise = getUser(id);
@@ -24,9 +42,7 @@ export function uploadUserAvatar(id, file) {
             let [user, img] = values;
             user.avatar = img._id;
             user.avatarUrl = `http://localhost:3000/api/avatar/${img._id}`;
-            return user.save();
-        }).then(user => {
-            resolve(user);
+            resolve(user.save());
         })
         .catch(err => {
             console.log(err);
