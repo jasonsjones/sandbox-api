@@ -156,5 +156,42 @@ describe('User Model', function () {
         expect(user.roles).to.contain('user');
         expect(user.roles.length).to.equal(1);
     });
+
+    it('removes a valid role from a user', function () {
+        let user = new User({
+            name: 'Oliver Queen',
+            email: 'oliver@qc.com',
+            password: 'arrow',
+            roles: ['user', 'admin', 'dev']
+        });
+        expect(user.roles.length).to.equal(3);
+        user.removeRole('admin');
+        expect(user.roles.length).to.equal(2);
+        expect(user.roles).to.not.contain('admin');
+    });
+
+    it('ignores removing an invalid role from a user', function () {
+        let user = new User({
+            name: 'Oliver Queen',
+            email: 'oliver@qc.com',
+            password: 'arrow',
+            roles: ['user', 'admin', 'dev']
+        });
+        expect(user.roles.length).to.equal(3);
+        user.removeRole('invalidRole');
+        expect(user.roles.length).to.equal(3);
+    });
+
+    it('ignores removing a valid role the user does not have', function () {
+        let user = new User({
+            name: 'Oliver Queen',
+            email: 'oliver@qc.com',
+            password: 'arrow',
+            roles: ['user', 'dev']
+        });
+        expect(user.roles.length).to.equal(2);
+        user.removeRole('admin');
+        expect(user.roles.length).to.equal(2);
+    });
 });
 

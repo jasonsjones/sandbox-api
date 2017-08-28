@@ -33,5 +33,12 @@ userSchema.methods.addRole = function (role) {
     }
 };
 
+userSchema.methods.removeRole = function (role) {
+    var roleIndex = this.roles.indexOf(role);
+    if (roleIndex !== -1) {
+        this.roles.splice(roleIndex, 1);
+    }
+};
+
 const User = mongoose.model('User', userSchema);
 export default User;
