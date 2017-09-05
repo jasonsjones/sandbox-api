@@ -1,9 +1,20 @@
 {
     "root": true,
     "extends": [
-        "eslint:recommended"
+        "eslint:recommended",
+        "plugin:react/recommended"
+    ],
+    "plugins": [
+        "react"
     ],
     "parser": "babel-eslint",
+    "parserOptions": {
+        "ecmaVersion": 6,
+        "sourceType": "module",
+        "ecmaFeatures": {
+            "jsx": true
+        }
+    },
     "env": {
         "browser": true,
         "node": true,
@@ -11,6 +22,7 @@
         "mocha": true
     },
     "rules": {
-        "no-console": 0
+        "no-console": 0,
+        "react/prop-types": 0
     }
 }
