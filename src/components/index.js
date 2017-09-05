@@ -1,15 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-const App = (props) => {
-    return (
-        <div>
-            <h1>Hello from React</h1>
-            <h2>{props.message}</h2>
-        </div>
-    );
-}
+import App from './App';
+
 ReactDOM.render(
-    <App message="here are the props..."/>,
+    <App />,
     document.getElementById('root')
 );
