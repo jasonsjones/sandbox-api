@@ -1,9 +1,9 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import morgan from 'morgan';
-import avatarRoute from '../avatar/avatar.routes';
-import userRoute from '../user/user.routes';
-import indexRoute from '../index/index.routes';
+import avatarRoute from '../api/avatar/avatar.routes';
+import userRoute from '../api/user/user.routes';
+import indexRoute from '../api/index/index.routes';
 const app = express();
 
 app.set('view engine', 'ejs');

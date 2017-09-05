@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import Config from '../config/config';
+import Config from '../../config/config';
 import User from '../user/user.model';
 
 const env = process.env.NODE_ENV || "development";
