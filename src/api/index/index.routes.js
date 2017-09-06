@@ -8,6 +8,6 @@ export default (app) => {
     })
 
     app.get('/', (req, res) => {
-        res.redirect('/api');
+        res.render('index', {title: 'React-Node Sandbox'});
     });
 }

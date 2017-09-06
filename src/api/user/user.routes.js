@@ -9,13 +9,14 @@ export default (app) => {
     app.get('/api/users', UserController.getUsers);
 
     app.get('/api/user/:id', UserController.getUser);
-
+    app.put('/api/user/:id', UserController.updateUser);
     app.delete('/api/user/:id', UserController.deleteUser);
 
     app.post('/api/signup', UserController.signupUser);
 
     app.post('/api/user/:userid/avatar',
-              AuthController.protectRoute,
+              AuthController.verifyToken,
+              AuthController.protectRouteByUser,
               upload.single('avatar'),
               UserController.uploadUserAvatar
     );

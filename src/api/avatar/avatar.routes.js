@@ -10,5 +10,6 @@ export default (app) => {
         .post(upload.single('avatar'), AvatarController.uploadAvatar);
 
     app.route('/api/avatar/:id')
-        .get(AvatarController.getAvatar);
+        .get(AvatarController.getAvatar)
+        .delete(AvatarController.deleteAvatar);
 }

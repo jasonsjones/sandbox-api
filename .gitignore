@@ -1,6 +1,7 @@
 node_modules/
 data/
 uploads/
+public/
 npm-debug.log
 .config/
 .DS_Store

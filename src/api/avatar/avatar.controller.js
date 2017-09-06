@@ -1,7 +1,7 @@
 import * as AvatarRepository from './avatar.repository';
 
 export function getAvatars(req, res) {
-    AvatarRepository.getAvatars()
+    AvatarRepository.getAvatars({}, '-data')
         .then(avatars => {
             res.json({
                 success: true,
@@ -29,6 +29,24 @@ export function getAvatar(req, res) {
             res.json({
                 success: false,
                 message: 'error retrieving avatar'
+            });
+        });
+}
+
+export function deleteAvatar(req, res) {
+    AvatarRepository.deleteAvatar(req.params.id)
+        .then(avatar => {
+            res.json({
+                success: true,
+                message: 'avatar successfully deleted',
+                payload: avatar
+            })
+        })
+        .catch(err => {
+            console.log(err);
+            res.json({
+                success: false,
+                message: 'error deleting avatar'
             });
         });
 }
