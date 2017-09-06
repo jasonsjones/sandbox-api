@@ -2,7 +2,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import morgan from 'morgan';
 import graphqlHTTP from 'express-graphql';
-import schema from './graphql';
+import schema from '../graphql';
 import avatarRoute from '../api/avatar/avatar.routes';
 import userRoute from '../api/user/user.routes';
 import indexRoute from '../api/index/index.routes';

@@ -7,8 +7,8 @@ import {
     GraphQLSchema
 } from 'graphql';
 
-import User from '../user/user.model';
-import Avatar from '../avatar/avatar.model';
+import User from '../api/user/user.model';
+import Avatar from '../api/avatar/avatar.model';
 
 // User Type
 const UserType = new GraphQLObjectType({
