@@ -8,3 +8,4 @@ npm-debug.log
 *.swp
 .v8flags*
 .babel.json
+.env
