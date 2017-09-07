@@ -80,7 +80,8 @@ export default class Login extends React.Component {
 
     resetForm() {
         this.setState({
-            password: ''
+            password: '',
+            errorMsg: ''
         });
     }
 
