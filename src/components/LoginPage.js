@@ -22,7 +22,7 @@ const InputElement = (props) => {
     );
 }
 
-InputElement.PropTypes = {
+InputElement.propTypes = {
     name: PropTypes.string.isRequired,
     label: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
@@ -48,6 +48,15 @@ const LoginForm = (props) => {
         </form>
     );
 }
+LoginForm.propTypes = {
+    value: PropTypes.shape({
+        email: PropTypes.string,
+        password: PropTypes.string,
+        isLoggingIn: PropTypes.bool
+    }),
+    handleChange: PropTypes.func.isRequired,
+    handleSubmit: PropTypes.func.isRequired
+};
 
 export default class Login extends React.Component {
     constructor(props) {
