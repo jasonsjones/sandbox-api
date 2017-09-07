@@ -3,6 +3,10 @@ import AppDispatcher from '../dispatcher';
 import * as dataservice from './dataservice';
 
 export function authenticateUser(user) {
+    AppDispatcher.handleViewAction({
+        actionType: 'LOGIN_USER_START',
+        data: true
+    });
     dataservice.getAuthUser(user)
         .then(theUser => {
             let currentUser = {

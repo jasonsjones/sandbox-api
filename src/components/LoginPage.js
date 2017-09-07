@@ -31,13 +31,20 @@ InputElement.PropTypes = {
 };
 
 const LoginForm = (props) => {
+    let button;
+    if (props.value.isLoggingIn) {
+        button = <button type='submit' className="slds-button slds-button_neutral slds-m-top_medium">Logging in...</button>
+    } else {
+        button = <button type='submit' className="slds-button slds-button_brand slds-m-top_medium">Login</button>
+    }
+
     return (
         <form className="slds-form slds-form_stacked" onSubmit={props.handleSubmit}>
             <InputElement type="text" name="email" label="Email"
                 value={props.value.email} handleChange={props.handleChange} />
             <InputElement type="password" name="password" label="Password"
                 value={props.value.password} handleChange={props.handleChange} />
-            <button type='submit' className="slds-button slds-button_brand slds-m-top_medium">Login</button>
+            {button}
         </form>
     );
 }
@@ -48,7 +55,8 @@ export default class Login extends React.Component {
         this.state = {
             email: '',
             password: '',
-            errorMsg: ''
+            errorMsg: '',
+            isLoggingIn: false
         };
 
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -74,7 +82,8 @@ export default class Login extends React.Component {
 
     updateErrorMsg() {
         this.setState({
-            errorMsg: authStore.getErrorMessage()
+            errorMsg: authStore.getErrorMessage(),
+            isLoggingIn: authStore.getLoginStatus()
         });
     }
 

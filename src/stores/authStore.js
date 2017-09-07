@@ -43,10 +43,15 @@ class AuthStore extends EventEmitter {
         return this.errorMsg;
     }
 
+    getLoginStatus() {
+        return this.loggingIn;
+    }
+
     authenticateUser(data) {
         this.currentUser = data.user;
         this.token = data.token;
         this.errorMsg = '';
+        this.loggingIn = false;
         // this is a good place to store the token (if sent from server)
         // and current user data in local or session storage
         localStorage.setItem('userToken', this.token);
@@ -56,6 +61,7 @@ class AuthStore extends EventEmitter {
 
     authenticatUserError(err) {
         this.errorMsg = err;
+        this.loggingIn = false;
         this.emitChange();
     }
 
@@ -64,6 +70,11 @@ class AuthStore extends EventEmitter {
         localStorage.removeItem('currentUser');
         this.token = '';
         this.currentUser = {};
+        this.emitChange();
+    }
+
+    userLoggingIn() {
+        this.loggingIn = true;
         this.emitChange();
     }
 
@@ -78,6 +89,9 @@ class AuthStore extends EventEmitter {
                 break;
             case 'AUTHENTICATE_USER_ERROR':
                 this.authenticatUserError(payload.data);
+                break;
+            case 'LOGIN_USER_START':
+                this.userLoggingIn();
                 break;
             default:
         }
