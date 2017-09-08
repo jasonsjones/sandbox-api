@@ -70,15 +70,15 @@ export default class Login extends React.Component {
 
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChange = this.handleChange.bind(this);
-        this.updateErrorMsg = this.updateErrorMsg.bind(this);
+        this.updateState = this.updateState.bind(this);
     }
 
     componentWillMount() {
-        authStore.on('change', this.updateErrorMsg);
+        authStore.on('change', this.updateState);
     }
 
     componentWillUnmount() {
-        authStore.removeListener('change', this.updateErrorMsg);
+        authStore.removeListener('change', this.updateState);
     }
 
     handleChange(e) {
@@ -89,7 +89,7 @@ export default class Login extends React.Component {
         });
     }
 
-    updateErrorMsg() {
+    updateState() {
         this.setState({
             errorMsg: authStore.getErrorMessage(),
             isLoggingIn: authStore.getLoginStatus()
