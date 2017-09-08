@@ -82,16 +82,16 @@ class AuthStore extends EventEmitter {
         let payload = action.action;
         switch(payload.actionType) {
             case 'AUTHENTICATE_USER':
-                this.authenticateUser(payload.data);
+                this.userLoggingIn();
                 break;
-            case 'LOGOUT_USER':
-                this.logoutUser();
+            case 'AUTHENTICATE_USER_SUCCESS':
+                this.authenticateUser(payload.data);
                 break;
             case 'AUTHENTICATE_USER_ERROR':
                 this.authenticatUserError(payload.data);
                 break;
-            case 'LOGIN_USER_START':
-                this.userLoggingIn();
+            case 'LOGOUT_USER':
+                this.logoutUser();
                 break;
             default:
         }

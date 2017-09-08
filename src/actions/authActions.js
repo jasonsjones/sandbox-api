@@ -4,7 +4,7 @@ import * as dataservice from './dataservice';
 
 export function authenticateUser(user) {
     AppDispatcher.handleViewAction({
-        actionType: 'LOGIN_USER_START',
+        actionType: 'AUTHENTICATE_USER',
         data: true
     });
     dataservice.getAuthUser(user)
@@ -15,7 +15,7 @@ export function authenticateUser(user) {
             };
             let token = 'jwt.token.fromServer';
             AppDispatcher.handleViewAction({
-                actionType: "AUTHENTICATE_USER",
+                actionType: "AUTHENTICATE_USER_SUCCESS",
                 data: {
                     user: currentUser,
                     token: token
