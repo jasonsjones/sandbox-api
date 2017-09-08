@@ -26,7 +26,7 @@ InputElement.propTypes = {
     name: PropTypes.string.isRequired,
     label: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
-    value: PropTypes.string,
+    value: PropTypes.string.isRequired,
     handleChange: PropTypes.func.isRequired
 };
 
@@ -50,9 +50,9 @@ const LoginForm = (props) => {
 }
 LoginForm.propTypes = {
     value: PropTypes.shape({
-        email: PropTypes.string,
-        password: PropTypes.string,
-        isLoggingIn: PropTypes.bool
+        email: PropTypes.string.isRequired,
+        password: PropTypes.string.isRequired,
+        isLoggingIn: PropTypes.bool.isRequired
     }),
     handleChange: PropTypes.func.isRequired,
     handleSubmit: PropTypes.func.isRequired
