@@ -4,13 +4,6 @@ import authStore from '../stores/authStore';
 
 import LoginPage from './LoginPage';
 
-const styles = {
-    container: {
-        margin: "0 auto",
-        width: 960
-    }
-};
-
 class App extends React.Component {
     constructor() {
         super();
@@ -44,7 +37,7 @@ class App extends React.Component {
 
     render() {
         return (
-            <div style={styles.container}>
+            <div>
                 <LoginPage isAuthenticated={this.isUserAuthenticated()} />
             </div>
         );

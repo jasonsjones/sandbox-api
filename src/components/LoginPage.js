@@ -6,7 +6,10 @@ import * as authAction from '../actions/authActions';
 
 const styles = {
     loginform: {
-        width: 350
+        width: 350,
+        marginLeft: "250px",
+        marginTop: "250px",
+        border: "1px solid #d9dbdd"
     }
 };
 
@@ -125,13 +128,17 @@ export default class Login extends React.Component {
                         </p>
         }
         return (
-            <div style={styles.loginform}>
-                <h1 className="slds-text-heading_large">Login</h1>
-                <LoginForm handleSubmit={this.handleSubmit}
-                           handleChange={this.handleChange}
-                           value={this.state} />
-                <button type='button' onClick={this.handleClick} className="slds-button slds-button_brand slds-m-top_medium">Salesforce Auth</button>
-                {errorText}
+            <div className="slds-grid slds-grid--frame slds-grid--pull-padded-medium">
+                <div className="slds-size--1-of-2 slds-p-horizontal--medium left">
+                    <div className="slds-m-top_large" style={styles.loginform}>
+                        <h1 className="slds-text-heading_large">Login</h1>
+                        {errorText}
+                        <LoginForm handleSubmit={this.handleSubmit}
+                                handleChange={this.handleChange}
+                                value={this.state} />
+                        <button type='button' onClick={this.handleClick} className="slds-button slds-button_brand slds-m-top_medium">Salesforce Auth</button>
+                    </div>
+                </div>
             </div>
         );
     }
