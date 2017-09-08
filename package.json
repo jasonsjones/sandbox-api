@@ -10,7 +10,7 @@
     "lt": "lt --port 3000 --subdomain sandboxapi",
     "lint": "eslint webpack.config.js src/**/*.js",
     "webpack": "webpack -wd",
-    "test": "NODE_ENV=test mocha src/**/*.test.js --compilers js:babel-register"
+    "test": "NODE_ENV=test mocha src/api/**/*.test.js --compilers js:babel-register"
   },
   "repository": {
     "type": "git",
