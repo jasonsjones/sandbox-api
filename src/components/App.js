@@ -3,6 +3,7 @@ import React from 'react';
 import authStore from '../stores/authStore';
 
 import LoginPage from './LoginPage';
+import HomePage from './HomePage';
 
 class App extends React.Component {
     constructor() {
@@ -38,7 +39,11 @@ class App extends React.Component {
     render() {
         return (
             <div>
-                <LoginPage isAuthenticated={this.isUserAuthenticated()} />
+                {this.isUserAuthenticated() ? (
+                    <HomePage user={this.state.currentUser} />
+                    ) : (
+                    <LoginPage isAuthenticated={this.isUserAuthenticated()} />
+                )}
             </div>
         );
     }

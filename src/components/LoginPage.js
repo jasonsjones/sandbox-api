@@ -77,11 +77,11 @@ export default class Login extends React.Component {
     }
 
     componentWillMount() {
-        authStore.on('change', this.updateState);
+        authStore.addChangeListenter(this.updateState);
     }
 
     componentWillUnmount() {
-        authStore.removeListener('change', this.updateState);
+        authStore.removeChangeListener(this.updateState);
     }
 
     handleChange(e) {
@@ -93,10 +93,14 @@ export default class Login extends React.Component {
     }
 
     updateState() {
-        this.setState({
-            errorMsg: authStore.getErrorMessage(),
-            isLoggingIn: authStore.getLoginStatus()
-        });
+        // check ref to loginForm before setting state, otherwise this may get
+        // called after the component has been unmounted
+        if (this.loginForm) {
+            this.setState({
+                errorMsg: authStore.getErrorMessage(),
+                isLoggingIn: authStore.getLoginStatus()
+            });
+        }
     }
 
     resetForm() {
@@ -128,7 +132,8 @@ export default class Login extends React.Component {
                         </p>
         }
         return (
-            <div className="slds-grid slds-grid--frame slds-grid--pull-padded-medium">
+            <div className="slds-grid slds-grid--frame slds-grid--pull-padded-medium"
+                 ref={(element) => {this.loginForm = element}}>
                 <div className="slds-size--1-of-2 slds-p-horizontal--medium left">
                     <div className="slds-m-top_large" style={styles.loginform}>
                         <h1 className="slds-text-heading_large">Login</h1>
@@ -142,4 +147,8 @@ export default class Login extends React.Component {
             </div>
         );
     }
+}
+
+Login.propTypes = {
+    isAuthenticated: PropTypes.bool
 }
