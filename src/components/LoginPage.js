@@ -3,15 +3,7 @@ import PropTypes from 'prop-types';
 
 import authStore from '../stores/authStore';
 import * as authAction from '../actions/authActions';
-
-const styles = {
-    loginform: {
-        width: 350,
-        marginLeft: "250px",
-        marginTop: "250px",
-        border: "1px solid #d9dbdd"
-    }
-};
+import './LoginPage.css';
 
 const InputElement = (props) => {
     return (
@@ -135,7 +127,7 @@ export default class Login extends React.Component {
             <div className="slds-grid slds-grid--frame slds-grid--pull-padded-medium"
                  ref={(element) => {this.loginForm = element}}>
                 <div className="slds-size--1-of-2 slds-p-horizontal--medium left">
-                    <div className="slds-m-top_large" style={styles.loginform}>
+                    <div className="slds-m-top_large loginform">
                         <h1 className="slds-text-heading_large">Login</h1>
                         {errorText}
                         <LoginForm handleSubmit={this.handleSubmit}
