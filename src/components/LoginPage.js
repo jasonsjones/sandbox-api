@@ -104,6 +104,13 @@ export default class Login extends React.Component {
 
     handleSubmit(e) {
         e.preventDefault();
+        const { email, password } = this.state;
+        if (!email || !password) {
+            this.setState({
+                errorMsg: 'Username and password required'
+            });
+            return;
+        }
         authAction.authenticateUser({
             email: this.state.email,
             password: this.state.password
