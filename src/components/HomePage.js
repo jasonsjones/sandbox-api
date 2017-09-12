@@ -19,8 +19,11 @@ class Home extends React.Component {
         return (
             <div className="slds-m-around_x-large">
                 <h1 className="slds-text-heading_large">Home page!</h1>
-                <h3 className="slds-text-heading_medium">Hello, {user.name}</h3>
-                <button className="slds-button slds-button_neutral slds-m-top_medium" onClick={this.handleClick}>Logout</button>
+                <h3 className="slds-text-heading_medium slds-m-bottom_large">Hello, {user.name}</h3>
+                <span className="slds-avatar slds-avatar_large slds-m-right_large">
+                    <img src={user.avatarUrl}/>
+                </span>
+                <button className="slds-button slds-button_neutral" onClick={this.handleClick}>Logout</button>
             </div>
         );
     }
@@ -28,7 +31,9 @@ class Home extends React.Component {
 
 Home.propTypes = {
     user: PropTypes.shape({
-        name: PropTypes.string.isRequired
+        name: PropTypes.string.isRequired,
+        email: PropTypes.string.isRequired,
+        avatarUrl: PropTypes.string.isRequired
     })
 };
 

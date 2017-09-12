@@ -1,30 +1,24 @@
 
-// temp user list
-const users = [
-    {
-        name: 'Oliver Queen',
-        email: 'oliver@qc.com',
-        password: 'arrow'
-    },
-    {
-        name: 'John Diggle',
-        email: 'dig@qc.com',
-        password: 'spartan'
-    }
-];
-
 export function getAuthUser(user) {
+    const url = 'http://localhost:3000/api/login';
+    if (!user.email || !user.password) return;
     return new Promise((resolve, reject) => {
-        let theUser = users.find(function (u) {
-            return (u.email === user.email) && (u.password === user.password);
-        });
-        setTimeout(() => {
-            if (theUser) {
-                resolve(theUser);
+        fetch(url, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json' },
+            body: JSON.stringify(user)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                resolve(data);
             } else {
-                reject('Oooops...Email and/or password is invalid');
+                reject(data.message);
             }
-        }, 1000);
-
+        })
+        .catch(err => {
+            console.log(err);
+            reject(err);
+        });
     });
 }

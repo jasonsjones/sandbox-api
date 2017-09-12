@@ -51,7 +51,7 @@ export function protectRouteByUser(req, res, next) {
 export function loginUser(req, res) {
     User.findOne({email: req.body.email}).exec()
         .then(user => {
-            if (user.verifyPassword(req.body.password)) {
+            if (user && user.verifyPassword(req.body.password)) {
                 let token = jwt.sign({
                     sub: user._id,
                     name: user.name
