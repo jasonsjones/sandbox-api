@@ -5,6 +5,7 @@ import authStore from '../stores/authStore';
 
 import LoginPage from './LoginPage';
 import HomePage from './HomePage';
+import './styles.css';
 
 class App extends React.Component {
     constructor() {

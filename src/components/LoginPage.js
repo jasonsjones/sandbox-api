@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 
 import authStore from '../stores/authStore';
 import * as authAction from '../actions/authActions';
-import './LoginPage.css';
 
 const InputElement = (props) => {
     return (
