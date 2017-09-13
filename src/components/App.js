@@ -1,4 +1,5 @@
 import React from 'react';
+import { BrowserRouter, Route, Redirect } from 'react-router-dom';
 
 import authStore from '../stores/authStore';
 
@@ -37,14 +38,27 @@ class App extends React.Component {
     }
 
     render() {
+        let user = this.state.currentUser;
+        let isAuthenticated = this.isUserAuthenticated();
         return (
-            <div>
-                {this.isUserAuthenticated() ? (
-                    <HomePage user={this.state.currentUser} />
-                    ) : (
-                    <LoginPage isAuthenticated={this.isUserAuthenticated()} />
-                )}
-            </div>
+            <BrowserRouter>
+                <div>
+                    <Route exact path='/' render={() => (
+                        isAuthenticated ? (
+                            <HomePage user={user}/>
+                        ) : (
+                            <Redirect to='/login'/>
+                        )
+                    )}/>
+                    <Route exact path='/login' render={() => (
+                        !isAuthenticated ? (
+                            <LoginPage/>
+                        ) : (
+                            <Redirect to='/'/>
+                        )
+                    )}/>
+                </div>
+            </BrowserRouter>
         );
     }
 }

@@ -148,7 +148,3 @@ export default class Login extends React.Component {
         );
     }
 }
-
-Login.propTypes = {
-    isAuthenticated: PropTypes.bool
-}
