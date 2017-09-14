@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
 import InputTextElement from './InputTextElement';
 import authStore from '../stores/authStore';
@@ -150,7 +151,9 @@ export default class Login extends React.Component {
                     </div>
                     <div className="slds-grid slds-grid_align-space slds-grid_vertical-align-center slds-m-top_large">
                         <p>Not a Customer?</p>
-                        <button type='button' className="slds-button slds-button_neutral tryButton">Try for Free</button>
+                        <Link to="/signup">
+                            <button type='button' className="slds-button slds-button_neutral tryButton">Try for Free</button>
+                        </Link>
                     </div>
                     </div>
                 </div>

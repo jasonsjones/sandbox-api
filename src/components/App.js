@@ -5,6 +5,7 @@ import authStore from '../stores/authStore';
 
 import LoginPage from './LoginPage';
 import HomePage from './HomePage';
+import SignupPage from './SignupPage';
 
 class App extends React.Component {
     constructor() {
@@ -57,6 +58,7 @@ class App extends React.Component {
                             <Redirect to='/'/>
                         )
                     )}/>
+                    <Route exact path='/signup' render={()=><SignupPage/>}/>
                 </div>
             </BrowserRouter>
         );
