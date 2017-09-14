@@ -97,7 +97,10 @@ export function signupUser(req, res) {
             res.json({
                 success: true,
                 message: 'new user saved',
-                payload: user
+                payload: {
+                    name: user.name,
+                    email: user.email
+                }
             })
         })
         .catch(err => {
