@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import InputTextElement from './InputTextElement';
 import authStore from '../stores/authStore';
 import * as authAction from '../actions/authActions';
 import './LoginPage.css';
@@ -21,26 +22,6 @@ const CheckBox = () => {
     );
 }
 
-const InputElement = (props) => {
-    return (
-        <div className="slds-form-element slds-m-top_medium">
-            <label className="slds-form-element__label" htmlFor={props.name}>{props.label}</label>
-            <div className="slds-form-control__control">
-                <input className="slds-input loginform-text-input" type={props.type} id={props.name} name={props.name}
-                    value={props.value} onChange={props.handleChange} />
-            </div>
-        </div>
-    );
-}
-
-InputElement.propTypes = {
-    name: PropTypes.string.isRequired,
-    label: PropTypes.string.isRequired,
-    type: PropTypes.string.isRequired,
-    value: PropTypes.string.isRequired,
-    handleChange: PropTypes.func.isRequired
-};
-
 const LoginForm = (props) => {
     let button;
     if (props.value.isLoggingIn) {
@@ -51,9 +32,9 @@ const LoginForm = (props) => {
 
     return (
         <form className="slds-form slds-form_stacked" onSubmit={props.handleSubmit}>
-            <InputElement type="text" name="email" label="Email"
+            <InputTextElement type="text" name="email" label="Email"
                 value={props.value.email} handleChange={props.handleChange} />
-            <InputElement type="password" name="password" label="Password"
+            <InputTextElement type="password" name="password" label="Password"
                 value={props.value.password} handleChange={props.handleChange} />
             {button}
         </form>
