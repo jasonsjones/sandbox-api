@@ -27,7 +27,7 @@ export function checkForErrors(err, user, next) {
 export function removeAvatarOnDelete(user) {
     Avatar.findOne(user.avatar).exec()
         .then(avatar => {
-            if (avatar && avatar.user.equals(user._id)) {
+            if (avatar && !avatar.defaultImg && avatar.user.equals(user._id)) {
                 return avatar.remove();
             }
         })
