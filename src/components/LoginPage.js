@@ -3,14 +3,31 @@ import PropTypes from 'prop-types';
 
 import authStore from '../stores/authStore';
 import * as authAction from '../actions/authActions';
+import './LoginPage.css';
+
+const CheckBox = () => {
+    return (
+        <div className="slds-form-element">
+            <div className="slds-form-element__control">
+                <span className="slds-checkbox">
+                    <input type="checkbox" name="options" id="checkbox-1" value="on" />
+                    <label className="slds-checkbox__label" htmlFor="checkbox-1">
+                        <span className="slds-checkbox_faux"></span>
+                        <span className="slds-form-element__label">Remember Me</span>
+                    </label>
+                </span>
+            </div>
+        </div>
+    );
+}
 
 const InputElement = (props) => {
     return (
         <div className="slds-form-element slds-m-top_medium">
             <label className="slds-form-element__label" htmlFor={props.name}>{props.label}</label>
             <div className="slds-form-control__control">
-                <input className="slds-input" type={props.type} id={props.name} name={props.name}
-                value={props.value} onChange={props.handleChange}/>
+                <input className="slds-input loginform-text-input" type={props.type} id={props.name} name={props.name}
+                    value={props.value} onChange={props.handleChange} />
             </div>
         </div>
     );
@@ -27,9 +44,9 @@ InputElement.propTypes = {
 const LoginForm = (props) => {
     let button;
     if (props.value.isLoggingIn) {
-        button = <button type='submit' className="slds-button slds-button_neutral slds-m-top_medium">Logging in...</button>
+        button = <button type='submit' className="slds-button slds-button_neutral slds-m-top_medium loginButton">Logging in...</button>
     } else {
-        button = <button type='submit' className="slds-button slds-button_brand slds-m-top_medium">Login</button>
+        button = <button type='submit' className="slds-button slds-button_brand slds-m-top_medium loginButton">Log In</button>
     }
 
     return (
@@ -126,22 +143,37 @@ export default class Login extends React.Component {
         let errorText = null;
         if (this.state.errorMsg) {
             errorText = <p className="slds-text-color_error slds-text-heading_small slds-m-top_medium">
-                            {this.state.errorMsg}
-                        </p>
+                {this.state.errorMsg}
+            </p>
         }
         return (
             <div className="slds-grid slds-grid--frame slds-grid--pull-padded-medium"
-                 ref={(element) => {this.loginForm = element}}>
-                <div className="slds-size--1-of-2 slds-p-horizontal--medium left">
+                ref={(element) => { this.loginForm = element }}>
+                <div className="slds-size--1-of-2 slds-p-horizontal--medium loginform-left">
+                    <div className="loginform-container">
+                    <img className="loginLogo" src="styles/design-system/assets/images/logo-noname.svg" />
                     <div className="slds-m-top_large loginform">
-                        <img className="loginLogo" src="styles/design-system/assets/images/logo-noname.svg"/>
-                        <h1 className="slds-text-heading_large">Login</h1>
                         {errorText}
                         <LoginForm handleSubmit={this.handleSubmit}
-                                handleChange={this.handleChange}
-                                value={this.state} />
-                        <button type='button' onClick={this.handleClick} className="slds-button slds-button_brand slds-m-top_medium">Salesforce Auth</button>
+                            handleChange={this.handleChange}
+                            value={this.state} />
+                        {/* <button type='button' onClick={this.handleClick} className="slds-button slds-button_brand slds-m-top_medium">Salesforce Auth</button> */}
+                        <div className="slds-m-top_large">
+                            <CheckBox />
+                        </div>
+                        <hr/>
+                        <div className="slds-grid slds-grid_align-spread slds-m-bottom_small">
+                            <a href="javascript:void(0)">Forgot Your Password?</a>
+                            <a href="javascript:void(0)">Use Custom Domain</a>
+                        </div>
                     </div>
+                    <div className="slds-grid slds-grid_align-space slds-grid_vertical-align-center slds-m-top_large">
+                        <p>Not a Customer?</p>
+                        <button type='button' className="slds-button slds-button_neutral tryButton">Try for Free</button>
+                    </div>
+                    </div>
+                </div>
+                <div className="slds-size--1-of-2 slds-p-horizontal--medium loginpage-right">
                 </div>
             </div>
         );

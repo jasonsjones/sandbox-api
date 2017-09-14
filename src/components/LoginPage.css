@@ -1,0 +1,30 @@
+.loginform-left {
+    background-color: #f2f2f3;
+}
+.loginform-container {
+    width: 50%;
+    margin: 15% 25%;
+}
+
+.loginform {
+    padding: 15px;
+    border: 1px solid #d9dbdd;
+    border-radius: 5px;
+    background-color: white;
+}
+
+.loginButton {
+    width: 100%;
+    height: 40px;
+    font-size: 14px;
+}
+
+.loginLogo {
+    width: 40%;
+    margin: 0 30%;
+}
+
+.tryButton, .loginform-text-input {
+    height: 40px;
+    font-size: 14px;
+}
