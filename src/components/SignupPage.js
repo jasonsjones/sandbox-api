@@ -94,7 +94,7 @@ export default class SignupPage extends React.Component {
                         <InputTextElement type="text" name="name" label="Name" value={this.state.name} handleChange={this.handleChange} />
                         <InputTextElement type="text" name="email" label="Email" value={this.state.email} handleChange={this.handleChange} />
                         <InputTextElement type="password" name="password" label="Password" value={this.state.password} handleChange={this.handleChange} />
-                        <InputTextElement type="password" name="confirmPassword" label="Confirm Password" error={!this.state.doPasswordsMatch} value={this.state.confirmPassword} handleChange={this.handleChange} />
+                        <InputTextElement type="password" name="confirmPassword" label="Confirm Password" value={this.state.confirmPassword} handleChange={this.handleChange} />
                         {button}
                     </form>
                     {this.state.isSignupComplete && (
