@@ -41,7 +41,11 @@ let defaultAvatarPromise = seedDefaultAvatar();
 Promise.all([defaultUserPromise, defaultAvatarPromise])
     .then((values) => {
         let [arrow] = values;
-        return addCustomAvatarToUser(arrow, 'male3.png');
+        if (!arrow.avatar) {
+            return addCustomAvatarToUser(arrow, 'male3.png');
+        } else {
+            return Promise.resolve();
+        }
     })
     .then(() => dbConn.close())
     .catch(err => console.log(err));
