@@ -7,55 +7,6 @@ import authStore from '../stores/authStore';
 import * as authAction from '../actions/authActions';
 import './LoginPage.css';
 
-const Icon = () => {
-    return (
-        <div>
-        <span className="slds-assistive-text">info</span>
-        <span className="slds-icon_container slds-icon-utility-info slds-m-right_small slds-no-flex slds-align-top"
-            title="Description of icon when needed">
-            <svg className="slds-icon slds-icon_small" aria-hidden="true">
-                <use xlinkHref="styles/design-system/assets/icons/utility-sprite/svg/symbols.svg#info" />
-            </svg>
-        </span>
-        </div>
-    );
-}
-
-const ToastButtonClose = (props) => {
-    return (
-        <button className="slds-button slds-button_icon slds-notify__close slds-button_icon-inverse" onClick={props.onClose} title="Close">
-            <svg className="slds-button__icon slds-button__icon_large" aria-hidden="true">
-                <use xlinkHref="styles/design-system/assets/icons/utility-sprite/svg/symbols.svg#close" />
-            </svg>
-            <span className="slds-assistive-text">Close</span>
-        </button>
-    );
-}
-
-ToastButtonClose.propTypes = {
-    onClose: PropTypes.func
-}
-
-const Toast = (props) => {
-    return (
-        <div className="slds-notify_container slds-is-absolute">
-            <div className="slds-notify slds-notify_toast slds-theme_info" role="alert">
-                <Icon/>
-                <div className="slds-notify__content">
-                    <h2 className="slds-text-heading_small">
-                        Test message in a default Toast. <a href="javascript:void(0);">We can include links...</a>
-                    </h2>
-                </div>
-                <ToastButtonClose onClose={props.onClose} />
-            </div>
-        </div>
-    );
-}
-
-Toast.propTypes = {
-    onClose: PropTypes.func
-}
-
 const CheckBox = () => {
     return (
         <div className="slds-form-element">
@@ -108,13 +59,11 @@ export default class Login extends React.Component {
             email: '',
             password: '',
             errorMsg: '',
-            isLoggingIn: false,
-            showToast: true
+            isLoggingIn: false
         };
 
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChange = this.handleChange.bind(this);
-        this.closeToast = this.closeToast.bind(this);
         this.updateState = this.updateState.bind(this);
     }
 
@@ -131,12 +80,6 @@ export default class Login extends React.Component {
         const name = e.target.name;
         this.setState({
             [name]: value
-        });
-    }
-
-    closeToast() {
-        this.setState({
-            showToast: false
         });
     }
 
@@ -185,7 +128,6 @@ export default class Login extends React.Component {
             <div className="slds-grid slds-grid--frame slds-grid--pull-padded-medium"
                 ref={(element) => { this.loginForm = element }}>
                 <div className="slds-size--1-of-2 slds-p-horizontal--medium loginform-left">
-                {this.state.showToast && <Toast onClose={this.closeToast}/>}
                     <div className="loginform-container">
                     <img className="loginLogo" src="styles/design-system/assets/images/logo-noname.svg" />
                     <div className="slds-m-top_large loginform">
@@ -193,7 +135,9 @@ export default class Login extends React.Component {
                         <LoginForm handleSubmit={this.handleSubmit}
                             handleChange={this.handleChange}
                             value={this.state} />
-                        {/* <button type='button' onClick={this.handleClick} className="slds-button slds-button_brand slds-m-top_medium">Salesforce Auth</button> */}
+                        {/* <button type='button' onClick={this.handleClick} className="slds-button slds-button_brand slds-m-top_medium">
+                                Salesforce Auth
+                            </button> */}
                         <div className="slds-m-top_large">
                             <CheckBox />
                         </div>
