@@ -30,22 +30,43 @@ ToastButtonClose.propTypes = {
     onClose: PropTypes.func
 }
 
-const Toast = (props) => {
-    return (
-        <div className="slds-notify_container slds-is-absolute">
-            <div className="slds-notify slds-notify_toast slds-theme_info" role="alert">
-                <Icon/>
-                <div className="slds-notify__content">
-                    <h2 className="slds-text-heading_small">
-                        Test message in a default Toast. <a href="javascript:void(0);">We can include links...</a>
-                    </h2>
+class Toast extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            showToast: true
+        };
+
+        this.closeToast = this.closeToast.bind(this);
+    }
+
+    closeToast() {
+        this.setState({
+            showToast: false
+        });
+    }
+
+    render() {
+        let hideClass = (!this.state.showToast) ? 'slds-hide' : '';
+        let rootClasses = `slds-notify_container slds-is-absolute ${hideClass}`;
+        return (
+            <div className={rootClasses}>
+                <div className="slds-notify slds-notify_toast slds-theme_info" role="alert">
+                    <Icon/>
+                    <div className="slds-notify__content">
+                        <h2 className="slds-text-heading_small">
+                            Test message in a default Toast. <a href="javascript:void(0);">We can include links...</a>
+                        </h2>
+                    </div>
+                    <ToastButtonClose onClose={this.closeToast} />
                 </div>
-                <ToastButtonClose onClose={props.onClose} />
             </div>
-        </div>
-    );
+        );
+    }
 }
 
 Toast.propTypes = {
     onClose: PropTypes.func
 }
+
+export default Toast;
