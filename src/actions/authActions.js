@@ -10,6 +10,7 @@ export function authenticateUser(user) {
     dataservice.getAuthUser(user)
         .then(data => {
             let currentUser = {
+                id: data.payload.user._id,
                 name: data.payload.user.name,
                 email: data.payload.user.email,
                 avatarUrl: data.payload.user.avatarUrl
