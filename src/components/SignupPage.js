@@ -1,5 +1,5 @@
 import React from 'react';
-import { Redirect } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
 
 import * as signupActions from '../actions/signupActions';
 import signupStore from '../stores/signupStore';
@@ -82,9 +82,9 @@ export default class SignupPage extends React.Component {
     render() {
         let button;
         if (this.state.isSigningUp) {
-            button = <button type='submit' className="slds-button slds-button_neutral slds-m-top_medium">Signing Up...</button>
+            button = <button type='submit' className="slds-button slds-button_neutral">Signing Up...</button>
         } else {
-            button = <button type='submit' className="slds-button slds-button_brand slds-m-top_medium">Sign Up</button>
+            button = <button type='submit' className="slds-button slds-button_brand">Sign Up</button>
         }
         return (
             <div className="slds-grid slds-grid--vertical">
@@ -95,7 +95,10 @@ export default class SignupPage extends React.Component {
                         <InputTextElement type="text" name="email" label="Email" value={this.state.email} handleChange={this.handleChange} />
                         <InputTextElement type="password" name="password" label="Password" value={this.state.password} handleChange={this.handleChange} />
                         <InputTextElement type="password" name="confirmPassword" label="Confirm Password" value={this.state.confirmPassword} handleChange={this.handleChange} />
-                        {button}
+                        <div className="slds-grid slds-grid_align-spread slds-grid_vertical-align-center slds-m-top_medium">
+                            {button}
+                            <a href="javascript:void(0)"><Link to="/login">Already have account?</Link></a>
+                        </div>
                     </form>
                     {this.state.isSignupComplete && (
                         <Redirect to="/login"/>
