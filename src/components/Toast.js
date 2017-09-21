@@ -1,18 +1,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const Icon = () => {
+const ToastIcon  = (props) => {
     return (
         <div>
-        <span className="slds-assistive-text">info</span>
-        <span className="slds-icon_container slds-icon-utility-info slds-m-right_small slds-no-flex slds-align-top"
-            title="Description of icon when needed">
-            <svg className="slds-icon slds-icon_small" aria-hidden="true">
-                <use xlinkHref="styles/design-system/assets/icons/utility-sprite/svg/symbols.svg#info" />
-            </svg>
-        </span>
+            <span className="slds-assistive-text">{props.theme}</span>
+            <span className="slds-icon_container slds-icon-utility-info slds-m-right_small slds-no-flex slds-align-top"
+                title="Description of icon when needed">
+                <svg className="slds-icon slds-icon_small" aria-hidden="true">
+                    <use xlinkHref={`styles/design-system/assets/icons/utility-sprite/svg/symbols.svg#${props.theme}`} />
+                </svg>
+            </span>
         </div>
     );
+}
+
+ToastIcon.propTypes = {
+    theme: PropTypes.string
 }
 
 const ToastButtonClose = (props) => {
@@ -48,15 +52,12 @@ class Toast extends React.Component {
 
     render() {
         let hideClass = (!this.state.showToast) ? 'slds-hide' : '';
-        let rootClasses = `slds-notify_container slds-is-absolute ${hideClass}`;
         return (
-            <div className={rootClasses}>
-                <div className="slds-notify slds-notify_toast slds-theme_info" role="alert">
-                    <Icon/>
+            <div className={`slds-notify_container slds-is-absolute ${hideClass}`}>
+                <div className={`slds-notify slds-notify_toast slds-theme_${this.props.theme}`} role="alert">
+                    <ToastIcon theme={this.props.theme}/>
                     <div className="slds-notify__content">
-                        <h2 className="slds-text-heading_small">
-                            Test message in a default Toast. <a href="javascript:void(0);">We can include links...</a>
-                        </h2>
+                        {this.props.children}
                     </div>
                     <ToastButtonClose onClose={this.closeToast} />
                 </div>
@@ -66,6 +67,8 @@ class Toast extends React.Component {
 }
 
 Toast.propTypes = {
+    theme: PropTypes.string.isRequired,
+    children: PropTypes.element.isRequired,
     onClose: PropTypes.func
 }
 
