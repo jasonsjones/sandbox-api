@@ -78,6 +78,12 @@ class AuthStore extends EventEmitter {
         this.emitChange();
     }
 
+    updateUser(data) {
+        this.currentUser = data.user;
+        localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+        this.emitChange();
+    }
+
     handleActions(action) {
         let payload = action.action;
         switch(payload.actionType) {
@@ -89,6 +95,9 @@ class AuthStore extends EventEmitter {
                 break;
             case 'AUTHENTICATE_USER_ERROR':
                 this.authenticatUserError(payload.data);
+                break;
+            case 'UPDATE_USER_SUCCESS':
+                this.updateUser(payload.data);
                 break;
             case 'LOGOUT_USER':
                 this.logoutUser();
