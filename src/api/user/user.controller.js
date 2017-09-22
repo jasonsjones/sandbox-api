@@ -79,7 +79,9 @@ export function uploadUserAvatar(req, res) {
             res.json({
                 success: true,
                 message: 'avatar uploaded and saved',
-                payload: user
+                payload: {
+                    user: user
+                }
             });
         })
         .catch(err => {
