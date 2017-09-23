@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import * as authAction from '../actions/authActions';
+import AvatarUpload from './AvatarUpload';
 
 class Home extends React.Component {
     constructor(props) {
@@ -24,6 +25,11 @@ class Home extends React.Component {
                     <img src={user.avatarUrl}/>
                 </span>
                 <button className="slds-button slds-button_neutral" onClick={this.handleClick}>Logout</button>
+
+                <div className="slds-m-top_large">
+                    <AvatarUpload/>
+                </div>
+
             </div>
         );
     }
@@ -31,6 +37,7 @@ class Home extends React.Component {
 
 Home.propTypes = {
     user: PropTypes.shape({
+        id: PropTypes.string.isRequired,
         name: PropTypes.string.isRequired,
         email: PropTypes.string.isRequired,
         avatarUrl: PropTypes.string.isRequired
