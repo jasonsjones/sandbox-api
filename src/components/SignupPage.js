@@ -1,9 +1,10 @@
 import React from 'react';
-import { Redirect, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import * as signupActions from '../actions/signupActions';
 import signupStore from '../stores/signupStore';
 import InputTextElement from './InputTextElement';
+import Toast from './Toast';
 import './SignupPage.css';
 
 export default class SignupPage extends React.Component {
@@ -60,7 +61,7 @@ export default class SignupPage extends React.Component {
             password: this.state.password
         }
 
-        if (this.verifyPasswords()) {
+        if (this.isFormFilled() && this.verifyPasswords()) {
             this.resetForm();
             signupActions.signupUser(newUser);
         }
@@ -77,6 +78,10 @@ export default class SignupPage extends React.Component {
 
     verifyPasswords() {
         return this.state.password === this.state.confirmPassword;
+    }
+
+    isFormFilled() {
+        return this.state.name && this.state.email && this.state.password;
     }
 
     render() {
@@ -97,11 +102,15 @@ export default class SignupPage extends React.Component {
                         <InputTextElement type="password" name="confirmPassword" label="Confirm Password" value={this.state.confirmPassword} handleChange={this.handleChange} />
                         <div className="slds-grid slds-grid_align-spread slds-grid_vertical-align-center slds-m-top_medium">
                             {button}
-                            <a href="javascript:void(0)"><Link to="/login">Already have account?</Link></a>
+                            <Link to="/login">Already have account?</Link>
                         </div>
                     </form>
                     {this.state.isSignupComplete && (
-                        <Redirect to="/login"/>
+                        <Toast theme="success">
+                            <h2 className="slds-text-heading_small">
+                                Account Created! <Link to="/login">Click here to log in.</Link>
+                            </h2>
+                        </Toast>
                     )}
                 </div>
             </div>
