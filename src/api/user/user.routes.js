@@ -6,7 +6,10 @@ export default (app) => {
 
     const upload = multer({dest: './uploads/'});
 
-    app.get('/api/users', UserController.getUsers);
+    app.get('/api/users',
+             AuthController.verifyToken,
+             AuthController.adminRoute,
+             UserController.getUsers);
 
     app.get('/api/user/:id', UserController.getUser);
     app.put('/api/user/:id', UserController.updateUser);

@@ -20,6 +20,7 @@ export function verifyToken(req, res, next) {
                 req.decoded = decoded
                 next();
             } else {
+                res.status(401);
                 res.json({
                     success: false,
                     message: 'invalid token provided',
@@ -28,6 +29,7 @@ export function verifyToken(req, res, next) {
             }
         });
     } else {
+        res.status(401);
         res.json({
             success: false,
             message: 'No token provided',
@@ -40,12 +42,33 @@ export function protectRouteByUser(req, res, next) {
     if (req.decoded && req.decoded.sub === req.params.userid) {
         next();
     } else {
+        res.status(401);
         res.json({
             success: false,
             message: 'Not an authorized user for this route',
             payload: null
         });
     }
+}
+
+export function adminRoute(req, res, next) {
+    User.findById(req.decoded.sub).exec()
+        .then(user => {
+            if (user.isAdmin()) {
+                next();
+            } else {
+                res.status(401);
+                res.json({
+                    success: false,
+                    message: 'Not an authorized user for this route',
+                    payload: null
+                });
+            }
+        })
+        .catch(err => {
+            console.log(err);
+            next(err);
+        });
 }
 
 export function loginUser(req, res) {
