@@ -4,7 +4,7 @@ import { BrowserRouter, Route, Redirect } from 'react-router-dom';
 import authStore from '../stores/authStore';
 
 import LoginPage from './LoginPage';
-import HomePage from './HomePage';
+import UserProfilePage from './UserProfilePage';
 import SignupPage from './SignupPage';
 
 class App extends React.Component {
@@ -46,7 +46,7 @@ class App extends React.Component {
                 <div>
                     <Route exact path='/' render={() => (
                         isAuthenticated ? (
-                            <HomePage user={user}/>
+                            <UserProfilePage user={user}/>
                         ) : (
                             <Redirect to='/login'/>
                         )

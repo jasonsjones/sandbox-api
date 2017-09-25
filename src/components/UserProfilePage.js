@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import * as authAction from '../actions/authActions';
 import AvatarUpload from './AvatarUpload';
 
-class Home extends React.Component {
+class UserProfilePage extends React.Component {
     constructor(props) {
         super(props);
         this.handleClick = this.handleClick.bind(this);
@@ -19,8 +19,9 @@ class Home extends React.Component {
 
         return (
             <div className="slds-m-around_x-large">
-                <h1 className="slds-text-heading_large">Home page!</h1>
-                <h3 className="slds-text-heading_medium slds-m-bottom_large">Hello, {user.name}</h3>
+                <h1 className="slds-text-heading_large">User Profile Page!</h1>
+                <h3 className="slds-text-heading_medium">Hello, {user.name}</h3>
+                <p className="slds-text-body_regular slds-text-color_weak slds-m-bottom_medium">{user.email}</p>
                 <span className="slds-avatar slds-avatar_large slds-m-right_large">
                     <img src={user.avatarUrl}/>
                 </span>
@@ -35,7 +36,7 @@ class Home extends React.Component {
     }
 }
 
-Home.propTypes = {
+UserProfilePage.propTypes = {
     user: PropTypes.shape({
         id: PropTypes.string.isRequired,
         name: PropTypes.string.isRequired,
@@ -44,4 +45,4 @@ Home.propTypes = {
     })
 };
 
-export default Home;
+export default UserProfilePage;
