@@ -7,7 +7,7 @@ import {
     GraphQLSchema
 } from 'graphql';
 
-import User from '../api/user/user.model';
+import * as userRepository from '../api/user/user.repository';
 import Avatar from '../api/avatar/avatar.model';
 
 // User Type
@@ -44,11 +44,11 @@ const RootQuery = new GraphQLObjectType({
             args: {
                 id: {type: GraphQLString}
             },
-            resolve: (parentValue, args) =>  User.findById(args.id).exec()
+            resolve: (parentValue, args) => userRepository.getUser(args.id);
         },
         users: {
             type: new GraphQLList(UserType),
-            resolve: () =>  User.find({}).exec()
+            resolve: () => userRepository.getUsers();
         },
         avatars: {
             type: new GraphQLList(AvatarType),
