@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import * as authAction from '../actions/authActions';
@@ -30,6 +31,9 @@ class UserProfilePage extends React.Component {
                 <div className="slds-m-top_large">
                     <AvatarUpload/>
                 </div>
+                <Link to="/editprofile">
+                    <button className="slds-button slds-button_brand">Edit Profile</button>
+                </Link>
 
             </div>
         );

@@ -6,6 +6,7 @@ import authStore from '../stores/authStore';
 import LoginPage from './LoginPage';
 import UserProfilePage from './UserProfilePage';
 import SignupPage from './SignupPage';
+import EditUserProfilePage from './EditUserProfilePage';
 
 class App extends React.Component {
     constructor() {
@@ -59,6 +60,13 @@ class App extends React.Component {
                         )
                     )}/>
                     <Route exact path='/signup' render={()=><SignupPage/>}/>
+                    <Route exact path='/editprofile' render={() => (
+                        isAuthenticated ? (
+                            <EditUserProfilePage user={user}/>
+                        ) : (
+                            <Redirect to='/login'/>
+                        )
+                    )}/>
                 </div>
             </BrowserRouter>
         );
