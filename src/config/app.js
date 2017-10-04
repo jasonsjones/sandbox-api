@@ -7,6 +7,7 @@ import graphqlHTTP from 'express-graphql';
 
 import Config from './config';
 import schema from '../graphql';
+import authRoute from '../api/common/auth.routes';
 import avatarRoute from '../api/avatar/avatar.routes';
 import userRoute from '../api/user/user.routes';
 import indexRoute from '../api/index/index.routes';
@@ -36,6 +37,7 @@ app.use('/graphql', graphqlHTTP({
     graphiql: true
 }));
 
+authRoute(app);
 avatarRoute(app);
 userRoute(app);
 indexRoute(app);
