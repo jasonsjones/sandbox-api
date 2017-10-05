@@ -29,11 +29,10 @@ class UserProfilePage extends React.Component {
                 <button className="slds-button slds-button_neutral" onClick={this.handleClick}>Logout</button>
 
                 <div className="slds-m-top_large">
-                    <AvatarUpload/>
+                    <Link to="/editprofile">
+                        <button className="slds-button slds-button_brand">Edit Profile</button>
+                    </Link>
                 </div>
-                <Link to="/editprofile">
-                    <button className="slds-button slds-button_brand">Edit Profile</button>
-                </Link>
 
             </div>
         );
