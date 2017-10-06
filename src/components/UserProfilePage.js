@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import * as authAction from '../actions/authActions';
-import AvatarUpload from './AvatarUpload';
 
 class UserProfilePage extends React.Component {
     constructor(props) {
@@ -19,7 +18,7 @@ class UserProfilePage extends React.Component {
         const { user } = this.props;
 
         return (
-            <div className="slds-m-around_x-large">
+            <div className="slds-m-around_x-large container-content">
                 <h1 className="slds-text-heading_large">User Profile Page!</h1>
                 <h3 className="slds-text-heading_medium">Hello, {user.name}</h3>
                 <p className="slds-text-body_regular slds-text-color_weak slds-m-bottom_medium">{user.email}</p>

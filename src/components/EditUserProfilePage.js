@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 
 import AvatarUpload from './AvatarUpload';
 import InputTextElement from './InputTextElement';
-import './EditUserProfilePage.css';
 
 class EditUserProfilePage extends React.Component {
     constructor(props) {
@@ -33,7 +32,7 @@ class EditUserProfilePage extends React.Component {
     render() {
         return (
             <div className="slds-grid">
-                <div className="editProfileForm">
+                <div className="container-content">
                     <h1 className="slds-text-heading_large">Edit User Profile Page</h1>
                     <div className="slds-m-top_large">
                         <span className="slds-avatar slds-avatar_large slds-m-right_large">

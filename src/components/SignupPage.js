@@ -5,7 +5,6 @@ import * as signupActions from '../actions/signupActions';
 import signupStore from '../stores/signupStore';
 import InputTextElement from './InputTextElement';
 import Toast from './Toast';
-import './SignupPage.css';
 
 export default class SignupPage extends React.Component {
     constructor(props) {
@@ -93,7 +92,7 @@ export default class SignupPage extends React.Component {
         }
         return (
             <div className="slds-grid slds-grid--vertical">
-                <div className="signupform">
+                <div className="container-content">
                     <h1 className="slds-text-heading_large">Signup for free account</h1>
                     <form className="slds-form slds-form_stacked" onSubmit={this.handleSubmit}>
                         <InputTextElement type="text" name="name" label="Name" value={this.state.name} handleChange={this.handleChange} />

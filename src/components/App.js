@@ -7,6 +7,7 @@ import LoginPage from './LoginPage';
 import UserProfilePage from './UserProfilePage';
 import SignupPage from './SignupPage';
 import EditUserProfilePage from './EditUserProfilePage';
+import './App.css';
 
 class App extends React.Component {
     constructor() {
