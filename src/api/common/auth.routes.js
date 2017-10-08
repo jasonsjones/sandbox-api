@@ -1,18 +1,9 @@
 import fetch from 'node-fetch';
+import * as authController from './auth.controller';
 
 export default (app) => {
 
-    app.get('/auth/sfdc', (req, res) => {
-        let clientId = process.env.SFDC_CLIENT_ID;
-        let callback = encodeURI('http://localhost:3000/auth/callback');
-
-        let url = 'https://login.salesforce.com/services/oauth2/authorize?' +
-                   'response_type=code' +
-                   '&client_id=' + clientId +
-                   '&redirect_uri=' + callback;
-
-        res.redirect(url);
-    });
+    app.get('/auth/sfdc', authController.redirectToSFDC);
 
     app.get('/auth/callback', (req, res) => {
         let access_token;

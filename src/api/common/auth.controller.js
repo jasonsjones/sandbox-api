@@ -108,3 +108,15 @@ export function loginUser(req, res) {
             });
         });
 }
+
+export const redirectToSFDC = (req, res) => {
+    const clientId = process.env.SFDC_CLIENT_ID;
+    const callback = encodeURI('http://localhost:3000/auth/callback');
+
+    const url = 'https://login.salesforce.com/services/oauth2/authorize?' +
+                'response_type=code' +
+                '&client_id=' + clientId +
+                '&redirect_uri=' + callback;
+
+    res.redirect(url);
+}
