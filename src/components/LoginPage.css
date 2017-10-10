@@ -24,7 +24,7 @@
     margin: 0 30%;
 }
 
-.tryButton, .loginform-text-input {
+.tryButton {
     height: 40px;
     font-size: 14px;
 }

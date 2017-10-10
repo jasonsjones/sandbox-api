@@ -95,10 +95,10 @@ export default class SignupPage extends React.Component {
                 <div className="container-content">
                     <h1 className="slds-text-heading_large">Signup for free account</h1>
                     <form className="slds-form slds-form_stacked" onSubmit={this.handleSubmit}>
-                        <InputTextElement type="text" name="name" label="Name" value={this.state.name} handleChange={this.handleChange} />
-                        <InputTextElement type="text" name="email" label="Email" value={this.state.email} handleChange={this.handleChange} />
-                        <InputTextElement type="password" name="password" label="Password" value={this.state.password} handleChange={this.handleChange} />
-                        <InputTextElement type="password" name="confirmPassword" label="Confirm Password" value={this.state.confirmPassword} handleChange={this.handleChange} />
+                        <InputTextElement type="text" name="name" label="Name" variant="large" value={this.state.name} handleChange={this.handleChange} />
+                        <InputTextElement type="text" name="email" label="Email" variant="large" value={this.state.email} handleChange={this.handleChange} />
+                        <InputTextElement type="password" name="password" label="Password" variant="large" value={this.state.password} handleChange={this.handleChange} />
+                        <InputTextElement type="password" name="confirmPassword" label="Confirm Password" variant="large" value={this.state.confirmPassword} handleChange={this.handleChange} />
                         <div className="slds-grid slds-grid_align-spread slds-grid_vertical-align-center slds-m-top_medium">
                             {button}
                             <Link to="/login">Already have account?</Link>

@@ -2,3 +2,8 @@
     margin: 75px auto;
     width: 30%;
 }
+
+.input-text-element_large {
+    height: 40px;
+    font-size: 14px;
+}

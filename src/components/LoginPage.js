@@ -33,9 +33,9 @@ const LoginForm = (props) => {
 
     return (
         <form className="slds-form slds-form_stacked" onSubmit={props.handleSubmit}>
-            <InputTextElement type="text" name="email" label="Email"
+            <InputTextElement type="text" name="email" label="Email" variant="large"
                 value={props.value.email} handleChange={props.handleChange} />
-            <InputTextElement type="password" name="password" label="Password"
+            <InputTextElement type="password" name="password" label="Password" variant="large"
                 value={props.value.password} handleChange={props.handleChange} />
             {button}
         </form>
