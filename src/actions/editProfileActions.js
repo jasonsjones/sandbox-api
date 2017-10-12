@@ -8,17 +8,22 @@ export function updateUserProfile(newUserData) {
         data: true
     });
 
-    console.log('New User Data: ');
-    console.log(newUserData);
-
     dataservice.updateUserProfile(newUserData)
-        .then(data => {
-            console.log('going to make PATCH call to: ');
-            console.log(data);
-            AppDispatcher.handleViewAction({
-                actionType: "UPDATE_USER_PROFILE_SUCCESS",
-                data: true
-            });
+        .then(response => {
+            if (response.success) {
+                let currentUser = {
+                    id: response.payload.user._id,
+                    name: response.payload.user.name,
+                    email: response.payload.user.email,
+                    avatarUrl: response.payload.user.avatarUrl
+                };
+                AppDispatcher.handleViewAction({
+                    actionType: "UPDATE_USER_PROFILE_SUCCESS",
+                    data: {
+                        user: currentUser
+                    }
+                });
+            }
         })
         .catch(err => {
             AppDispatcher.handleViewAction({

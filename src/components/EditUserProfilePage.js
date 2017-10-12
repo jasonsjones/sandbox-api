@@ -27,11 +27,7 @@ class EditUserProfilePage extends React.Component {
 
     handleSubmit(e) {
         e.preventDefault();
-        console.log('submitting the update');
-        console.log(this.props.user.id);
-        let updatedData = this.state;
-        updatedData.id = this.props.user.id;
-        editProfileActions.updateUserProfile(updatedData);
+        editProfileActions.updateUserProfile(this.state);
     }
 
     render() {

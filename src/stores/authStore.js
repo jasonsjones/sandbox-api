@@ -97,6 +97,7 @@ class AuthStore extends EventEmitter {
                 this.authenticatUserError(payload.data);
                 break;
             case 'UPDATE_USER_SUCCESS':
+            case 'UPDATE_USER_PROFILE_SUCCESS':
                 this.updateUser(payload.data);
                 break;
             case 'LOGOUT_USER':

@@ -40,7 +40,9 @@ export function updateUser(req, res) {
             res.json({
                 success: true,
                 message: 'user updated',
-                payload: user
+                payload: {
+                    user: user
+                }
             });
         })
         .catch(err => {

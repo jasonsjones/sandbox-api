@@ -81,10 +81,26 @@ export function updateUserAvatar(newAvatar) {
 }
 
 export function updateUserProfile(newUserData) {
-    const userId = newUserData.id;
+    const userId = authStore.getCurrentUser().id;
     const url = `${baseUrl}/user/${userId}`;
     return new Promise((resolve, reject) => {
-        resolve(url);
+        fetch(url, {
+            method: 'PUT',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(newUserData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                resolve(data);
+            } else {
+                reject(data.message);
+            }
+        })
+        .catch(err => {
+            console.log(err);
+            reject(err);
+        });
     });
 
 }
