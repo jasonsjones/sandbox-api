@@ -78,5 +78,13 @@ export function updateUserAvatar(newAvatar) {
         });
 
     });
+}
+
+export function updateUserProfile(newUserData) {
+    const userId = newUserData.id;
+    const url = `${baseUrl}/user/${userId}`;
+    return new Promise((resolve, reject) => {
+        resolve(url);
+    });
 
 }
