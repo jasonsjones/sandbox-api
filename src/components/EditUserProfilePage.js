@@ -1,7 +1,8 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
+import editUserProfileStore from '../stores/editUserProfileStore';
 import * as editProfileActions from '../actions/editProfileActions';
 import AvatarUpload from './AvatarUpload';
 import InputTextElement from './InputTextElement';
@@ -11,10 +12,27 @@ class EditUserProfilePage extends React.Component {
         super(props);
         this.state = {
             name: this.props.user.name,
-            email: this.props.user.email
+            email: this.props.user.email,
+            userUpdated: editUserProfileStore.getUserUpdateStatus()
         }
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+
+        this.updateState = this.updateState.bind(this);
+    }
+
+    componentWillMount() {
+        editUserProfileStore.addChangeListenter(this.updateState);
+    }
+
+    componentWillUnmount() {
+        editUserProfileStore.removeChangeListener(this.updateState);
+    }
+
+    updateState() {
+        this.setState({
+            userUpdated: editUserProfileStore.getUserUpdateStatus()
+        });
     }
 
     handleChange(e) {
@@ -27,7 +45,7 @@ class EditUserProfilePage extends React.Component {
 
     handleSubmit(e) {
         e.preventDefault();
-        editProfileActions.updateUserProfile(this.state);
+        editProfileActions.updateUserProfile({name: this.state.name, email: this.state.email});
     }
 
     render() {
@@ -51,6 +69,7 @@ class EditUserProfilePage extends React.Component {
                             </Link>
                         </div>
                     </form>
+                    {this.state.userUpdated && <Redirect to='/'/>}
                 </div>
             </div>
         );
