@@ -64,7 +64,7 @@ class EditUserProfilePage extends React.Component {
                         <InputTextElement type="text" name="email" label="Email" variant="large" value={this.state.email} handleChange={this.handleChange}/>
                         <div className="slds-grid slds-grid_align-spread slds-grid_vertical-align-center slds-m-top_medium">
                             <button type='submit' className="slds-button slds-button_brand">Submit</button>
-                            <Link to="/">
+                            <Link to="/profile">
                                 <button type='button' className="slds-button slds-button_brand">Cancel</button>
                             </Link>
                         </div>

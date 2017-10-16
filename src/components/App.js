@@ -53,11 +53,18 @@ class App extends React.Component {
                             <Redirect to='/login'/>
                         )
                     )}/>
+                    <Route exact path='/profile' render={() => (
+                        isAuthenticated ? (
+                            <UserProfilePage user={user}/>
+                        ) : (
+                            <Redirect to='/login'/>
+                        )
+                    )}/>
                     <Route exact path='/login' render={() => (
                         !isAuthenticated ? (
                             <LoginPage/>
                         ) : (
-                            <Redirect to='/'/>
+                            <Redirect to='/profile'/>
                         )
                     )}/>
                     <Route exact path='/signup' render={()=><SignupPage/>}/>
