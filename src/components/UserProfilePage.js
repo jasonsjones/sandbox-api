@@ -19,7 +19,7 @@ class UserProfilePage extends React.Component {
 
         return (
             <div className="slds-m-around_x-large container-content">
-                <h1 className="slds-text-heading_large">User Profile Page!</h1>
+                <h1 className="slds-text-heading_large slds-text-align_center">User Profile Page</h1>
                 <h3 className="slds-text-heading_medium">Hello, {user.name}</h3>
                 <p className="slds-text-body_regular slds-text-color_weak slds-m-bottom_medium">{user.email}</p>
                 <span className="slds-avatar slds-avatar_large slds-m-right_large">
