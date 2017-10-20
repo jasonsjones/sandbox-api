@@ -14,6 +14,7 @@ import Avatar from '../avatar/avatar.model';
 // User Type
 const UserType = new GraphQLObjectType({
     name: 'User',
+    description: 'Simple user type to represent a user of the system',
     fields: () => ({
         id: {type: GraphQLString},
         name: {type: GraphQLString},
@@ -27,6 +28,7 @@ const UserType = new GraphQLObjectType({
 // Avatar Type
 const AvatarType = new GraphQLObjectType({
     name: 'Avatar',
+    description: 'Simple avatar type to represent a user avatar',
     fields: () => ({
         id: {type: GraphQLString},
         contentType: {type: GraphQLString},
@@ -39,6 +41,7 @@ const AvatarType = new GraphQLObjectType({
 // Root Query
 const RootQuery = new GraphQLObjectType({
     name: 'RootQueryType',
+    description: 'The root query type',
     fields: {
         user: {
             type: UserType,
