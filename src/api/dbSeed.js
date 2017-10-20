@@ -2,8 +2,8 @@ import fs from 'fs';
 import debug from 'debug';
 import Config from './config/config';
 import db from './config/db';
-import User from './api/user/user.model';
-import Avatar from './api/avatar/avatar.model';
+import User from './user/user.model';
+import Avatar from './avatar/avatar.model';
 
 const env = process.env.NODE_ENV || "development";
 const config = Config[env];

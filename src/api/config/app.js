@@ -7,10 +7,10 @@ import graphqlHTTP from 'express-graphql';
 
 import Config from './config';
 import schema from '../graphql';
-import authRoute from '../api/common/auth.routes';
-import avatarRoute from '../api/avatar/avatar.routes';
-import userRoute from '../api/user/user.routes';
-import indexRoute from '../api/index/index.routes';
+import authRoute from '../common/auth.routes';
+import avatarRoute from '../avatar/avatar.routes';
+import userRoute from '../user/user.routes';
+import indexRoute from '../index/index.routes';
 
 const env = process.env.NODE_ENV || "development";
 const config = Config[env];
