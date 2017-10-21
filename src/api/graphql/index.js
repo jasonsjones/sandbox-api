@@ -7,23 +7,11 @@ import {
     GraphQLSchema
 } from 'graphql';
 
+import UserType from './types/userType';
+
 import * as userRepository from '../user/user.repository';
 import User from '../user/user.model';
 import Avatar from '../avatar/avatar.model';
-
-// User Type
-const UserType = new GraphQLObjectType({
-    name: 'User',
-    description: 'Simple user type to represent a user of the system',
-    fields: () => ({
-        id: {type: GraphQLString},
-        name: {type: GraphQLString},
-        email: {type: GraphQLString},
-        roles: {type: new GraphQLList(GraphQLString)},
-        avatar: {type: GraphQLString},
-        avatarUrl: {type: GraphQLString}
-    })
-});
 
 // Avatar Type
 const AvatarType = new GraphQLObjectType({
