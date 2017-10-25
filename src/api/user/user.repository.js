@@ -9,6 +9,10 @@ export function getUser(id) {
     return Promise.resolve(User.findById(id).exec());
 }
 
+export function lookupUserByEmail(email) {
+    return Promise.resolve(User.findOne({email: email}).exec());
+}
+
 export function deleteUser(id) {
     return Promise.resolve(User.findByIdAndRemove(id).exec());
 }
