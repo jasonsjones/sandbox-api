@@ -26,6 +26,9 @@ app.use(morgan('dev'));
 app.use(cors());
 
 app.use(session({
+    cookie: {
+        secure: false
+    },
     secret: config.session_secret,
     resave: false,
     saveUninitialized: true
