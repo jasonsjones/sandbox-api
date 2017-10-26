@@ -104,3 +104,23 @@ export function updateUserProfile(newUserData) {
     });
 
 }
+export function getSessionUser() {
+    const url = `${baseUrl}/sessionUser`;
+    return new Promise((resolve, reject) => {
+        fetch(url, {
+            method: 'GET',
+            credentials: 'include',
+            headers: {'Content-Type': 'application/json'},
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                resolve(data);
+            }
+        })
+        .catch(err => {
+            console.log(err);
+            reject(err);
+        });
+    });
+}
