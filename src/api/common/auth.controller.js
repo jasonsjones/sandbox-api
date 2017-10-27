@@ -3,6 +3,7 @@ import fetch from 'node-fetch';
 
 import Config from '../config/config';
 import User from '../user/user.model';
+import * as UserRepository from '../user/user.repository';
 
 const env = process.env.NODE_ENV || "development";
 const config = Config[env];
@@ -131,6 +132,8 @@ export const sfdcCallback = (req, res) => {
     let code = req.query.code;
     let bodyData = `grant_type=authorization_code&redirect_uri=${callback}&client_id=${clientId}&client_secret=${clientSecret}&code=${code}`;
 
+    let sfdcUser = null;
+
     fetch('https://login.salesforce.com/services/oauth2/token', {
         method: 'POST',
         headers: {
@@ -141,7 +144,7 @@ export const sfdcCallback = (req, res) => {
     .then(res => res.json())
     .then(json => {
         access_token = json.access_token;
-        console.log(json);
+        req.session.jwt = json.id_token;
         return fetch(json.id, {
             method: 'GET',
             headers: {
@@ -151,10 +154,21 @@ export const sfdcCallback = (req, res) => {
     })
     .then(res => res.json())
     .then(user => {
-        console.log(user);
-        res.json({
-            success: true,
-            data: user
-        });
-    });
+        sfdcUser = user;
+        return UserRepository.lookupUserByEmail(user.email);
+    })
+    .then(localUser => {
+        if (localUser) {
+            req.session.user = localUser;
+        } else {
+            req.session.user = {
+                id: sfdcUser.user_id,
+                name: sfdcUser.display_name,
+                email: sfdcUser.email,
+                avatarUrl: sfdcUser.photos.picture
+            }
+        }
+        res.redirect('/')
+    })
+    .catch(err => console.log(err));
 }

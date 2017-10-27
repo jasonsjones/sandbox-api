@@ -1,5 +1,6 @@
 import EventEmitter from 'events';
 import AppDispatcher from '../dispatcher';
+import * as authActions from '../actions/authActions';
 
 class AuthStore extends EventEmitter {
     constructor() {
@@ -9,6 +10,7 @@ class AuthStore extends EventEmitter {
         this.token = null;
         this.errorMsg = '';
         this.loggingIn = false;
+        this.checkServerForSessionUser();
     }
 
     addChangeListenter(callback) {
@@ -24,7 +26,7 @@ class AuthStore extends EventEmitter {
     }
 
     getCurrentUser() {
-        let user = localStorage.getItem('currentUser');
+        const { user } = this.getDataFromLocalStorage();
         if (user) {
             this.currentUser = JSON.parse(user);
         }
@@ -32,7 +34,7 @@ class AuthStore extends EventEmitter {
     }
 
     getToken() {
-        let userToken = localStorage.getItem('userToken');
+        const { userToken } = this.getDataFromLocalStorage();
         if (userToken) {
             this.token = userToken;
         }
@@ -45,6 +47,20 @@ class AuthStore extends EventEmitter {
 
     getLoginStatus() {
         return this.loggingIn;
+    }
+
+    checkServerForSessionUser() {
+        const { user, userToken } = this.getDataFromLocalStorage();
+        if (!user || !userToken) {
+            authActions.getSessionUser();
+        }
+    }
+
+    getDataFromLocalStorage() {
+        return {
+            user: localStorage.getItem('currentUser'),
+            userToken: localStorage.getItem('userToken')
+        }
     }
 
     authenticateUser(data) {
