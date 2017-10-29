@@ -148,6 +148,9 @@ export default class Login extends React.Component {
                         </div>
                     </div>
                     <div className="slds-grid slds-grid_align-space slds-grid_vertical-align-center slds-m-top_large">
+                        <a href="/auth/sfdc">
+                            <button type="button" className="slds-button slds-button_brand">SFDC Oauth</button>
+                        </a>
                         <p>Not a Customer?</p>
                         <Link to="/signup">
                             <button type='button' className="slds-button slds-button_neutral tryButton">Try for Free</button>
