@@ -15,7 +15,7 @@ export function getAvatars(queryConditions = {}, selectionStr = '') {
 
 export function getAvatar(id) {
     if (id === 'default') {
-        return Promise.resolve(getDefaultAvatar());
+        return getDefaultAvatar();
     } else {
         return Promise.resolve(getAvatarById(id));
     }
@@ -53,7 +53,15 @@ export function makeAvatarModel(file, userId) {
 }
 
 function getDefaultAvatar() {
-    return Avatar.findOne({defaultImg: true}).exec();
+    return new Promise((resolve, reject) => {
+        Avatar.findOne({defaultImg: true}).exec()
+            .then(avatar => {
+                resolve(avatar)
+            })
+            .catch(err => {
+                reject(err);
+            });
+    });
 }
 function getAvatarById(id) {
     return Avatar.findById(id).exec();
