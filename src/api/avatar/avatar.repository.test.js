@@ -44,13 +44,12 @@ const mockAvatars = [
 ];
 
 describe('Avatar Repository', function () {
+    let AvatarMock;
+    afterEach(function () {
+        AvatarMock.restore();
+    });
 
     describe('getAvatars()', function () {
-
-        let AvatarMock;
-        afterEach(function () {
-            AvatarMock.restore();
-        });
 
         it('resolves to an array of avatars', function () {
             AvatarMock = sinon.mock(Avatar);
@@ -84,8 +83,9 @@ describe('Avatar Repository', function () {
     });
 
     describe('getAvatar()', function () {
+
         it('with default id resolves to the default image', function () {
-            const AvatarMock = sinon.mock(Avatar);
+            AvatarMock = sinon.mock(Avatar);
             AvatarMock.expects('findOne').withArgs({defaultImg: true})
                 .chain('exec')
                 .resolves(mockAvatars[0]);
@@ -99,7 +99,24 @@ describe('Avatar Repository', function () {
                 expect(avatar).to.have.property('defaultImg');
                 expect(avatar).to.have.property('user');
                 expect(avatar.defaultImg).to.equal(true);
-            })
+            });
         });
+
+        it('with default id rejects with error if something goes wrong', function () {
+            AvatarMock = sinon.mock(Avatar);
+            AvatarMock.expects('findOne').withArgs({defaultImg: true})
+                .chain('exec')
+                .rejects(new Error('Oops, something went wrong getting default image'));
+
+            const promise = AvatarRepository.getAvatar('default');
+            expect(promise).to.be.a('Promise');
+            return promise.catch(err => {
+                expect(err).to.exist;
+                expect(err).to.be.an('Error');
+            });
+        });
+
+        it('with avatar id resolves to the avatar with that id');
+        it('with avatar id rejects with error if something goes wrong with the lookup');
     });
 });
