@@ -63,6 +63,15 @@ function getDefaultAvatar() {
             });
     });
 }
+
 function getAvatarById(id) {
-    return Avatar.findById(id).exec();
+    return new Promise((resolve, reject) => {
+        Avatar.findById(id).exec()
+            .then(avatar => {
+                resolve(avatar);
+            })
+            .catch(err => {
+                reject(err);
+            })
+    });
 }

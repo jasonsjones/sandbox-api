@@ -116,7 +116,15 @@ describe('Avatar Repository', function () {
             });
         });
 
-        it('with avatar id resolves to the avatar with that id');
+        it('with avatar id resolves to the avatar with that id', () => {
+            AvatarMock = sinon.mock(Avatar);
+            AvatarMock.expects('findById').withArgs(mockAvatars[1]._id)
+                .chain('exec')
+                .resolves(mockAvatars[1]);
+            const promise = AvatarRepository.getAvatar(mockAvatars[1]._id);
+            expect(promise).to.be.a('Promise');
+        });
+
         it('with avatar id rejects with error if something goes wrong with the lookup');
     });
 });
