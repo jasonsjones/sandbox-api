@@ -48,7 +48,7 @@ export function getSessionUser() {
     dataservice.getSessionUser()
         .then(data => {
             let currentUser = {
-                id: data.payload.user._id,
+                id: data.payload.user.id,
                 name: data.payload.user.name,
                 email: data.payload.user.email,
                 avatarUrl: data.payload.user.avatarUrl
