@@ -2,11 +2,13 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import morgan from 'morgan';
 import session from 'express-session';
+import passport from 'passport';
 import cors from 'cors';
 import graphqlHTTP from 'express-graphql';
 
 import Config from './config';
 import schema from '../graphql';
+import passportConfig from './passport';
 import authRoute from '../common/auth.routes';
 import avatarRoute from '../avatar/avatar.routes';
 import userRoute from '../user/user.routes';
@@ -34,13 +36,17 @@ app.use(session({
     saveUninitialized: true
 }));
 
+app.use(passport.initialize());
+app.use(passport.session());
+passportConfig(passport);
+
 app.use('/graphql', graphqlHTTP({
     schema,
     pretty: true,
     graphiql: true
 }));
 
-authRoute(app);
+authRoute(app, passport);
 avatarRoute(app);
 userRoute(app);
 indexRoute(app);

@@ -23,6 +23,4 @@ export default (app) => {
               upload.single('avatar'),
               UserController.uploadUserAvatar
     );
-
-    app.post('/api/login', AuthController.loginUser);
 }
