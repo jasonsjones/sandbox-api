@@ -3,6 +3,7 @@ import fetch from 'node-fetch';
 
 import Config from '../config/config';
 import User from '../user/user.model';
+import utils from './auth.utils';
 import * as UserRepository from '../user/user.repository';
 
 const env = process.env.NODE_ENV || "development";
@@ -78,14 +79,7 @@ export function loginUser(req, res) {
     User.findOne({email: req.body.email}).exec()
         .then(user => {
             if (user && user.verifyPassword(req.body.password)) {
-                let token = jwt.sign({
-                    sub: user._id,
-                    name: user.name
-                },
-                config.token_secret,
-                {
-                    expiresIn: '24hr'
-                });
+                const token = utils.generateToken(user);
                 res.json({
                     success: true,
                     message: 'user authenticated',
