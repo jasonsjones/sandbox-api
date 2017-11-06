@@ -1,5 +1,5 @@
 import * as AuthController from './auth.controller';
-import utils from './auth.utils';
+import * as AuthUtils from './auth.utils';
 
 export default (app, passport) => {
 
@@ -23,7 +23,7 @@ export default (app, passport) => {
                 message: 'authenticated via passport',
                 payload: {
                     user: req.user,
-                    token: utils.generateToken(req.user)
+                    token: AuthUtils.generateToken(req.user)
                 }});
         }
     );
