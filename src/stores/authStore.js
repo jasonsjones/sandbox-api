@@ -1,6 +1,5 @@
 import EventEmitter from 'events';
 import AppDispatcher from '../dispatcher';
-import * as authActions from '../actions/authActions';
 
 class AuthStore extends EventEmitter {
     constructor() {
@@ -10,7 +9,6 @@ class AuthStore extends EventEmitter {
         this.token = null;
         this.errorMsg = '';
         this.loggingIn = false;
-        this.checkServerForSessionUser();
     }
 
     addChangeListenter(callback) {
@@ -49,12 +47,6 @@ class AuthStore extends EventEmitter {
         return this.loggingIn;
     }
 
-    checkServerForSessionUser() {
-        const { user, userToken } = this.getDataFromLocalStorage();
-        if (!user || !userToken) {
-            authActions.getSessionUser();
-        }
-    }
 
     getDataFromLocalStorage() {
         return {
