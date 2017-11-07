@@ -99,6 +99,7 @@ describe('Avatar Repository', function () {
                 expect(avatar).to.have.property('defaultImg');
                 expect(avatar).to.have.property('user');
                 expect(avatar.defaultImg).to.equal(true);
+                expect(avatar.user).to.be.null;
             });
         });
 
@@ -123,8 +124,29 @@ describe('Avatar Repository', function () {
                 .resolves(mockAvatars[1]);
             const promise = AvatarRepository.getAvatar(mockAvatars[1]._id);
             expect(promise).to.be.a('Promise');
+
+            return promise.then(avatar => {
+                expect(avatar).to.be.an('object');
+                expect(avatar).to.have.property('contentType');
+                expect(avatar).to.have.property('fileSize');
+                expect(avatar).to.have.property('defaultImg');
+                expect(avatar).to.have.property('user');
+                expect(avatar.defaultImg).to.equal(false);
+                expect(avatar.user).not.to.be.null;
+            });
         });
 
-        it('with avatar id rejects with error if something goes wrong with the lookup');
+        it('with avatar id rejects with error if something goes wrong with the lookup', () => {
+            AvatarMock = sinon.mock(Avatar);
+            AvatarMock.expects('findById').withArgs(mockAvatars[3]._id)
+                .chain('exec')
+                .rejects(new Error('Oops, something went wrong getting image'));
+            const promise = AvatarRepository.getAvatar(mockAvatars[3]._id);
+            expect(promise).to.be.a('Promise');
+            return promise.catch(err => {
+                expect(err).to.exist;
+                expect(err).to.be.an('Error');
+            });
+        });
     });
 });
