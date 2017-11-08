@@ -7,7 +7,7 @@ export function authenticateUser(user) {
         actionType: 'AUTHENTICATE_USER',
         data: true
     });
-    dataservice.getAuthUser(user)
+    dataservice.getAuthUser(user, 'passportlogin')
         .then(data => {
             let currentUser = {
                 id: data.payload.user._id,
@@ -42,24 +42,28 @@ export function logoutUser(user) {
 
 export function getSessionUser() {
     AppDispatcher.handleServerAction({
-        actionType: 'GET_SESSION_USER',
-        data: true
+        actionType: 'GET_SESSION_USER'
     });
     dataservice.getSessionUser()
         .then(data => {
-            let currentUser = {
-                id: data.payload.user.id,
-                name: data.payload.user.name,
-                email: data.payload.user.email,
-                avatarUrl: data.payload.user.avatarUrl
-            };
-            let token = data.payload.token
-            AppDispatcher.handleViewAction({
-                actionType: "AUTHENTICATE_USER_SUCCESS",
-                data: {
-                    user: currentUser,
-                    token: token
-                }
+            if (data.success) {
+                let currentUser = {
+                    id: data.payload.user._id,
+                    name: data.payload.user.name,
+                    email: data.payload.user.email,
+                    avatarUrl: data.payload.user.avatarUrl
+                };
+                let token = data.payload.token
+                AppDispatcher.handleViewAction({
+                    actionType: "AUTHENTICATE_USER_SUCCESS",
+                    data: {
+                        user: currentUser,
+                        token: token
+                    }
+                });
+            }
+            AppDispatcher.handleServerAction({
+                actionType: 'GET_SESSION_USER_COMPLETE'
             });
         })
         .catch(err => {

@@ -2,8 +2,8 @@ import authStore from '../stores/authStore';
 
 const baseUrl = 'http://localhost:3000/api';
 
-export function getAuthUser(user) {
-    const url = `${baseUrl}/login`;
+export function getAuthUser(user, path) {
+    const url = `${baseUrl}/${path}`;
     if (!user.email || !user.password) return;
     return new Promise((resolve, reject) => {
         fetch(url, {
@@ -114,9 +114,7 @@ export function getSessionUser() {
         })
         .then(response => response.json())
         .then(data => {
-            if (data.success) {
-                resolve(data);
-            }
+            resolve(data);
         })
         .catch(err => {
             console.log(err);

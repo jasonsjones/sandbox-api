@@ -108,6 +108,12 @@ class AuthStore extends EventEmitter {
             case 'UPDATE_USER_PROFILE_SUCCESS':
                 this.updateUser(payload.data);
                 break;
+            case 'GET_SESSION_USER':
+                console.log('getting session user...');
+                break;
+            case 'GET_SESSION_USER_COMPLETE':
+                console.log('getting session user is complete...');
+                break;
             case 'LOGOUT_USER':
                 this.logoutUser();
                 break;
