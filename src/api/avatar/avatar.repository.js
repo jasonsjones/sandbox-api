@@ -17,13 +17,13 @@ export function getAvatar(id) {
     if (id === 'default') {
         return getDefaultAvatar();
     } else {
-        return Promise.resolve(getAvatarById(id));
+        return getAvatarById(id);
     }
 }
 
 export function deleteAvatar(id) {
     return new Promise((resolve, reject) => {
-        Avatar.findById(id, '-data').exec()
+        Avatar.findById(id,).exec()
             .then(avatar => {
                 resolve(avatar.remove());
             })

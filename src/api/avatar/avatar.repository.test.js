@@ -149,4 +149,37 @@ describe('Avatar Repository', function () {
             });
         });
     });
+
+    describe('deleteAvatar()', function () {
+        it('with avatar id rejects with error if something goes wrong with the lookup', () => {
+            AvatarMock = sinon.mock(Avatar);
+            AvatarMock.expects('findById').withArgs(mockAvatars[3]._id)
+                .chain('exec')
+                .rejects(new Error('Oops, something went wrong getting image'));
+            const promise = AvatarRepository.deleteAvatar(mockAvatars[3]._id);
+            expect(promise).to.be.a('Promise');
+            return promise.catch(err => {
+                expect(err).to.exist;
+                expect(err).to.be.an('Error');
+            });
+        });
+        it('with avatar id resolves with avatar.remove()', () => {
+            const stub = sinon.stub(Avatar.prototype, 'remove');
+            stub.resolves(new Avatar(mockAvatars[3]));
+
+            AvatarMock = sinon.mock(Avatar);
+            AvatarMock.expects('findById').withArgs(mockAvatars[3]._id)
+                .chain('exec')
+                .resolves(stub());
+
+            const promise = AvatarRepository.deleteAvatar(mockAvatars[3]._id);
+            expect(promise).to.be.a('Promise');
+            return promise.then(avatar => {
+                expect(avatar).to.be.an('object');
+                expect(stub.called).to.equal(true);
+                stub.restore();
+            });
+        });
+
+    });
 });
