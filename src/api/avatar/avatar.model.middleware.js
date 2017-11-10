@@ -1,7 +1,7 @@
 import User from '../user/user.model';
 
 export function removeAvatarRefFromUser(avatar) {
-    User.findById(avatar.user).exec()
+    return User.findById(avatar.user).exec()
         .then(user => {
             if (user && user.avatar.equals(avatar._id)) {
                 user.avatar = null;
@@ -10,6 +10,6 @@ export function removeAvatarRefFromUser(avatar) {
             }
         })
         .catch(err => {
-            console.log(err);
+            return err;
         });
 }
