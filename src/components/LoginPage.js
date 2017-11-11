@@ -135,9 +135,6 @@ export default class Login extends React.Component {
                         <LoginForm handleSubmit={this.handleSubmit}
                             handleChange={this.handleChange}
                             value={this.state} />
-                        {/* <button type='button' onClick={this.handleClick} className="slds-button slds-button_brand slds-m-top_medium">
-                                Salesforce Auth
-                            </button> */}
                         <div className="slds-m-top_large">
                             <CheckBox />
                         </div>
