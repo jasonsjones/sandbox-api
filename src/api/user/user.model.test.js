@@ -45,25 +45,6 @@ describe('User Model', function () {
         });
     });
 
-    it('hashes the password to save in db', function (done) {
-        const ORIG_PWD = 'arrow';
-        let user = new User({
-            name: 'Oliver Queen',
-            email: 'oliver@qc.com',
-            password: ORIG_PWD,
-            isModified: function () {
-                return true;
-            }
-        });
-        // need to bind the middleware function to the user to ensure the
-        // proper 'this' context from within the function
-        middleware.hashPassword.bind(user, function (err, user) {
-            expect(user.password).to.not.equal(ORIG_PWD);
-            expect(user.password.startsWith('$2a$')).to.be.true;
-            done();
-        })();
-    });
-
     it('isAdmin() is true if user has an admin role', function () {
         let user = new User({
             name: 'Oliver Queen',
