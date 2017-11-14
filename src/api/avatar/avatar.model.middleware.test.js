@@ -91,9 +91,6 @@ describe('Avatar model middleware', function () {
         });
 
         it('rejects with error if something goes wrong', function () {
-            stub = sinon.stub(User.prototype, 'save');
-            stub.resolves(user);
-
             UserMock = sinon.mock(User);
             UserMock.expects('findById').withArgs(avatar.user)
                 .chain('exec')
