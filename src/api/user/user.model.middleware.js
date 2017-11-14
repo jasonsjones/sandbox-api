@@ -25,13 +25,13 @@ export function checkForErrors(err, user, next) {
 }
 
 export function removeAvatarOnDelete(user) {
-    Avatar.findOne(user.avatar).exec()
+    return Avatar.findOne(user.avatar).exec()
         .then(avatar => {
             if (avatar && !avatar.defaultImg && avatar.user.equals(user._id)) {
                 return avatar.remove();
             }
         })
         .catch(err => {
-            console.log(err);
+            return err;
         });
 }

@@ -1,9 +1,68 @@
-
 import { expect } from 'chai';
 import sinon from 'sinon';
+import 'sinon-mongoose';
 
 import User from './user.model';
+import Avatar from '../avatar/avatar.model';
 import * as Middleware from './user.model.middleware';
+
+const mockUsers = [
+    {
+      "_id": "59c44d83f2943200228467b2",
+      "name": "John Diggle",
+      "email": "dig@qc.com",
+      "avatar": "59c44d9d0e584d00425c1722",
+      "avatarUrl": "http://localhost:3000/api/avatar/59c44d9d0e584d00425c1722"
+    },
+    {
+      "_id": "59c44d83f2943200228467b3",
+      "name": "Roy Harper",
+      "email": "roy@qc.com",
+      "avatar": null,
+      "avatarUrl": "http://localhost:3000/api/avatar/default"
+    },
+    {
+      "_id": "59c44d83f2943200228467b1",
+      "name": "Oliver Queen",
+      "email": "oliver@qc.com",
+      "avatar": "59c44d85f2943200228467b4",
+      "avatarUrl": "http://localhost:3000/api/avatar/59c44d85f2943200228467b4"
+    },
+    {
+      "_id": "59c6c317f9760b01a35c63b1",
+      "name": "Jason Jones",
+      "email": "jsjones96@gmail.com",
+      "avatar": "59e4062a4c3bc800574e895f",
+      "avatarUrl": "http://localhost:3000/api/avatar/59e4062a4c3bc800574e895f"
+    }
+];
+
+const mockAvatars = [
+    {
+      "_id": "59c44d83f2943200228467b0",
+      "defaultImg": true,
+      "fileSize": 5012,
+      "contentType": "image/png"
+    },
+    {
+      "_id": "59c44d85f2943200228467b4",
+      "defaultImg": false,
+      "fileSize": 62079,
+      "contentType": "image/png"
+    },
+    {
+      "_id": "59c44d9d0e584d00425c1722",
+      "defaultImg": false,
+      "fileSize": 71955,
+      "contentType": "image/png"
+    },
+    {
+      "_id": "59e4062a4c3bc800574e895f",
+      "defaultImg": false,
+      "fileSize": 117632,
+      "contentType": "image/png"
+    }
+]
 
 describe("User middleware", function () {
     describe('checkForErrors()', function () {
@@ -61,6 +120,15 @@ describe("User middleware", function () {
 
     describe('removeAvatarOnDelete()', function () {
         it('removes the users custom avatar when the user is deleted');
-        it('rejects with an error if something goes wrong');
+
+        it('rejects with an error if something goes wrong', function () {
+            const AvatarMock = sinon.mock(Avatar);
+            AvatarMock.expects('findOne').withArgs(mockUsers[2].avatar)
+                .chain('exec')
+                .rejects(new Error("Ooops...something went wrong!"));
+
+            const promise = Middleware.removeAvatarOnDelete(mockUsers[2]);
+            expect(promise).to.be.a('Promise');
+        });
     });
 });
