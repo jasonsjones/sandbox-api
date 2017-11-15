@@ -48,19 +48,22 @@ const mockAvatars = [
       "_id": "59c44d85f2943200228467b4",
       "defaultImg": false,
       "fileSize": 62079,
-      "contentType": "image/png"
+      "contentType": "image/png",
+      "user": "59c44d83f2943200228467b1",
     },
     {
       "_id": "59c44d9d0e584d00425c1722",
       "defaultImg": false,
       "fileSize": 71955,
-      "contentType": "image/png"
+      "contentType": "image/png",
+      "user": "59c44d83f2943200228467b2",
     },
     {
       "_id": "59e4062a4c3bc800574e895f",
       "defaultImg": false,
       "fileSize": 117632,
-      "contentType": "image/png"
+      "contentType": "image/png",
+      "user": "59c6c317f9760b01a35c63b1",
     }
 ]
 
@@ -119,7 +122,23 @@ describe("User middleware", function () {
     });
 
     describe('removeAvatarOnDelete()', function () {
-        it('removes the users custom avatar when the user is deleted');
+        it('removes the users custom avatar when the user is deleted', function () {
+            const stub = sinon.stub(Avatar.prototype, 'remove');
+            stub.resolves(new Avatar(mockAvatars[1]));
+            const AvatarMock = sinon.mock(Avatar);
+            AvatarMock.expects('findOne').withArgs(mockUsers[2].avatar)
+                .chain('exec')
+                .resolves(new Avatar(mockAvatars[1]));
+            const promise = Middleware.removeAvatarOnDelete(mockUsers[2]);
+            expect(promise).to.be.a('Promise');
+            return promise.then(data => {
+                expect(data).to.exist;
+                expect(data).to.have.property('defaultImg');
+                expect(data).to.have.property('contentType');
+                expect(data).to.have.property('fileSize');
+                AvatarMock.restore();
+            });
+        });
 
         it('rejects with an error if something goes wrong', function () {
             const AvatarMock = sinon.mock(Avatar);
@@ -129,6 +148,11 @@ describe("User middleware", function () {
 
             const promise = Middleware.removeAvatarOnDelete(mockUsers[2]);
             expect(promise).to.be.a('Promise');
+            return promise.catch(err => {
+                expect(err).to.exist;
+                expect(err).to.be.an('Error');
+                AvatarMock.restore();
+            });
         });
     });
 });
