@@ -65,6 +65,7 @@ describe('User Model', function () {
     });
 
     it('verifies a correct password', function (done) {
+        this.timeout(6000);
         const ORIG_PWD = 'arrow';
         let user = new User({
             name: 'Oliver Queen',
@@ -83,6 +84,7 @@ describe('User Model', function () {
     });
 
     it('does not verify an incorrect password', function (done) {
+        this.timeout(6000);
         const ORIG_PWD = 'arrow';
         let user = new User({
             name: 'Oliver Queen',
