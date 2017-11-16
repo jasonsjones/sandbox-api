@@ -42,7 +42,8 @@ const mockAvatars = [
       "_id": "59c44d83f2943200228467b0",
       "defaultImg": true,
       "fileSize": 5012,
-      "contentType": "image/png"
+      "contentType": "image/png",
+      "user": null
     },
     {
       "_id": "59c44d85f2943200228467b4",
@@ -122,10 +123,19 @@ describe("User middleware", function () {
     });
 
     describe('removeAvatarOnDelete()', function () {
+        let AvatarMock;
+
+        beforeEach(() => {
+            AvatarMock = sinon.mock(Avatar);
+        });
+
+        afterEach(() => {
+            AvatarMock.restore();
+        });
+
         it('removes the users custom avatar when the user is deleted', function () {
             const stub = sinon.stub(Avatar.prototype, 'remove');
             stub.resolves(new Avatar(mockAvatars[1]));
-            const AvatarMock = sinon.mock(Avatar);
             AvatarMock.expects('findOne').withArgs(mockUsers[2].avatar)
                 .chain('exec')
                 .resolves(new Avatar(mockAvatars[1]));
@@ -136,12 +146,11 @@ describe("User middleware", function () {
                 expect(data).to.have.property('defaultImg');
                 expect(data).to.have.property('contentType');
                 expect(data).to.have.property('fileSize');
-                AvatarMock.restore();
+                stub.restore();
             });
         });
 
         it('rejects with an error if something goes wrong', function () {
-            const AvatarMock = sinon.mock(Avatar);
             AvatarMock.expects('findOne').withArgs(mockUsers[2].avatar)
                 .chain('exec')
                 .rejects(new Error("Ooops...something went wrong!"));
@@ -151,7 +160,6 @@ describe("User middleware", function () {
             return promise.catch(err => {
                 expect(err).to.exist;
                 expect(err).to.be.an('Error');
-                AvatarMock.restore();
             });
         });
     });
