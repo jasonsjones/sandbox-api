@@ -1,19 +1,21 @@
 import * as AvatarRepository from './avatar.repository';
 
-export function getAvatars(req, res) {
+export function getAvatars(req, res, next) {
     AvatarRepository.getAvatars({}, '-data')
         .then(avatars => {
             res.json({
                 success: true,
                 data: avatars
             });
+            next(null);
         })
         .catch(err => {
-            console.log(err);
+            res.status(500);
             res.json({
                 success: false,
                 message: 'error retrieving avatars'
             });
+            next(err);
         });
 }
 
