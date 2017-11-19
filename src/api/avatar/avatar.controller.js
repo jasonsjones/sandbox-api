@@ -19,19 +19,21 @@ export function getAvatars(req, res, next) {
         });
 }
 
-export function getAvatar(req, res) {
+export function getAvatar(req, res, next) {
     AvatarRepository.getAvatar(req.params.id)
         .then(avatar => {
             res.contentType(avatar.contentType);
             res.write(avatar.data);
             res.end();
+            next(null);
         })
         .catch(err => {
-            console.log(err);
+            res.status(500);
             res.json({
                 success: false,
                 message: 'error retrieving avatar'
             });
+            next(err);
         });
 }
 

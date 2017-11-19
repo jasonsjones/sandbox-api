@@ -41,7 +41,7 @@ describe('Avatar controller', function () {
         let req, res, stub;
         beforeEach(() => {
             stub = sinon.stub(AvatarRepository, 'getAvatars');
-            req = sinon.spy();
+            req = {}
             res = {
                 status: sinon.spy(),
                 json: sinon.spy()
@@ -50,7 +50,6 @@ describe('Avatar controller', function () {
 
         afterEach(() => {
             stub.restore();
-            req.reset();
             res.status.reset();
             res.json.reset();
         });
@@ -95,5 +94,63 @@ describe('Avatar controller', function () {
                 done();
             });
         });
+    });
+
+    describe('getAvatar()', function () {
+        let req, res, stub;
+        beforeEach(() => {
+            stub = sinon.stub(AvatarRepository, 'getAvatar');
+            req = {};
+            res = {
+                status: sinon.spy(),
+                json: sinon.spy()
+            }
+        });
+
+        afterEach(() => {
+            stub.restore();
+            req = {};
+            res.status.reset();
+            res.json.reset();
+        });
+
+        it('sends the avatar data in the response');
+
+        it('sends a status 500 if error occurs', function (done) {
+            stub.withArgs(mockAvatars[1]._id)
+                .rejects(new Error('Oops, something went wrong...'));
+
+            req.params = {
+               id : mockAvatars[1]._id
+            };
+
+            Controller.getAvatar(req, res, (err) => {
+                expect(err).to.exist;
+                expect(res.json.calledOnce).to.be.true;
+                expect(res.status.calledOnce).to.be.true;
+                expect(res.status.calledWith(500)).to.be.true;
+                done();
+            });
+        });
+
+        it('sends a success false and message when error occurs', function (done) {
+            stub.withArgs(mockAvatars[1]._id)
+                .rejects(new Error('Oops, something went wrong...'));
+
+            req.params = {
+               id : mockAvatars[1]._id
+            };
+
+            Controller.getAvatar(req, res, (err) => {
+                const args = res.json.args[0][0];
+                expect(err).to.exist;
+                expect(res.json.calledOnce).to.be.true;
+                expect(args).to.have.property('success');
+                expect(args).to.have.property('message');
+                expect(args.success).to.be.false;
+                done();
+            });
+        });
+
     });
 });
