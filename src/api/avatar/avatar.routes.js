@@ -14,7 +14,14 @@ export default (app) => {
                     res.json(err);
                 });
         })
-        .post(upload.single('avatar'), AvatarController.uploadAvatar);
+        .post(upload.single('avatar'), (req, res) => {
+            AvatarController.uploadAvatar(req)
+                .then(response => res.json(response))
+                .catch(err => {
+                    res.status(500);
+                    res.json(err)
+                });
+        });
 
     app.route('/api/avatar/:id')
         .get((req, res) => {
@@ -29,5 +36,12 @@ export default (app) => {
                     res.json(err);
                 });
         })
-        .delete(AvatarController.deleteAvatar);
+        .delete((req, res) => {
+            AvatarController.deleteAvatar(req)
+                .then(response => res.json(response))
+                .catch(err => {
+                    res.status(500);
+                    res.json(err);
+                });
+        });
 }

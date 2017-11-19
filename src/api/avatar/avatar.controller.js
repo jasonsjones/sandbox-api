@@ -34,43 +34,41 @@ export function getAvatar(req) {
         });
 }
 
-// TODO: need to promisify
-export function deleteAvatar(req, res) {
-    AvatarRepository.deleteAvatar(req.params.id)
+export function deleteAvatar(req) {
+    return AvatarRepository.deleteAvatar(req.params.id)
         .then(avatar => {
-            res.json({
+            return {
                 success: true,
-                message: 'avatar successfully deleted',
+                message: 'avatar successfully deleted.',
                 payload: avatar
-            })
+            };
         })
         .catch(err => {
-            console.log(err);
-            res.json({
+            return {
                 success: false,
-                message: 'error deleting avatar'
-            });
+                message: 'error deleting avatar. ' + err,
+                error: err
+            };
         });
 }
 
-// TODO: need to promisify
-export function uploadAvatar(req, res) {
-    AvatarRepository.uploadAvatar(req.file)
-        .then((img) => {
-            res.json({
+export function uploadAvatar(req) {
+    return AvatarRepository.uploadAvatar(req.file)
+        .then(avatar => {
+            return {
                 success: true,
-                message: 'avatar uploaded and saved',
+                message: 'avatar uploaded and saved.',
                 payload: {
-                    avatar: img
+                    avatar
                 }
-            });
+            }
         })
         .catch(err => {
-            console.log(err);
-            res.json({
+            return {
                 success: false,
-                message: 'error saving avatar'
-            });
+                message: 'error saving avatar. ' + err,
+                error: err
+            };
         });
 }
 
