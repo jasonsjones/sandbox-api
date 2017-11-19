@@ -1,42 +1,40 @@
 import * as AvatarRepository from './avatar.repository';
 
-export function getAvatars(req, res, next) {
-    AvatarRepository.getAvatars({}, '-data')
+export function getAvatars() {
+    return AvatarRepository.getAvatars({}, '-data')
         .then(avatars => {
-            res.json({
+            return {
                 success: true,
                 data: avatars
-            });
-            next(null);
+            };
         })
         .catch(err => {
-            res.status(500);
-            res.json({
+            return {
                 success: false,
-                message: 'error retrieving avatars'
-            });
-            next(err);
+                message: 'error retrieving avatars. ' + err,
+                error: err
+            }
         });
 }
 
-export function getAvatar(req, res, next) {
-    AvatarRepository.getAvatar(req.params.id)
+export function getAvatar(req) {
+    return AvatarRepository.getAvatar(req.params.id)
         .then(avatar => {
-            res.contentType(avatar.contentType);
-            res.write(avatar.data);
-            res.end();
-            next(null);
+            return {
+                contentType: avatar.contentType,
+                data: avatar.data
+            };
         })
         .catch(err => {
-            res.status(500);
-            res.json({
+            return {
                 success: false,
-                message: 'error retrieving avatar'
-            });
-            next(err);
+                message: 'error retrieving avatar. ' + err,
+                error: err
+            }
         });
 }
 
+// TODO: need to promisify
 export function deleteAvatar(req, res) {
     AvatarRepository.deleteAvatar(req.params.id)
         .then(avatar => {
@@ -55,6 +53,7 @@ export function deleteAvatar(req, res) {
         });
 }
 
+// TODO: need to promisify
 export function uploadAvatar(req, res) {
     AvatarRepository.uploadAvatar(req.file)
         .then((img) => {

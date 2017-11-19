@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 import 'sinon-mongoose';
 
-import * as AvatarRepository from './avatar.repository';
+import * as Repository from './avatar.repository';
 import * as Controller from './avatar.controller';
 
 const mockAvatars = [
@@ -38,85 +38,54 @@ const mockAvatars = [
 
 describe('Avatar controller', function () {
     describe('getAvatars()', function () {
-        let req, res, stub;
+        let stub;
         beforeEach(() => {
-            stub = sinon.stub(AvatarRepository, 'getAvatars');
-            req = {}
-            res = {
-                status: sinon.spy(),
-                json: sinon.spy()
-            }
+            stub = sinon.stub(Repository, 'getAvatars');
         });
 
         afterEach(() => {
             stub.restore();
-            res.status.reset();
-            res.json.reset();
         });
 
-        it('sends a payload with an array of all avatars', function (done) {
+        it('sends a payload with an array of all avatars', function () {
             stub.resolves(mockAvatars);
 
-            Controller.getAvatars(req, res, (err) => {
-                const args = res.json.args[0][0];
-                expect(err).not.to.exist;
-                expect(res.json.calledOnce).to.be.true;
-                expect(args).to.have.property('success');
-                expect(args).to.have.property('data');
-                expect(args.success).to.be.true;
-                expect(args.data).to.be.an('Array');
-                done();
+            return Controller.getAvatars().then(response => {
+                expect(response).to.have.property('success');
+                expect(response).to.have.property('data');
+                expect(response.success).to.be.true
+                expect(response.data).to.be.an('Array');
             });
         });
 
-        it('sends a status 500 if error occurs', function (done) {
+        it('sends a success false and message when error occurs', function () {
             stub.rejects(new Error('Oops, something went wrong...'));
 
-            Controller.getAvatars(req, res, (err) => {
-                expect(err).to.exist;
-                expect(res.json.calledOnce).to.be.true;
-                expect(res.status.calledOnce).to.be.true;
-                expect(res.status.calledWith(500)).to.be.true;
-                done();
-            });
-        });
-
-        it('sends a success false and message when error occurs', function (done) {
-            stub.rejects(new Error('Oops, something went wrong...'));
-
-            Controller.getAvatars(req, res, (err) => {
-                const args = res.json.args[0][0];
-                expect(err).to.exist;
-                expect(res.json.calledOnce).to.be.true;
-                expect(args).to.have.property('success');
-                expect(args).to.have.property('message');
-                expect(args.success).to.be.false;
-                done();
+            return Controller.getAvatars().then(response => {
+                expect(response).to.have.property('success');
+                expect(response).to.have.property('message');
+                expect(response).to.have.property('error');
+                expect(response.success).to.be.false
+                expect(response.error instanceof Error).to.be.true
             });
         });
     });
 
     describe('getAvatar()', function () {
-        let req, res, stub;
+        let req, stub;
         beforeEach(() => {
-            stub = sinon.stub(AvatarRepository, 'getAvatar');
+            stub = sinon.stub(Repository, 'getAvatar');
             req = {};
-            res = {
-                status: sinon.spy(),
-                json: sinon.spy()
-            }
         });
 
         afterEach(() => {
             stub.restore();
             req = {};
-            res.status.reset();
-            res.json.reset();
         });
 
         it('sends the avatar data in the response');
 
-        it('sends a status 500 if error occurs', function (done) {
+        it('sends a success false and message when error occurs', function () {
             stub.withArgs(mockAvatars[1]._id)
                 .rejects(new Error('Oops, something went wrong...'));
 
@@ -124,33 +93,13 @@ describe('Avatar controller', function () {
                id : mockAvatars[1]._id
             };
 
-            Controller.getAvatar(req, res, (err) => {
-                expect(err).to.exist;
-                expect(res.json.calledOnce).to.be.true;
-                expect(res.status.calledOnce).to.be.true;
-                expect(res.status.calledWith(500)).to.be.true;
-                done();
+            return Controller.getAvatar(req).then(response => {
+                expect(response).to.have.property('success');
+                expect(response).to.have.property('message');
+                expect(response).to.have.property('error');
+                expect(response.success).to.be.false
+                expect(response.error instanceof Error).to.be.true
             });
         });
-
-        it('sends a success false and message when error occurs', function (done) {
-            stub.withArgs(mockAvatars[1]._id)
-                .rejects(new Error('Oops, something went wrong...'));
-
-            req.params = {
-               id : mockAvatars[1]._id
-            };
-
-            Controller.getAvatar(req, res, (err) => {
-                const args = res.json.args[0][0];
-                expect(err).to.exist;
-                expect(res.json.calledOnce).to.be.true;
-                expect(args).to.have.property('success');
-                expect(args).to.have.property('message');
-                expect(args.success).to.be.false;
-                done();
-            });
-        });
-
     });
 });
