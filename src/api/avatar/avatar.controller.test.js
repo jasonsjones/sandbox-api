@@ -4,6 +4,7 @@ import 'sinon-mongoose';
 
 import * as Repository from './avatar.repository';
 import * as Controller from './avatar.controller';
+import Avatar from './avatar.model';
 
 const mockAvatars = [
     {
@@ -11,7 +12,13 @@ const mockAvatars = [
       "defaultImg": true,
       "fileSize": 5012,
       "contentType": "image/png",
-      "user": null
+      "user": null,
+      "data": {
+          "type": "Buffer",
+          "data": [
+              137, 80, 78, 71, 13, 10, 26, 10, 0, 0, 0, 13, 73, 72, 68, 82, 0, 0, 0
+          ]
+      }
     },
     {
       "_id": "59c44d85f2943200228467b4",
@@ -19,6 +26,12 @@ const mockAvatars = [
       "fileSize": 62079,
       "contentType": "image/png",
       "user": "59c44d83f2943200228467b1",
+      "data": {
+          "type": "Buffer",
+          "data": [
+              137, 80, 78, 71, 13, 10, 26, 10, 0, 0, 0, 13, 73, 72, 68, 82, 0, 0, 0
+          ]
+      }
     },
     {
       "_id": "59c44d9d0e584d00425c1722",
@@ -26,6 +39,12 @@ const mockAvatars = [
       "fileSize": 71955,
       "contentType": "image/png",
       "user": "59c44d83f2943200228467b2",
+      "data": {
+          "type": "Buffer",
+          "data": [
+              137, 80, 78, 71, 13, 10, 26, 10, 0, 0, 0, 13, 73, 72, 68, 82, 0, 0, 0
+          ]
+      }
     },
     {
       "_id": "59e4062a4c3bc800574e895f",
@@ -33,6 +52,12 @@ const mockAvatars = [
       "fileSize": 117632,
       "contentType": "image/png",
       "user": "59c6c317f9760b01a35c63b1",
+      "data": {
+          "type": "Buffer",
+          "data": [
+              137, 80, 78, 71, 13, 10, 26, 10, 0, 0, 0, 13, 73, 72, 68, 82, 0, 0, 0
+          ]
+      }
     }
 ];
 
@@ -83,7 +108,18 @@ describe('Avatar controller', function () {
             req = {};
         });
 
-        it('sends the avatar data in the response');
+        it('sends the avatar data in the response', function () {
+            stub.withArgs('default')
+                .resolves(mockAvatars[0]);
+            req.params = {
+               id : 'default'
+            };
+            return Controller.getAvatar(req).then(response => {
+                expect(response).to.have.property('contentType');
+                expect(response).to.have.property('data');
+                expect(response.data).to.be.an('Object');
+            });
+        });
 
         it('sends a success false and message when error occurs', function () {
             stub.withArgs(mockAvatars[1]._id)
@@ -94,6 +130,61 @@ describe('Avatar controller', function () {
             };
 
             return Controller.getAvatar(req).then(response => {
+                expect(response).to.have.property('success');
+                expect(response).to.have.property('message');
+                expect(response).to.have.property('error');
+                expect(response.success).to.be.false
+                expect(response.error instanceof Error).to.be.true
+            });
+        });
+    });
+
+    describe('deleteAvatar()', function () {
+        let req, stub;
+        beforeEach(() => {
+            stub = sinon.stub(Repository, 'deleteAvatar');
+            req = {};
+        });
+
+        afterEach(() => {
+            stub.restore();
+            req = {};
+        });
+
+        it('deletes an avatar when called with avatar id', function () {
+            const modelStub = sinon.stub(Avatar.prototype, 'remove');
+            modelStub.resolves(new Avatar(mockAvatars[1]));
+
+            stub.withArgs(mockAvatars[1]._id)
+                .resolves(modelStub());
+
+            req.params = {
+               id : mockAvatars[1]._id
+            };
+
+            return Controller.deleteAvatar(req).then(response => {
+                expect(response).to.have.property('success');
+                expect(response).to.have.property('message');
+                expect(response).to.have.property('payload');
+                expect(response.success).to.be.true
+                expect(response.payload).to.be.an('Object');
+                expect(response.payload).to.have.property('_id');
+                expect(response.payload).to.have.property('contentType');
+                expect(response.payload).to.have.property('user');
+                expect(response.payload).to.have.property('fileSize');
+                modelStub.restore();
+                });
+        });
+
+        it('sends a success false and message when error occurs', function () {
+            stub.withArgs(mockAvatars[1]._id)
+                .rejects(new Error('Oops, something went wrong...'));
+
+            req.params = {
+               id : mockAvatars[1]._id
+            };
+
+            return Controller.deleteAvatar(req).then(response => {
                 expect(response).to.have.property('success');
                 expect(response).to.have.property('message');
                 expect(response).to.have.property('error');
