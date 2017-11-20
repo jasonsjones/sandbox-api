@@ -33,19 +33,22 @@ export function deleteAvatar(id) {
     });
 }
 
-export function uploadAvatar(file) {
-    let avatar = makeAvatarModel(file);
-    return Promise.resolve(avatar.save());
+export function uploadAvatar(file, userId, deleteAfter) {
+    let avatar = this.makeAvatarModel(file, userId, deleteAfter);
+    return avatar.save();
 }
 
-export function makeAvatarModel(file, userId) {
+export function makeAvatarModel(file, userId, deleteAfter = true) {
     let avatar = new Avatar();
     avatar.fileName = file.originalname;
     avatar.contentType = file.mimetype;
     avatar.fileSize = file.size;
     avatar.defaultImg = false;
     avatar.data = fs.readFileSync(file.path);
-    fs.unlinkSync(file.path);
+    if (deleteAfter) {
+        fs.unlinkSync(file.path);
+    }
+
     if (userId) {
         avatar.user = userId;
     }

@@ -182,4 +182,78 @@ describe('Avatar Repository', function () {
         });
 
     });
+
+    describe('makeAvatarModel()', function () {
+        it('returns an avatar model', function () {
+            const file = {
+                originalName: 'default.png',
+                mimetype: 'image/png',
+                size: 62079,
+                path: __dirname + '/../../../assets/male3.png'
+            };
+            const avatar = AvatarRepository.makeAvatarModel(file, mockAvatars[1].user, false);
+            expect(avatar).to.exist;
+            expect(avatar).to.have.property('_id');
+            expect(avatar).to.have.property('user');
+            expect(avatar).to.have.property('fileSize');
+            expect(avatar).to.have.property('contentType');
+            expect(avatar).to.have.property('defaultImg');
+            expect(avatar).to.have.property('data');
+            expect(avatar.defaultImg).to.be.false;
+        });
+    });
+
+    describe('uploadAvatar()', function () {
+
+        let file, stub, spy;
+
+        beforeEach(() => {
+            file = {
+                originalName: 'default.png',
+                mimetype: 'image/png',
+                size: 62079,
+                path: __dirname + '/../../../assets/male3.png'
+            };
+            stub = sinon.stub(Avatar.prototype, 'save');
+            spy = sinon.spy(AvatarRepository, 'makeAvatarModel');
+        });
+
+        afterEach(() => {
+            file = null;
+            stub.restore();
+            spy.restore();
+        });
+
+        it('generates the avatar model and saves to db', function () {
+            const avatar = AvatarRepository.makeAvatarModel(file, mockAvatars[1].user, false);
+            stub.resolves(avatar);
+
+            return AvatarRepository.uploadAvatar(file, null, false)
+                .then(response => {
+                    expect(response).to.exist;
+                    expect(response).to.have.property('_id');
+                    expect(response).to.have.property('user');
+                    expect(response).to.have.property('fileSize');
+                    expect(response).to.have.property('contentType');
+                    expect(response).to.have.property('defaultImg');
+                    expect(response).to.have.property('data');
+                    expect(response.user.toString()).to.equal(mockAvatars[1].user);
+
+                    expect(spy.calledTwice).to.be.true;
+                    expect(spy.secondCall.args.length).to.equal(3);
+            });
+        });
+
+        it('catches an error if the avatar is unable to be saved to db', function () {
+            stub.rejects(new Error('Oops, unable to save avatar to db'));
+
+            return AvatarRepository.uploadAvatar(file, null, false)
+                .then(() => { })
+                .catch(err => {
+                    expect(spy.calledOnce).to.be.true;
+                    expect(spy.firstCall.args.length).to.equal(3);
+                    expect(err).to.exist;
+                });
+        });
+    });
 });
