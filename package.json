@@ -6,8 +6,8 @@
   "scripts": {
     "predev": "npm run dbSeed",
     "dev": "nodemon src/api/server.js --inspect=0.0.0.0:5858 --watch src/ --exec babel-node",
-    "prebuild": "rm -f public/bundle.js public/styles/styles.css",
-    "build": "webpack -wd",
+    "prebuild": "rm -f public/bundle.js* public/styles/styles.css*",
+    "build": "webpack -w",
     "dbSeed": "babel-node src/api/dbSeed.js",
     "lt": "lt --port 3000 --subdomain sandboxapi",
     "lint": "eslint webpack.config.js src/**/*.js",
