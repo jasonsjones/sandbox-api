@@ -77,16 +77,16 @@ describe('Avatar controller', function () {
 
             return Controller.getAvatars().then(response => {
                 expect(response).to.have.property('success');
-                expect(response).to.have.property('data');
+                expect(response).to.have.property('payload');
                 expect(response.success).to.be.true
-                expect(response.data).to.be.an('Array');
+                expect(response.payload).to.be.an('Array');
             });
         });
 
         it('sends a success false and message when error occurs', function () {
             stub.rejects(new Error('Oops, something went wrong...'));
 
-            return Controller.getAvatars().then(response => {
+            return Controller.getAvatars().catch(response => {
                 expect(response).to.have.property('success');
                 expect(response).to.have.property('message');
                 expect(response).to.have.property('error');
@@ -116,8 +116,8 @@ describe('Avatar controller', function () {
             };
             return Controller.getAvatar(req).then(response => {
                 expect(response).to.have.property('contentType');
-                expect(response).to.have.property('data');
-                expect(response.data).to.be.an('Object');
+                expect(response).to.have.property('payload');
+                expect(response.payload).to.be.an('Object');
             });
         });
 
@@ -129,7 +129,7 @@ describe('Avatar controller', function () {
                id : mockAvatars[1]._id
             };
 
-            return Controller.getAvatar(req).then(response => {
+            return Controller.getAvatar(req).catch(response => {
                 expect(response).to.have.property('success');
                 expect(response).to.have.property('message');
                 expect(response).to.have.property('error');
@@ -184,7 +184,7 @@ describe('Avatar controller', function () {
                id : mockAvatars[1]._id
             };
 
-            return Controller.deleteAvatar(req).then(response => {
+            return Controller.deleteAvatar(req).catch(response => {
                 expect(response).to.have.property('success');
                 expect(response).to.have.property('message');
                 expect(response).to.have.property('error');
@@ -192,5 +192,59 @@ describe('Avatar controller', function () {
                 expect(response.error instanceof Error).to.be.true
             });
         });
+    });
+
+    describe('uploadAvatar()', function () {
+        let stub;
+        beforeEach(() => {
+            stub = sinon.stub(Repository, 'uploadAvatar');
+        });
+
+        afterEach(() => {
+            stub.restore();
+        });
+
+        it('returns the avatar in payload when successfully uploaded', function () {
+            const req = {
+                file: {
+                    originalName: 'male3.png',
+                    mimetype: 'image/png',
+                    size: 62079,
+                    path: __dirname + '/../../../assets/male3.png'
+                }
+            }
+            const avatar = Repository.makeAvatarModel(req.file, mockAvatars[1].user, false);
+            stub.withArgs(req.file)
+                .resolves(avatar);
+            return Controller.uploadAvatar(req).then(response => {
+                expect(response).to.have.property('success');
+                expect(response).to.have.property('message');
+                expect(response).to.have.property('payload');
+                expect(response.success).to.be.true
+            });
+        });
+
+        it('sends a success false and message when error occurs', function () {
+            const req = {
+                file: {
+                    originalName: 'male3.png',
+                    mimetype: 'image/png',
+                    size: 62079,
+                    path: __dirname + '/../../../assets/male3.png'
+                }
+            }
+
+            stub.withArgs(req.file)
+                .rejects(new Error('Oops, something went wrong uploading the image...'));
+
+            return Controller.uploadAvatar(req).catch(response => {
+                expect(response).to.have.property('success');
+                expect(response).to.have.property('message');
+                expect(response).to.have.property('error');
+                expect(response.success).to.be.false
+                expect(response.error instanceof Error).to.be.true
+            });
+        });
+
     });
 });

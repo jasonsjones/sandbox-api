@@ -5,15 +5,15 @@ export function getAvatars() {
         .then(avatars => {
             return {
                 success: true,
-                data: avatars
+                payload: avatars
             };
         })
         .catch(err => {
-            return {
+            return Promise.reject({
                 success: false,
                 message: 'error retrieving avatars. ' + err,
                 error: err
-            }
+            });
         });
 }
 
@@ -22,15 +22,15 @@ export function getAvatar(req) {
         .then(avatar => {
             return {
                 contentType: avatar.contentType,
-                data: avatar.data
+                payload: avatar.data
             };
         })
         .catch(err => {
-            return {
+            return Promise.reject({
                 success: false,
                 message: 'error retrieving avatar. ' + err,
                 error: err
-            }
+            });
         });
 }
 
@@ -40,15 +40,15 @@ export function deleteAvatar(req) {
             return {
                 success: true,
                 message: 'avatar successfully deleted.',
-                payload: avatar
+                payload:  avatar
             };
         })
         .catch(err => {
-            return {
+            return Promise.reject({
                 success: false,
                 message: 'error deleting avatar. ' + err,
                 error: err
-            };
+            });
         });
 }
 
@@ -58,17 +58,15 @@ export function uploadAvatar(req) {
             return {
                 success: true,
                 message: 'avatar uploaded and saved.',
-                payload: {
-                    avatar
-                }
+                payload: avatar
             }
         })
         .catch(err => {
-            return {
+            return Promise.reject({
                 success: false,
                 message: 'error saving avatar. ' + err,
                 error: err
-            };
+            });
         });
 }
 

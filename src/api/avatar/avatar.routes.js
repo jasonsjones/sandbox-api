@@ -28,7 +28,7 @@ export default (app) => {
             AvatarController.getAvatar(req)
                 .then(response => {
                     res.contentType(response.contentType);
-                    res.write(response.data);
+                    res.write(response.payload);
                     res.end();
                 })
                 .catch(err => {
