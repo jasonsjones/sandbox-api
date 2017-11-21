@@ -2,7 +2,6 @@ import React from 'react';
 import { BrowserRouter, Route, Redirect } from 'react-router-dom';
 
 import authStore from '../stores/authStore';
-import * as authActions from '../actions/authActions';
 
 import LoginPage from './LoginPage';
 import UserProfilePage from './UserProfilePage';
@@ -24,7 +23,6 @@ class App extends React.Component {
 
     componentWillMount() {
         authStore.addChangeListenter(this.updateUser);
-        authActions.getSessionUser();
     }
 
     componentWillUnmount() {
