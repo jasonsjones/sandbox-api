@@ -11,16 +11,25 @@ export function getAuthUser(user, path) {
             headers: {'Content-Type': 'application/json' },
             body: JSON.stringify(user)
         })
-        .then(response => response.json())
+        .then(response => {
+            // if the response status is 200 OK, then we know we are getting
+            // a json payload back
+            if (response.status === 200) {
+                return response.json();
+            }
+            // any other response status is likely to be just text (e.g., 'Unauthorized')
+            return response.text();
+        })
         .then(data => {
             if (data.success) {
                 resolve(data);
-            } else {
+            } else if (!data.success && data.message) {
                 reject(data.message);
+            } else {
+                reject(data);
             }
         })
         .catch(err => {
-            console.log(err);
             reject(err);
         });
     });
@@ -104,6 +113,7 @@ export function updateUserProfile(newUserData) {
     });
 
 }
+
 export function getSessionUser() {
     const url = `${baseUrl}/sessionUser`;
     return new Promise((resolve, reject) => {
