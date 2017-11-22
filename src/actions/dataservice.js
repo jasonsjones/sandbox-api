@@ -11,20 +11,10 @@ export function getAuthUser(user, path) {
             headers: {'Content-Type': 'application/json' },
             body: JSON.stringify(user)
         })
-        .then(response => {
-            // if the response status is 200 OK, then we know we are getting
-            // a json payload back
-            if (response.status === 200) {
-                return response.json();
-            }
-            // any other response status is likely to be just text (e.g., 'Unauthorized')
-            return response.text();
-        })
+        .then(processResponse)
         .then(data => {
             if (data.success) {
                 resolve(data);
-            } else if (!data.success && data.message) {
-                reject(data.message);
             } else {
                 reject(data);
             }
@@ -132,3 +122,19 @@ export function getSessionUser() {
         });
     });
 }
+
+const processResponse = (response) => {
+    // if the response status is 200 OK, then we know we are getting
+    // a json payload back
+    if (response.status === 200) {
+        return response.json();
+    }
+    // any other response status is likely to be just text (e.g., 'Unauthorized')
+    return response.text().then(msg => {
+        return {
+            success: false,
+            message: msg,
+            payload: null
+        }
+    });
+};

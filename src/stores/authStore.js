@@ -68,7 +68,7 @@ class AuthStore extends EventEmitter {
     }
 
     authenticatUserError(err) {
-        this.errorMsg = err;
+        this.errorMsg = err.message;
         this.loggingIn = false;
         this.emitChange();
     }
