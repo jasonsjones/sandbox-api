@@ -2,7 +2,15 @@ import User from './user.model';
 import { makeAvatarModel } from '../avatar/avatar.repository';
 
 export function getUsers(queryCondition = {}) {
-    return Promise.resolve(User.find(queryCondition).exec());
+    return new Promise ((resolve, reject) => {
+        User.find(queryCondition).exec()
+            .then(users => {
+                resolve(users);
+            })
+            .catch(err => {
+                reject(err)
+            });
+    });
 }
 
 export function getUser(id) {
