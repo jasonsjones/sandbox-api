@@ -51,7 +51,7 @@ const mockUsers = [
     }
 ]
 
-describe('User Repository', function () {
+describe('User repository', function () {
     let UserMock;
     beforeEach(() => {
         UserMock = sinon.mock(User);
@@ -91,6 +91,18 @@ describe('User Repository', function () {
             });
         });
 
-        it('rejects with an error if something went wrong');
+        it('rejects with an error if something went wrong', function () {
+            UserMock.expects('find').withArgs({})
+                .chain('exec')
+                .rejects(new Error('Oops, something went wrong...'));
+
+            const promise = Repository.getUsers();
+            expect(promise).to.be.a('Promise');
+
+            return promise.catch(err => {
+                expect(err).to.exist;
+                expect(err).to.be.an('Error');
+            });
+        });
     });
 });
