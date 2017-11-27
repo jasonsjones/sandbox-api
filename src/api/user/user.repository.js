@@ -1,9 +1,16 @@
 import User from './user.model';
 import { makeAvatarModel } from '../avatar/avatar.repository';
 
-export function getUsers(queryCondition = {}) {
+export function getUsers(queryCondition = {}, inclAvatars = false) {
     return new Promise ((resolve, reject) => {
-        User.find(queryCondition).exec()
+        let query;
+        if (inclAvatars) {
+            query = User.find(queryCondition).populate('avatar', '-data');
+        } else {
+            query = User.find(queryCondition);
+        }
+
+        query.exec()
             .then(users => {
                 resolve(users);
             })
