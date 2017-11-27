@@ -5,7 +5,7 @@ import * as middleware from './user.model.middleware';
 
 mongoose.Promise = global.Promise;
 
-describe('User Model', function () {
+describe('User model', function () {
     it('is invalid if name is empty', function (done) {
         let user = new User({
             /* no name */

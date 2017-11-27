@@ -68,7 +68,7 @@ const mockAvatars = [
     }
 ]
 
-describe("User middleware", function () {
+describe("User model middleware", function () {
     describe('checkForErrors()', function () {
         let user;
         beforeEach(() => {
