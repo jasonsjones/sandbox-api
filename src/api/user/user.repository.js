@@ -2,7 +2,7 @@ import User from './user.model';
 import { makeAvatarModel } from '../avatar/avatar.repository';
 
 export function getUsers(queryCondition = {}, inclAvatars = false) {
-    return new Promise ((resolve, reject) => {
+    return new Promise((resolve, reject) => {
         let query;
         if (inclAvatars) {
             query = User.find(queryCondition).populate('avatar', '-data');
@@ -20,8 +20,23 @@ export function getUsers(queryCondition = {}, inclAvatars = false) {
     });
 }
 
-export function getUser(id) {
-    return Promise.resolve(User.findById(id).exec());
+export function getUser(id, inclAvatar = false) {
+    return new Promise((resolve, reject) => {
+        let query;
+        if (inclAvatar) {
+            query = User.findById(id).populate('avatar', '-data');
+        } else {
+            query = User.findById(id);
+        }
+        query.exec()
+            .then(user => {
+                resolve(user);
+            })
+            .catch(err => {
+                reject(err)
+            });
+
+    });
 }
 
 export function lookupUserByEmail(email) {

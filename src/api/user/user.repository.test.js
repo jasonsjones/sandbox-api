@@ -181,4 +181,78 @@ describe('User repository', function () {
             });
         });
     });
+
+    describe('getUser()', function () {
+        it('resolves to a user with the given id', function () {
+            const userId = mockUsers[0]._id;
+            UserMock.expects('findById').withArgs(userId)
+                .chain('exec')
+                .resolves(mockUsers[0]);
+
+            const promise = Repository.getUser(userId);
+            expect(promise).to.be.a('Promise');
+
+            return promise.then(user => {
+                expect(user).to.be.an('Object');
+                expect(user).to.have.property('name');
+                expect(user).to.have.property('email');
+                expect(user).to.have.property('avatarUrl');
+                expect(user).to.have.property('roles');
+            });
+        });
+
+        it('resolves to a user with the avatar model included', function () {
+            const userId = mockUsersWithAvatar[0]._id;
+            UserMock.expects('findById').withArgs(userId)
+                .chain('exec')
+                .resolves(mockUsersWithAvatar[0]);
+
+            const promise = Repository.getUser(userId, true);
+            expect(promise).to.be.a('Promise');
+
+            return promise.then(user => {
+                expect(user).to.be.an('Object');
+                expect(user).to.have.property('name');
+                expect(user).to.have.property('email');
+                expect(user).to.have.property('avatarUrl');
+                expect(user).to.have.property('roles');
+                expect(user).to.have.property('avatar');
+                expect(user.avatar).to.be.an('Object');
+                expect(user.avatar).to.have.property('user');
+                expect(user.avatar).to.have.property('fileSize');
+                expect(user.avatar).to.have.property('contentType');
+            });
+
+        });
+
+        it('rejects with an error if something went wrong', function () {
+            const userId = mockUsers[0]._id;
+            UserMock.expects('findById').withArgs(userId)
+                .chain('exec')
+                .rejects(new Error('Oops, something went wrong...'));
+
+            const promise = Repository.getUser(userId);
+            expect(promise).to.be.a('Promise');
+
+            return promise.catch(err => {
+                expect(err).to.exist;
+                expect(err).to.be.an('Error');
+            });
+        });
+    });
+
+    describe('lookupUserByEmail()', function () {
+    });
+
+    describe('deleteUser()', function () {
+    });
+
+    describe('updateUser()', function () {
+    });
+
+    describe('uploadUserAvatar()', function () {
+    });
+
+    describe('signUpUser()', function () {
+    });
 });
