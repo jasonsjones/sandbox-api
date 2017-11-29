@@ -9,3 +9,4 @@ npm-debug.log
 .v8flags*
 .babel.json
 .env
+.bash_history
