@@ -76,15 +76,15 @@ function seedDefaultAvatar() {
 function createDefaultAvatar() {
     const avatar = new Avatar({
         contentType: "image/png",
-        fileSize: fs.statSync(__dirname + '/../assets/sfdc_default_avatar.png').size,
-        data: fs.readFileSync(__dirname + '/../assets/sfdc_default_avatar.png'),
+        fileSize: fs.statSync(__dirname + '/../../assets/sfdc_default_avatar.png').size,
+        data: fs.readFileSync(__dirname + '/../../assets/sfdc_default_avatar.png'),
         defaultImg: true
     });
     return avatar;
 }
 
 function makeCustomAvatar(userId, filename) {
-    let filepath = `/../assets/${filename}`
+    let filepath = `/../../assets/${filename}`
     const avatar = new Avatar({
         contentType: "image/png",
         fileSize: fs.statSync(__dirname + filepath).size,
