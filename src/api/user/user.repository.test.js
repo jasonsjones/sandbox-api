@@ -193,11 +193,7 @@ describe('User repository', function () {
             expect(promise).to.be.a('Promise');
 
             return promise.then(user => {
-                expect(user).to.be.an('Object');
-                expect(user).to.have.property('name');
-                expect(user).to.have.property('email');
-                expect(user).to.have.property('avatarUrl');
-                expect(user).to.have.property('roles');
+                expectUserProperties(user);
             });
         });
 
@@ -211,18 +207,8 @@ describe('User repository', function () {
             expect(promise).to.be.a('Promise');
 
             return promise.then(user => {
-                expect(user).to.be.an('Object');
-                expect(user).to.have.property('name');
-                expect(user).to.have.property('email');
-                expect(user).to.have.property('avatarUrl');
-                expect(user).to.have.property('roles');
-                expect(user).to.have.property('avatar');
-                expect(user.avatar).to.be.an('Object');
-                expect(user.avatar).to.have.property('user');
-                expect(user.avatar).to.have.property('fileSize');
-                expect(user.avatar).to.have.property('contentType');
+                expectUserToHaveAvatar(user);
             });
-
         });
 
         it('rejects with an error if something went wrong', function () {
@@ -242,6 +228,48 @@ describe('User repository', function () {
     });
 
     describe('lookupUserByEmail()', function () {
+        it('resolves to a user with the given email', function () {
+            const email = mockUsers[0].email;
+            UserMock.expects('findOne').withArgs({email: email})
+                .chain('exec')
+                .resolves(mockUsers[0]);
+
+            const promise = Repository.lookupUserByEmail(email);
+            expect(promise).to.be.a('Promise');
+
+            return promise.then(user => {
+                expectUserProperties(user);
+            });
+        });
+
+        it('resolves to a user with the avatar model included', function () {
+            const email = mockUsersWithAvatar[0].email;
+            UserMock.expects('findOne').withArgs({email: email})
+                .chain('exec')
+                .resolves(mockUsersWithAvatar[0]);
+
+            const promise = Repository.lookupUserByEmail(email, true);
+            expect(promise).to.be.a('Promise');
+
+            return promise.then(user => {
+                expectUserToHaveAvatar(user);
+            });
+        });
+
+        it('rejects with an error if something went wrong', function () {
+            const email = mockUsers[0].email;
+            UserMock.expects('findOne').withArgs({email: email})
+                .chain('exec')
+                .rejects(new Error('Oops, something went wrong...'));
+
+            const promise = Repository.lookupUserByEmail(email);
+            expect(promise).to.be.a('Promise');
+
+            return promise.catch(err => {
+                expect(err).to.exist;
+                expect(err).to.be.an('Error');
+            });
+        });
     });
 
     describe('deleteUser()', function () {
@@ -256,3 +284,26 @@ describe('User repository', function () {
     describe('signUpUser()', function () {
     });
 });
+
+const expectUserToHaveAvatar = user => {
+    expect(user).to.be.an('Object');
+    expect(user).to.have.property('name');
+    expect(user).to.have.property('email');
+    expect(user).to.have.property('avatarUrl');
+    expect(user).to.have.property('roles');
+    expect(user).to.have.property('avatar');
+    expect(user.avatar).to.be.an('Object');
+    expect(user.avatar).to.have.property('user');
+    expect(user.avatar).to.have.property('fileSize');
+    expect(user.avatar).to.have.property('contentType');
+};
+
+const expectUserProperties = user => {
+    expect(user).to.be.an('Object');
+    expect(user).to.have.property('name');
+    expect(user).to.have.property('email');
+    expect(user).to.have.property('avatarUrl');
+    expect(user).to.have.property('roles');
+    expect(user).to.have.property('avatar');
+    expect(user.avatar).to.be.a('string');
+};

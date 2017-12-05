@@ -28,6 +28,7 @@ export function getUser(id, inclAvatar = false) {
         } else {
             query = User.findById(id);
         }
+
         query.exec()
             .then(user => {
                 resolve(user);
@@ -35,12 +36,26 @@ export function getUser(id, inclAvatar = false) {
             .catch(err => {
                 reject(err)
             });
-
     });
 }
 
-export function lookupUserByEmail(email) {
-    return Promise.resolve(User.findOne({email: email}).exec());
+export function lookupUserByEmail(email, inclAvatar = false) {
+    return new Promise((resolve, reject) => {
+        let query;
+        if (inclAvatar) {
+            query = User.findOne({email: email}).populate('avatar', '-data');
+        } else {
+            query = User.findOne({email: email});
+        }
+
+        query.exec()
+            .then(user => {
+                resolve(user);
+            })
+            .catch(err => {
+                reject(err)
+            });
+    });
 }
 
 export function deleteUser(id) {
