@@ -11,7 +11,7 @@
     "dbSeed": "babel-node src/api/dbSeed.js",
     "lt": "lt --port 3000 --subdomain sandboxapi",
     "lint": "eslint webpack.config.js src/**/*.js",
-    "test": "NODE_ENV=test mocha src/api/**/*.test.js --compilers js:babel-register"
+    "test:api": "NODE_ENV=test mocha src/api/**/*.test.js --compilers js:babel-register"
   },
   "repository": {
     "type": "git",
