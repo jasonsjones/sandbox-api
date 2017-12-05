@@ -50,7 +50,6 @@ describe('Avatar Repository', function () {
     });
 
     describe('getAvatars()', function () {
-
         it('resolves to an array of avatars', function () {
             AvatarMock = sinon.mock(Avatar);
             AvatarMock.expects('find').withArgs({})
@@ -83,7 +82,6 @@ describe('Avatar Repository', function () {
     });
 
     describe('getAvatar()', function () {
-
         it('with default id resolves to the default image', function () {
             AvatarMock = sinon.mock(Avatar);
             AvatarMock.expects('findOne').withArgs({defaultImg: true})
@@ -163,6 +161,7 @@ describe('Avatar Repository', function () {
                 expect(err).to.be.an('Error');
             });
         });
+
         it('with avatar id resolves with avatar.remove()', () => {
             const stub = sinon.stub(Avatar.prototype, 'remove');
             stub.resolves(new Avatar(mockAvatars[3]));
@@ -180,7 +179,6 @@ describe('Avatar Repository', function () {
                 stub.restore();
             });
         });
-
     });
 
     describe('makeAvatarModel()', function () {
@@ -204,9 +202,7 @@ describe('Avatar Repository', function () {
     });
 
     describe('uploadAvatar()', function () {
-
         let file, stub, spy;
-
         beforeEach(() => {
             file = {
                 originalName: 'default.png',
