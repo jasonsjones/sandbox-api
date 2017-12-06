@@ -273,16 +273,87 @@ describe('User repository', function () {
     });
 
     describe('deleteUser()', function () {
-    });
+        it('resovles to the deleted user when successful', function () {
+            UserMock.expects('findByIdAndRemove').withArgs(mockUsers[1]._id)
+                .chain('exec')
+                .resolves(mockUsers[1]);
 
-    describe('updateUser()', function () {
-    });
+            const promise = Repository.deleteUser(mockUsers[1]._id);
+            expect(promise).to.be.a('Promise');
+            return promise.then(user => {
+                expectUserProperties(user);
+            });
+        });
 
-    describe('uploadUserAvatar()', function () {
+        it('rejects with error if something goes wrong', function () {
+            UserMock.expects('findByIdAndRemove').withArgs(mockUsers[1]._id)
+                .chain('exec')
+                .rejects(new Error('Oops, something went wrong deleting the user'));
+
+            const promise = Repository.deleteUser(mockUsers[1]._id);
+            expect(promise).to.be.a('Promise');
+            return promise.catch(err => {
+                expect(err).to.exist;
+                expect(err).to.be.an('Error');
+            });
+        });
     });
 
     describe('signUpUser()', function () {
+        let newUser;
+        beforeEach(() => {
+            newUser = {
+                name: "Roy Harper",
+                email: "roy@qc.com",
+                password: 'arsenal',
+                roles: [
+                    "user"
+                ]
+            };
+        });
+
+        afterEach(() => {
+            newUser = null;
+        });
+
+        it('resolves with user.save()', function () {
+            const stub = sinon.stub(User.prototype, 'save');
+            stub.resolves(mockUsers[0]);
+
+            const promise = Repository.signUpUser(newUser);
+            expect(promise).to.be.an('Promise');
+
+            promise.then(user => {
+                expectUserProperties(user);
+                stub.restore();
+            });
+        });
+
+        it('rejects with error if something goes wrong', function () {
+            const stub = sinon.stub(User.prototype, 'save');
+            stub.rejects(new Error('Ooops, something went wrong when saving the user'));
+
+            const promise = Repository.signUpUser(newUser);
+            expect(promise).to.be.an('Promise');
+
+            promise.catch(err => {
+                expect(err).to.exist;
+                expect(err).to.be.an('Error');
+                stub.restore();
+            });
+        });
     });
+
+    describe('updateUser()', function () {
+        it('resolves with user.save()');
+        it('rejects with error if something goes wrong');
+    });
+
+    describe('uploadUserAvatar()', function () {
+        it('resolves with user.save()');
+        it('rejects with error if something goes wrong');
+    });
+
 });
 
 const expectUserToHaveAvatar = user => {
@@ -305,5 +376,4 @@ const expectUserProperties = user => {
     expect(user).to.have.property('avatarUrl');
     expect(user).to.have.property('roles');
     expect(user).to.have.property('avatar');
-    expect(user.avatar).to.be.a('string');
 };

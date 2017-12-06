@@ -11,12 +11,8 @@ export function getUsers(queryCondition = {}, inclAvatars = false) {
         }
 
         query.exec()
-            .then(users => {
-                resolve(users);
-            })
-            .catch(err => {
-                reject(err)
-            });
+            .then(users => resolve(users))
+            .catch(err => reject(err));
     });
 }
 
@@ -30,12 +26,8 @@ export function getUser(id, inclAvatar = false) {
         }
 
         query.exec()
-            .then(user => {
-                resolve(user);
-            })
-            .catch(err => {
-                reject(err)
-            });
+            .then(user => resolve(user))
+            .catch(err => reject(err));
     });
 }
 
@@ -49,17 +41,17 @@ export function lookupUserByEmail(email, inclAvatar = false) {
         }
 
         query.exec()
-            .then(user => {
-                resolve(user);
-            })
-            .catch(err => {
-                reject(err)
-            });
+            .then(user => resolve(user))
+            .catch(err => reject(err));
     });
 }
 
 export function deleteUser(id) {
-    return Promise.resolve(User.findByIdAndRemove(id).exec());
+    return new Promise((resolve, reject) => {
+        User.findByIdAndRemove(id).exec()
+            .then(user => resolve(user))
+            .catch(err => reject(err));
+    });
 }
 
 export function updateUser(id, userData) {
@@ -102,5 +94,5 @@ export function uploadUserAvatar(id, file) {
 
 export function signUpUser(userData) {
     let newUser = new User(userData);
-    return Promise.resolve(newUser.save());
+    return newUser.save();
 }
