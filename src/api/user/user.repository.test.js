@@ -3,6 +3,7 @@ import sinon from 'sinon';
 import 'sinon-mongoose';
 
 import User from './user.model';
+import Avatar from '../avatar/avatar.model';
 import * as Repository from './user.repository';
 
 const mockUsersWithAvatar = [
@@ -345,15 +346,115 @@ describe('User repository', function () {
     });
 
     describe('updateUser()', function () {
-        it('resolves with user.save()');
-        it('rejects with error if something goes wrong');
+        it('resolves with user.save()', function () {
+            const updatedData = {
+                name: "Roy (red hood) Harper",
+                email: "arsenal@qc.com"
+            };
+            const stub = sinon.stub(User.prototype, 'save');
+            stub.resolves(new User(Object.assign(mockUsers[0], updatedData)));
+            UserMock.expects('findById').withArgs(mockUsers[0]._id)
+                .chain('exec')
+                .resolves(stub());
+            const promise = Repository.updateUser(mockUsers[0]._id, updatedData);
+            expect(promise).to.be.a('Promise');
+            return promise.then(user => {
+                expectUserProperties(user);
+                expect(user.name).to.equal(updatedData.name);
+                expect(user.email).to.equal(updatedData.email);
+                stub.restore();
+            });
+        });
+
+        it('rejects with error if something goes wrong', function () {
+            const updatedData = {
+                name: "Roy (red hood) Harper",
+                email: "arsenal@qc.com"
+            };
+            UserMock.expects('findById').withArgs(mockUsers[0]._id)
+                .chain('exec')
+                .rejects(new Error('Oops...something went wrong finding the user to update'));
+            const promise = Repository.updateUser(mockUsers[0]._id, updatedData);
+            expect(promise).to.be.a('Promise');
+            return promise.catch(err => {
+                expect(err).to.exist;
+                expect(err).to.be.an('Error');
+            });
+
+        });
     });
 
     describe('uploadUserAvatar()', function () {
-        it('resolves with user.save()');
-        it('rejects with error if something goes wrong');
-    });
+        let userId, file, avatarStub, userStub;
+        beforeEach(() => {
+            userId = mockUsers[1]._id;
+            file = {
+                originalName: 'male3.png',
+                mimetype: 'image/png',
+                size: 62079,
+                path: __dirname + '/../../../assets/male3.png'
+            };
+            avatarStub = sinon.stub(Avatar.prototype, 'save');
+            userStub = sinon.stub(User.prototype, 'save');
+        });
 
+        afterEach(() => {
+            userId = null;
+            file = {};
+            avatarStub.restore();
+            userStub.restore();
+        });
+
+        it('resolves with user.save()', function () {
+            avatarStub.resolves(new Avatar(mockUsersWithAvatar[1].avatar));
+            userStub.resolves(new User(mockUsers[1]));
+
+            UserMock.expects('findById').withArgs(userId)
+                .chain('exec')
+                .resolves(new User(mockUsers[1]));
+
+            const promise = Repository.uploadUserAvatar(userId, file, false);
+            expect(promise).to.be.a('Promise');
+
+            promise.then(user => {
+                expectUserProperties(user);
+            });
+        });
+
+        it('rejects with error if something goes wrong saving the avatar', function () {
+            avatarStub.rejects(new Error('Oops, problem saving the avatar...'))
+            userStub.resolves(new User(mockUsers[1]));
+
+            UserMock.expects('findById').withArgs(userId)
+                .chain('exec')
+                .resolves(new User(mockUsers[1]));
+
+            const promise = Repository.uploadUserAvatar(userId, file, false);
+            expect(promise).to.be.a('Promise');
+
+            promise.catch(err => {
+                expect(err).to.exist;
+                expect(err).to.be.an('Error');
+            });
+        });
+
+        it('rejects with error if something goes wrong saving the user', function () {
+            avatarStub.resolves(new Avatar(mockUsersWithAvatar[1].avatar));
+            userStub.rejects(new Error('Oops, something went wropng saving the user'));
+
+            UserMock.expects('findById').withArgs(userId)
+                .chain('exec')
+                .resolves(new User(mockUsers[1]));
+
+            const promise = Repository.uploadUserAvatar(userId, file, false);
+            expect(promise).to.be.a('Promise');
+
+            promise.catch(err => {
+                expect(err).to.exist;
+                expect(err).to.be.an('Error');
+            });
+        });
+    });
 });
 
 const expectUserToHaveAvatar = user => {
