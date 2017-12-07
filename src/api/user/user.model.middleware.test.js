@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
 import 'sinon-mongoose';
+import bcrypt from 'bcrypt-nodejs';
 
 import User from './user.model';
 import Avatar from '../avatar/avatar.model';
@@ -105,18 +106,70 @@ describe("User model middleware", function () {
     });
 
     describe('hashPassword()', function () {
-        it('hashes the password to save in db', function (done) {
-            const ORIG_PWD = 'arrow';
-            let user = new User({
+        const ORIG_PWD = 'arrow';
+        let user;
+        beforeEach(() => {
+            user = new User({
                 name: 'Oliver Queen',
                 email: 'oliver@qc.com',
                 password: ORIG_PWD,
             });
+        });
+
+        afterEach(() => {
+            user = null;
+        });
+
+        it('hashes the password to save in db', function (done) {
             // need to bind the middleware function to the user to ensure the
             // proper 'this' context from within the function
             Middleware.hashPassword.bind(user, function (err, hashedUser) {
                 expect(hashedUser.password).to.not.equal(ORIG_PWD);
                 expect(hashedUser.password.startsWith('$2a$')).to.be.true;
+                done();
+            })();
+        });
+
+        it('does not hash the password if it has not changed', function (done) {
+            user.isModified = () => false;
+
+            // need to bind the middleware function to the user to ensure the
+            // proper 'this' context from within the function
+            Middleware.hashPassword.bind(user, function (err, hashedUser) {
+                expect(err).to.not.exist;
+                expect(hashedUser).to.not.exist;
+                done();
+            })();
+        });
+
+        it('invokes the callback with an error if there was a problem with bcrypt salt', function (done) {
+            user.isModified = () => true;
+
+            const bcryptStub = sinon.stub(bcrypt, 'genSalt');
+            bcryptStub.yields(new Error('Oops, something went wrong with the salt...'));
+
+            // need to bind the middleware function to the user to ensure the
+            // proper 'this' context from within the function
+            Middleware.hashPassword.bind(user, function (err, hashedUser) {
+                expect(err).to.exist;
+                expect(hashedUser).to.not.exist;
+                bcryptStub.restore();
+                done();
+            })();
+        });
+
+        it('invokes the callback with an error if there was a problem with bcrypt hash', function (done) {
+            user.isModified = () => true;
+
+            const bcryptStub = sinon.stub(bcrypt, 'hash');
+            bcryptStub.yields(new Error('Oops, something went wrong with the hash...'));
+
+            // need to bind the middleware function to the user to ensure the
+            // proper 'this' context from within the function
+            Middleware.hashPassword.bind(user, function (err, hashedUser) {
+                expect(err).to.exist;
+                expect(hashedUser).to.not.exist;
+                bcryptStub.restore();
                 done();
             })();
         });
