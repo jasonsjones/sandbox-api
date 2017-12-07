@@ -24,9 +24,20 @@ const initialUsers = [
         password: "spartan"
     },
     {
+        name: "Felicity Smoak",
+        email: "felicity@qc.com",
+        roles: ["admin", "user"],
+        password: "felicity"
+    },
+    {
         name: "Roy Harper",
         email: "roy@qc.com",
         password: "arsenal"
+    },
+    {
+        name: "Thea Queen",
+        email: "thea@qc.com",
+        password: "thea"
     }
 ];
 
