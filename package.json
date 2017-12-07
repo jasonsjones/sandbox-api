@@ -11,7 +11,7 @@
     "dbSeed": "babel-node src/api/dbSeed.js",
     "lt": "lt --port 3000 --subdomain sandboxapi",
     "lint": "eslint webpack.config.js src/**/*.js",
-    "test:api": "NODE_ENV=test mocha src/api/**/*.test.js --compilers js:babel-register"
+    "test:api": "NODE_ENV=test nyc mocha src/api/**/*.test.js --compilers js:babel-register"
   },
   "repository": {
     "type": "git",
@@ -70,6 +70,7 @@
     "localtunnel": "^1.8.3",
     "mocha": "^3.5.0",
     "nodemon": "^1.11.0",
+    "nyc": "^11.3.0",
     "sinon": "^3.2.0",
     "sinon-mongoose": "^2.0.2",
     "style-loader": "^0.18.2",

@@ -10,3 +10,4 @@ npm-debug.log
 .babel.json
 .env
 .bash_history
+.nyc_output
