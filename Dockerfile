@@ -10,6 +10,6 @@ RUN chown -R blacktab:blacktab $HOME/
 
 USER blacktab
 WORKDIR $HOME/
-RUN npm install
+RUN yarn install
 
 CMD ["npm", "run", "dev"]
