@@ -1,6 +1,6 @@
 FROM node
 
-MAINTAINER Jason Jones
+LABEL maintainer="Jason Jones"
 
 RUN useradd --user-group --create-home --shell /bin/false blacktab
 ENV HOME=/home/blacktab
