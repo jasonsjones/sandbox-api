@@ -45,7 +45,7 @@ const mockAvatars = [
 ];
 
 
-describe('Avatar model middleware', function () {
+describe('Avatar model middleware', () => {
     let UserMock, stub, user, avatar;
     beforeEach(() => {
         const mockUser = {
@@ -66,8 +66,8 @@ describe('Avatar model middleware', function () {
         avatar = null;
     });
 
-    describe('removeAvatarRefFromUser()', function () {
-        it('removes the avatar ref and avatarUrl from user model', function () {
+    describe('removeAvatarRefFromUser()', () => {
+        it('removes the avatar ref and avatarUrl from user model', () => {
             const expectedAvatarUrl = 'http://localhost:3000/api/avatar/default';
 
             stub = sinon.stub(User.prototype, 'save');
@@ -90,7 +90,7 @@ describe('Avatar model middleware', function () {
             });
         });
 
-        it('rejects with error if something goes wrong', function () {
+        it('rejects with error if something goes wrong', () => {
             UserMock = sinon.mock(User);
             UserMock.expects('findById').withArgs(avatar.user)
                 .chain('exec')

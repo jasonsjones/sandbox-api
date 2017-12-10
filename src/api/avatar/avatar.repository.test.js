@@ -43,14 +43,14 @@ const mockAvatars = [
     }
 ];
 
-describe('Avatar Repository', function () {
+describe('Avatar Repository', () => {
     let AvatarMock;
-    afterEach(function () {
+    afterEach(() => {
         AvatarMock.restore();
     });
 
-    describe('getAvatars()', function () {
-        it('resolves to an array of avatars', function () {
+    describe('getAvatars()', () => {
+        it('resolves to an array of avatars', () => {
             AvatarMock = sinon.mock(Avatar);
             AvatarMock.expects('find').withArgs({})
                 .chain('exec')
@@ -65,7 +65,7 @@ describe('Avatar Repository', function () {
             });
         });
 
-        it('rejects with an error if something went wrong', function () {
+        it('rejects with an error if something went wrong', () => {
             AvatarMock = sinon.mock(Avatar);
             AvatarMock.expects('find').withArgs({})
                 .chain('exec')
@@ -81,8 +81,8 @@ describe('Avatar Repository', function () {
         });
     });
 
-    describe('getAvatar()', function () {
-        it('with default id resolves to the default image', function () {
+    describe('getAvatar()', () => {
+        it('with default id resolves to the default image', () => {
             AvatarMock = sinon.mock(Avatar);
             AvatarMock.expects('findOne').withArgs({defaultImg: true})
                 .chain('exec')
@@ -101,7 +101,7 @@ describe('Avatar Repository', function () {
             });
         });
 
-        it('with default id rejects with error if something goes wrong', function () {
+        it('with default id rejects with error if something goes wrong', () => {
             AvatarMock = sinon.mock(Avatar);
             AvatarMock.expects('findOne').withArgs({defaultImg: true})
                 .chain('exec')
@@ -148,7 +148,7 @@ describe('Avatar Repository', function () {
         });
     });
 
-    describe('deleteAvatar()', function () {
+    describe('deleteAvatar()', () => {
         it('with avatar id rejects with error if something goes wrong with the lookup', () => {
             AvatarMock = sinon.mock(Avatar);
             AvatarMock.expects('findById').withArgs(mockAvatars[3]._id)
@@ -181,8 +181,8 @@ describe('Avatar Repository', function () {
         });
     });
 
-    describe('makeAvatarModel()', function () {
-        it('returns an avatar model', function () {
+    describe('makeAvatarModel()', () => {
+        it('returns an avatar model', () => {
             const file = {
                 originalName: 'default.png',
                 mimetype: 'image/png',
@@ -201,7 +201,7 @@ describe('Avatar Repository', function () {
         });
     });
 
-    describe('uploadAvatar()', function () {
+    describe('uploadAvatar()', () => {
         let file, stub, spy;
         beforeEach(() => {
             file = {
@@ -220,7 +220,7 @@ describe('Avatar Repository', function () {
             spy.restore();
         });
 
-        it('generates the avatar model and saves to db', function () {
+        it('generates the avatar model and saves to db', () => {
             const avatar = AvatarRepository.makeAvatarModel(file, mockAvatars[1].user, false);
             stub.resolves(avatar);
 
@@ -240,7 +240,7 @@ describe('Avatar Repository', function () {
             });
         });
 
-        it('catches an error if the avatar is unable to be saved to db', function () {
+        it('catches an error if the avatar is unable to be saved to db', () => {
             stub.rejects(new Error('Oops, unable to save avatar to db'));
 
             return AvatarRepository.uploadAvatar(file, null, false)

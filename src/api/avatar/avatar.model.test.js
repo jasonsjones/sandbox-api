@@ -4,8 +4,8 @@ import Avatar from './avatar.model';
 
 mongoose.Promise = global.Promise;
 
-describe('Avatar Model', function () {
-    it('is valid when all required fields are present', function (done) {
+describe('Avatar Model', () => {
+    it('is valid when all required fields are present', (done) => {
         let avatar = new Avatar({
             contentType: 'image/png',
             data: Buffer.alloc(10, 1),
@@ -18,7 +18,7 @@ describe('Avatar Model', function () {
         });
     });
 
-    it('is invalid if contentType is empty', function (done) {
+    it('is invalid if contentType is empty', (done) => {
         let avatar = new Avatar({
             /* no contentType */
             data: Buffer.alloc(10, 1),
@@ -31,7 +31,7 @@ describe('Avatar Model', function () {
         });
     });
 
-    it('is invalid if data is empty', function (done) {
+    it('is invalid if data is empty', (done) => {
         let avatar = new Avatar({
             contentType: 'image/png',
             /* no data */
@@ -44,7 +44,7 @@ describe('Avatar Model', function () {
         });
     });
 
-    it('is invalid if user is empty on a non default image', function (done) {
+    it('is invalid if user is empty on a non default image', (done) => {
         let avatar = new Avatar({
             contentType: 'image/png',
             data: Buffer.alloc(10, 1),
