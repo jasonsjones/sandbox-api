@@ -111,7 +111,7 @@ const mockUsers = [
     }
 ];
 
-describe('User repository', function () {
+describe('User repository', () => {
     let UserMock;
     beforeEach(() => {
         UserMock = sinon.mock(User);
@@ -121,8 +121,8 @@ describe('User repository', function () {
         UserMock.restore();
     });
 
-    describe('getUsers()', function () {
-        it('resolves to an array of users', function () {
+    describe('getUsers()', () => {
+        it('resolves to an array of users', () => {
             UserMock.expects('find').withArgs({})
                 .chain('exec')
                 .resolves(mockUsers);
@@ -137,7 +137,7 @@ describe('User repository', function () {
             });
         });
 
-        it('resolves to an array of users with avatars populated', function () {
+        it('resolves to an array of users with avatars populated', () => {
             UserMock.expects('find').withArgs({})
                 .chain('populate').withArgs('avatar', '-data')
                 .chain('exec')
@@ -153,7 +153,7 @@ describe('User repository', function () {
             });
         });
 
-        it('resolves to an array of QC users', function () {
+        it('resolves to an array of QC users', () => {
             const qcRegex = new RegExp('@qc.com', 'i');
             UserMock.expects('find').withArgs({email: qcRegex})
                 .chain('exec')
@@ -168,7 +168,7 @@ describe('User repository', function () {
             });
         });
 
-        it('rejects with an error if something went wrong', function () {
+        it('rejects with an error if something went wrong', () => {
             UserMock.expects('find').withArgs({})
                 .chain('exec')
                 .rejects(new Error('Oops, something went wrong...'));
@@ -183,8 +183,8 @@ describe('User repository', function () {
         });
     });
 
-    describe('getUser()', function () {
-        it('resolves to a user with the given id', function () {
+    describe('getUser()', () => {
+        it('resolves to a user with the given id', () => {
             const userId = mockUsers[0]._id;
             UserMock.expects('findById').withArgs(userId)
                 .chain('exec')
@@ -198,7 +198,7 @@ describe('User repository', function () {
             });
         });
 
-        it('resolves to a user with the avatar model included', function () {
+        it('resolves to a user with the avatar model included', () => {
             const userId = mockUsersWithAvatar[0]._id;
             UserMock.expects('findById').withArgs(userId)
                 .chain('exec')
@@ -212,7 +212,7 @@ describe('User repository', function () {
             });
         });
 
-        it('rejects with an error if something went wrong', function () {
+        it('rejects with an error if something went wrong', () => {
             const userId = mockUsers[0]._id;
             UserMock.expects('findById').withArgs(userId)
                 .chain('exec')
@@ -228,8 +228,8 @@ describe('User repository', function () {
         });
     });
 
-    describe('lookupUserByEmail()', function () {
-        it('resolves to a user with the given email', function () {
+    describe('lookupUserByEmail()', () => {
+        it('resolves to a user with the given email', () => {
             const email = mockUsers[0].email;
             UserMock.expects('findOne').withArgs({email: email})
                 .chain('exec')
@@ -243,7 +243,7 @@ describe('User repository', function () {
             });
         });
 
-        it('resolves to a user with the avatar model included', function () {
+        it('resolves to a user with the avatar model included', () => {
             const email = mockUsersWithAvatar[0].email;
             UserMock.expects('findOne').withArgs({email: email})
                 .chain('exec')
@@ -257,7 +257,7 @@ describe('User repository', function () {
             });
         });
 
-        it('rejects with an error if something went wrong', function () {
+        it('rejects with an error if something went wrong', () => {
             const email = mockUsers[0].email;
             UserMock.expects('findOne').withArgs({email: email})
                 .chain('exec')
@@ -273,8 +273,8 @@ describe('User repository', function () {
         });
     });
 
-    describe('deleteUser()', function () {
-        it('resovles to the deleted user when successful', function () {
+    describe('deleteUser()', () => {
+        it('resovles to the deleted user when successful', () => {
             UserMock.expects('findByIdAndRemove').withArgs(mockUsers[1]._id)
                 .chain('exec')
                 .resolves(mockUsers[1]);
@@ -286,7 +286,7 @@ describe('User repository', function () {
             });
         });
 
-        it('rejects with error if something goes wrong', function () {
+        it('rejects with error if something goes wrong', () => {
             UserMock.expects('findByIdAndRemove').withArgs(mockUsers[1]._id)
                 .chain('exec')
                 .rejects(new Error('Oops, something went wrong deleting the user'));
@@ -300,7 +300,7 @@ describe('User repository', function () {
         });
     });
 
-    describe('signUpUser()', function () {
+    describe('signUpUser()', () => {
         let newUser;
         beforeEach(() => {
             newUser = {
@@ -317,7 +317,7 @@ describe('User repository', function () {
             newUser = null;
         });
 
-        it('resolves with user.save()', function () {
+        it('resolves with user.save()', () => {
             const stub = sinon.stub(User.prototype, 'save');
             stub.resolves(mockUsers[0]);
 
@@ -330,7 +330,7 @@ describe('User repository', function () {
             });
         });
 
-        it('rejects with error if something goes wrong', function () {
+        it('rejects with error if something goes wrong', () => {
             const stub = sinon.stub(User.prototype, 'save');
             stub.rejects(new Error('Ooops, something went wrong when saving the user'));
 
@@ -345,8 +345,8 @@ describe('User repository', function () {
         });
     });
 
-    describe('updateUser()', function () {
-        it('resolves with user.save()', function () {
+    describe('updateUser()', () => {
+        it('resolves with user.save()', () => {
             const updatedData = {
                 name: "Roy (red hood) Harper",
                 email: "arsenal@qc.com"
@@ -366,7 +366,7 @@ describe('User repository', function () {
             });
         });
 
-        it('rejects with error if something goes wrong', function () {
+        it('rejects with error if something goes wrong', () => {
             const updatedData = {
                 name: "Roy (red hood) Harper",
                 email: "arsenal@qc.com"
@@ -384,7 +384,7 @@ describe('User repository', function () {
         });
     });
 
-    describe('uploadUserAvatar()', function () {
+    describe('uploadUserAvatar()', () => {
         let userId, file, avatarStub, userStub;
         beforeEach(() => {
             userId = mockUsers[1]._id;
@@ -405,7 +405,7 @@ describe('User repository', function () {
             userStub.restore();
         });
 
-        it('resolves with user.save()', function () {
+        it('resolves with user.save()', () => {
             avatarStub.resolves(new Avatar(mockUsersWithAvatar[1].avatar));
             userStub.resolves(new User(mockUsers[1]));
 
@@ -421,7 +421,7 @@ describe('User repository', function () {
             });
         });
 
-        it('rejects with error if something goes wrong saving the avatar', function () {
+        it('rejects with error if something goes wrong saving the avatar', () => {
             avatarStub.rejects(new Error('Oops, problem saving the avatar...'))
             userStub.resolves(new User(mockUsers[1]));
 
@@ -438,7 +438,7 @@ describe('User repository', function () {
             });
         });
 
-        it('rejects with error if something goes wrong saving the user', function () {
+        it('rejects with error if something goes wrong saving the user', () => {
             avatarStub.resolves(new Avatar(mockUsersWithAvatar[1].avatar));
             userStub.rejects(new Error('Oops, something went wropng saving the user'));
 

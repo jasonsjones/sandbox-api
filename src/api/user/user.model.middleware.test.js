@@ -69,8 +69,8 @@ const mockAvatars = [
     }
 ]
 
-describe("User model middleware", function () {
-    describe('checkForErrors()', function () {
+describe("User model middleware", () => {
+    describe('checkForErrors()', () => {
         let user;
         beforeEach(() => {
             user = new User({
@@ -81,7 +81,7 @@ describe("User model middleware", function () {
             });
         });
 
-        it('throws error if there are duplicate keys', function (done) {
+        it('throws error if there are duplicate keys', (done) => {
             const expectedErrorMsg = 'There was a duplicate key error';
             const error = {
                 name: 'MongoError',
@@ -94,7 +94,7 @@ describe("User model middleware", function () {
             });
         });
 
-        it('propagates any other errors', function (done) {
+        it('propagates any other errors', (done) => {
             const error = new Error('Something when wrong...');
             Middleware.checkForErrors(error, user, (err) => {
                 expect(err).to.exist;
@@ -105,7 +105,7 @@ describe("User model middleware", function () {
         });
     });
 
-    describe('hashPassword()', function () {
+    describe('hashPassword()', () => {
         const ORIG_PWD = 'arrow';
         let user;
         beforeEach(() => {
@@ -120,7 +120,7 @@ describe("User model middleware", function () {
             user = null;
         });
 
-        it('hashes the password to save in db', function (done) {
+        it('hashes the password to save in db', (done) => {
             // need to bind the middleware function to the user to ensure the
             // proper 'this' context from within the function
             Middleware.hashPassword.bind(user, function (err, hashedUser) {
@@ -130,7 +130,7 @@ describe("User model middleware", function () {
             })();
         });
 
-        it('does not hash the password if it has not changed', function (done) {
+        it('does not hash the password if it has not changed', (done) => {
             user.isModified = () => false;
 
             // need to bind the middleware function to the user to ensure the
@@ -142,7 +142,7 @@ describe("User model middleware", function () {
             })();
         });
 
-        it('invokes the callback with an error if there was a problem with bcrypt salt', function (done) {
+        it('invokes the callback with an error if there was a problem with bcrypt salt', (done) => {
             user.isModified = () => true;
 
             const bcryptStub = sinon.stub(bcrypt, 'genSalt');
@@ -158,7 +158,7 @@ describe("User model middleware", function () {
             })();
         });
 
-        it('invokes the callback with an error if there was a problem with bcrypt hash', function (done) {
+        it('invokes the callback with an error if there was a problem with bcrypt hash', (done) => {
             user.isModified = () => true;
 
             const bcryptStub = sinon.stub(bcrypt, 'hash');
@@ -175,7 +175,7 @@ describe("User model middleware", function () {
         });
     });
 
-    describe('removeAvatarOnDelete()', function () {
+    describe('removeAvatarOnDelete()', () => {
         let AvatarMock;
 
         beforeEach(() => {
@@ -186,7 +186,7 @@ describe("User model middleware", function () {
             AvatarMock.restore();
         });
 
-        it('removes the users custom avatar when the user is deleted', function () {
+        it('removes the users custom avatar when the user is deleted', () => {
             const stub = sinon.stub(Avatar.prototype, 'remove');
             stub.resolves(new Avatar(mockAvatars[1]));
             AvatarMock.expects('findOne').withArgs(mockUsers[2].avatar)
@@ -203,7 +203,7 @@ describe("User model middleware", function () {
             });
         });
 
-        it('rejects with an error if something goes wrong', function () {
+        it('rejects with an error if something goes wrong', () => {
             AvatarMock.expects('findOne').withArgs(mockUsers[2].avatar)
                 .chain('exec')
                 .rejects(new Error("Ooops...something went wrong!"));
