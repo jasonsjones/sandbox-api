@@ -73,6 +73,13 @@ export function updateUser(req) {
 }
 
 export function deleteUser(req) {
+    if (!req || !req.params || !req.params.id) {
+        return Promise.reject({
+            success: false,
+            message: 'Missing required request parameter',
+            error: new Error('Missing required request paramater')
+        });
+    }
     return UserRepository.deleteUser(req.params.id)
         .then(user => {
             return user.remove();
@@ -96,6 +103,13 @@ export function deleteUser(req) {
 }
 
 export function uploadUserAvatar(req) {
+    if (!req || !req.params || !req.params.userid || !req.file) {
+        return Promise.reject({
+            success: false,
+            message: 'Missing required request parameter',
+            error: new Error('Missing required request paramater')
+        });
+    }
     return UserRepository.uploadUserAvatar(req.params.userid, req.file)
         .then(user => {
             return {
@@ -116,6 +130,13 @@ export function uploadUserAvatar(req) {
 }
 
 export function signupUser(req) {
+    if (!req || !req.body) {
+        return Promise.reject({
+            success: false,
+            message: 'Missing required request parameter',
+            error: new Error('Missing required request paramater')
+        });
+    }
     return UserRepository.signUpUser(req.body)
         .then(user => {
             return {
