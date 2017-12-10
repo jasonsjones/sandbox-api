@@ -1,117 +1,137 @@
 import * as UserRepository from './user.repository';
 
-export function getUsers(req, res) {
-    UserRepository.getUsers()
+export function getUsers() {
+    return UserRepository.getUsers()
         .then(users => {
-            res.json({
+            return {
                 success: true,
-                payload: users
-            });
+                payload: {
+                    users
+                }
+            };
         })
         .catch(err => {
-            console.log(err);
-            res.json({
+            return Promise.reject({
                 success: false,
-                message: 'error getting user'
+                message: `error getting users: ${err.message}`,
+                error: err
             });
         });
 }
 
-export function getUser(req, res) {
-    UserRepository.getUser(req.params.id)
+export function getUser(req) {
+    if (!req || !req.params || !req.params.id) {
+        return Promise.reject({
+            success: false,
+            message: 'Missing required request parameter',
+            error: new Error('Missing required request paramater')
+        });
+    }
+    return UserRepository.getUser(req.params.id)
         .then(user => {
-            res.json({
+            return {
                 success: true,
-                payload: user
-            });
+                payload: {
+                    user
+                }
+            };
         })
         .catch(err => {
-            console.log(err);
-            res.json({
+            return {
                 success: false,
-                message: 'error getting user'
-            });
+                message: `error getting user: ${err.message}`,
+                error: err
+            };
         });
 }
 
-export function updateUser(req, res) {
-    UserRepository.updateUser(req.params.id, req.body)
+export function updateUser(req) {
+    if (!req || !req.params || !req.params.id || !req.body) {
+        return Promise.reject({
+            success: false,
+            message: 'Missing required request parameter',
+            error: new Error('Missing required request paramater')
+        });
+    }
+    return UserRepository.updateUser(req.params.id, req.body)
         .then(user => {
-            res.json({
+            return {
                 success: true,
                 message: 'user updated',
                 payload: {
-                    user: user
+                    user
                 }
-            });
+            };
         })
         .catch(err => {
-            console.log(err);
-            res.json({
+            return {
                 success: false,
-                message: 'error updating user'
-            });
+                message: `error updating user: ${err.message}`,
+                error: err
+            };
         });
 }
 
-export function deleteUser(req, res) {
-    UserRepository.deleteUser(req.params.id)
+export function deleteUser(req) {
+    return UserRepository.deleteUser(req.params.id)
         .then(user => {
             return user.remove();
         })
         .then(user => {
-            res.json({
+            return {
                 success: true,
                 message: 'user removed',
-                payload: user
-            });
+                payload: {
+                    user
+                }
+            };
         })
         .catch(err => {
-            console.log(err);
-            res.json({
+            return {
                 success: false,
-                message: 'error removing user'
-            });
+                message: `error removing user: ${err.message}`,
+                error: err
+            };
         });
 }
 
-export function uploadUserAvatar(req, res) {
-    UserRepository.uploadUserAvatar(req.params.userid, req.file)
+export function uploadUserAvatar(req) {
+    return UserRepository.uploadUserAvatar(req.params.userid, req.file)
         .then(user => {
-            res.json({
+            return {
                 success: true,
                 message: 'avatar uploaded and saved',
                 payload: {
-                    user: user
+                    user
                 }
-            });
+            };
         })
         .catch(err => {
-            console.log(err);
-            res.json({
+            return {
                 success: false,
-                message: 'error uploading avatar'
-            });
+                message: `error uploading avatar: ${err.message}`,
+                error: err
+            };
         });
 }
 
-export function signupUser(req, res) {
-    UserRepository.signUpUser(req.body)
+export function signupUser(req) {
+    return UserRepository.signUpUser(req.body)
         .then(user => {
-            res.json({
+            return {
                 success: true,
                 message: 'new user saved',
                 payload: {
                     name: user.name,
                     email: user.email
                 }
-            })
+            };
         })
         .catch(err => {
-            console.log(err);
-            res.json({
+            return {
                 success: false,
-                message: 'error saving new user'
-            });
+                message: `error saving new user: ${err.message}`,
+                error: err
+            };
         });
 }
