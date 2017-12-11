@@ -18,6 +18,13 @@ export function getAvatars() {
 }
 
 export function getAvatar(req) {
+    if (!req || !req.params || !req.params.id) {
+        return Promise.reject({
+            success: false,
+            message: 'request parameter is required',
+            error: new Error('request parameter is required')
+        });
+    }
     return AvatarRepository.getAvatar(req.params.id)
         .then(avatar => {
             return {
@@ -35,6 +42,13 @@ export function getAvatar(req) {
 }
 
 export function deleteAvatar(req) {
+    if (!req || !req.params || !req.params.id) {
+        return Promise.reject({
+            success: false,
+            message: 'request parameter is required',
+            error: new Error('request parameter is required')
+        });
+    }
     return AvatarRepository.deleteAvatar(req.params.id)
         .then(avatar => {
             return {
@@ -53,6 +67,13 @@ export function deleteAvatar(req) {
 }
 
 export function uploadAvatar(req) {
+    if (!req || !req.file) {
+        return Promise.reject({
+            success: false,
+            message: 'request parameter is required',
+            error: new Error('request parameter is required')
+        });
+    }
     return AvatarRepository.uploadAvatar(req.file)
         .then(avatar => {
             return {

@@ -1,3 +1,4 @@
+import fs from 'fs';
 import { expect } from 'chai';
 import sinon from 'sinon';
 import 'sinon-mongoose';
@@ -56,7 +57,7 @@ describe('Avatar Repository', () => {
                 .chain('exec')
                 .resolves(mockAvatars);
 
-            const promise = AvatarRepository.getAvatars();
+            const promise = AvatarRepository.getAvatars({}, '');
             expect(promise).to.be.a('Promise');
 
             return promise.then(avatars => {
@@ -146,6 +147,15 @@ describe('Avatar Repository', () => {
                 expect(err).to.be.an('Error');
             });
         });
+
+        it('rejects with error if the id param is not provided', () => {
+            const promise = AvatarRepository.getAvatar();
+            expect(promise).to.be.a('Promise');
+            return promise.catch(err => {
+                expect(err).to.exist;
+                expect(err).to.be.an('Error');
+            });
+        });
     });
 
     describe('deleteAvatar()', () => {
@@ -179,6 +189,15 @@ describe('Avatar Repository', () => {
                 stub.restore();
             });
         });
+
+        it('rejects with error if the id param is not provided', () => {
+            const promise = AvatarRepository.deleteAvatar();
+            expect(promise).to.be.a('Promise');
+            return promise.catch(err => {
+                expect(err).to.exist;
+                expect(err).to.be.an('Error');
+            });
+        });
     });
 
     describe('makeAvatarModel()', () => {
@@ -202,7 +221,7 @@ describe('Avatar Repository', () => {
     });
 
     describe('uploadAvatar()', () => {
-        let file, stub, spy;
+        let file, userId, stub, spy;
         beforeEach(() => {
             file = {
                 originalName: 'default.png',
@@ -210,21 +229,24 @@ describe('Avatar Repository', () => {
                 size: 62079,
                 path: __dirname + '/../../../assets/male3.png'
             };
+            userId = mockAvatars[1].user;
             stub = sinon.stub(Avatar.prototype, 'save');
             spy = sinon.spy(AvatarRepository, 'makeAvatarModel');
         });
 
         afterEach(() => {
             file = null;
+            userId = '';
             stub.restore();
             spy.restore();
         });
 
         it('generates the avatar model and saves to db', () => {
-            const avatar = AvatarRepository.makeAvatarModel(file, mockAvatars[1].user, false);
+            const avatar = AvatarRepository.makeAvatarModel(file, userId, false);
             stub.resolves(avatar);
+            spy.reset();
 
-            return AvatarRepository.uploadAvatar(file, null, false)
+            return AvatarRepository.uploadAvatar(file, userId, false)
                 .then(response => {
                     expect(response).to.exist;
                     expect(response).to.have.property('_id');
@@ -235,21 +257,68 @@ describe('Avatar Repository', () => {
                     expect(response).to.have.property('data');
                     expect(response.user.toString()).to.equal(mockAvatars[1].user);
 
-                    expect(spy.calledTwice).to.be.true;
-                    expect(spy.secondCall.args.length).to.equal(3);
+                    expect(spy.calledOnce).to.be.true;
+                    expect(spy.firstCall.args.length).to.equal(3);
+            });
+        });
+
+        it('generates the avatar model and saves to db then deletes the file for fs', () => {
+            fs.copyFileSync(file.path, `${__dirname}/../../../assets/avatarCopy.png`);
+            const copyiedAvatar = {
+                originalName: 'avatarCopy.png',
+                mimetype: 'image/png',
+                size: 62079,
+                path: __dirname + '/../../../assets/avatarCopy.png'
+            };
+            const avatar = AvatarRepository.makeAvatarModel(copyiedAvatar, userId, false);
+            stub.resolves(avatar);
+            spy.reset();
+
+            return AvatarRepository.uploadAvatar(copyiedAvatar, userId)
+                .then(response => {
+                    expect(response).to.exist;
+                    expect(response).to.have.property('_id');
+                    expect(response).to.have.property('user');
+                    expect(response).to.have.property('fileSize');
+                    expect(response).to.have.property('contentType');
+                    expect(response).to.have.property('defaultImg');
+                    expect(response).to.have.property('data');
+                    expect(response.user.toString()).to.equal(mockAvatars[1].user);
+
+                    expect(spy.calledOnce).to.be.true;
+                    expect(spy.firstCall.args.length).to.equal(3);
+                    expect(fs.existsSync(copyiedAvatar.path)).to.be.false;
             });
         });
 
         it('catches an error if the avatar is unable to be saved to db', () => {
             stub.rejects(new Error('Oops, unable to save avatar to db'));
 
-            return AvatarRepository.uploadAvatar(file, null, false)
+            return AvatarRepository.uploadAvatar(file, userId, false)
                 .then(() => { })
                 .catch(err => {
                     expect(spy.calledOnce).to.be.true;
                     expect(spy.firstCall.args.length).to.equal(3);
                     expect(err).to.exist;
                 });
+        });
+
+        it('rejects with error if the file param is not provided', () => {
+            const promise = AvatarRepository.uploadAvatar(null, userId, false);
+            expect(promise).to.be.a('Promise');
+            return promise.catch(err => {
+                expect(err).to.exist;
+                expect(err).to.be.an('Error');
+            });
+        });
+
+        it('rejects with error if the id param is not provided', () => {
+            const promise = AvatarRepository.uploadAvatar(file, null, false);
+            expect(promise).to.be.a('Promise');
+            return promise.catch(err => {
+                expect(err).to.exist;
+                expect(err).to.be.an('Error');
+            });
         });
     });
 });

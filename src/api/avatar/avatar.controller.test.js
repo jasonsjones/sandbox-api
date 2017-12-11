@@ -87,11 +87,7 @@ describe('Avatar controller', () => {
             stub.rejects(new Error('Oops, something went wrong...'));
 
             return Controller.getAvatars().catch(response => {
-                expect(response).to.have.property('success');
-                expect(response).to.have.property('message');
-                expect(response).to.have.property('error');
-                expect(response.success).to.be.false
-                expect(response.error instanceof Error).to.be.true
+                expectErrorResponse(response);
             });
         });
     });
@@ -130,12 +126,14 @@ describe('Avatar controller', () => {
             };
 
             return Controller.getAvatar(req).catch(response => {
-                expect(response).to.have.property('success');
-                expect(response).to.have.property('message');
-                expect(response).to.have.property('error');
-                expect(response.success).to.be.false
-                expect(response.error instanceof Error).to.be.true
+                expectErrorResponse(response);
             });
+        });
+
+        it('rejects with error when avatar id is not provided', () => {
+            return Controller.getAvatar().catch(response => {
+                    expectErrorResponse(response);
+                });
         });
     });
 
@@ -185,12 +183,14 @@ describe('Avatar controller', () => {
             };
 
             return Controller.deleteAvatar(req).catch(response => {
-                expect(response).to.have.property('success');
-                expect(response).to.have.property('message');
-                expect(response).to.have.property('error');
-                expect(response.success).to.be.false
-                expect(response.error instanceof Error).to.be.true
+                expectErrorResponse(response);
             });
+        });
+
+        it('rejects with error when req is not provided', () => {
+            return Controller.deleteAvatar().catch(response => {
+                    expectErrorResponse(response);
+                });
         });
     });
 
@@ -238,13 +238,22 @@ describe('Avatar controller', () => {
                 .rejects(new Error('Oops, something went wrong uploading the image...'));
 
             return Controller.uploadAvatar(req).catch(response => {
-                expect(response).to.have.property('success');
-                expect(response).to.have.property('message');
-                expect(response).to.have.property('error');
-                expect(response.success).to.be.false
-                expect(response.error instanceof Error).to.be.true
+                expectErrorResponse(response);
             });
         });
 
+        it('rejects with error when req.file is not provided', () => {
+            return Controller.uploadAvatar().catch(response => {
+                    expectErrorResponse(response);
+                });
+        });
     });
 });
+
+const expectErrorResponse = response => {
+    expect(response).to.have.property('success');
+    expect(response).to.have.property('message');
+    expect(response).to.have.property('error');
+    expect(response.success).to.be.false
+    expect(response.error instanceof Error).to.be.true
+}
