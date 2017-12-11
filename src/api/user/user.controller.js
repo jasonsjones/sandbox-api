@@ -23,8 +23,8 @@ export function getUser(req) {
     if (!req || !req.params || !req.params.id) {
         return Promise.reject({
             success: false,
-            message: 'Missing required request parameter',
-            error: new Error('Missing required request paramater')
+            message: 'request parameter is required',
+            error: new Error('request parameter is required')
         });
     }
     return UserRepository.getUser(req.params.id)
@@ -49,8 +49,8 @@ export function updateUser(req) {
     if (!req || !req.params || !req.params.id || !req.body) {
         return Promise.reject({
             success: false,
-            message: 'Missing required request parameter',
-            error: new Error('Missing required request paramater')
+            message: 'request parameter is required',
+            error: new Error('request parameter is required')
         });
     }
     return UserRepository.updateUser(req.params.id, req.body)
@@ -76,8 +76,8 @@ export function deleteUser(req) {
     if (!req || !req.params || !req.params.id) {
         return Promise.reject({
             success: false,
-            message: 'Missing required request parameter',
-            error: new Error('Missing required request paramater')
+            message: 'request parameter is required',
+            error: new Error('request parameter is required')
         });
     }
     return UserRepository.deleteUser(req.params.id)
@@ -106,8 +106,8 @@ export function uploadUserAvatar(req) {
     if (!req || !req.params || !req.params.userid || !req.file) {
         return Promise.reject({
             success: false,
-            message: 'Missing required request parameter',
-            error: new Error('Missing required request paramater')
+            message: 'request parameter is required',
+            error: new Error('request parameter is required')
         });
     }
     return UserRepository.uploadUserAvatar(req.params.userid, req.file)
@@ -133,8 +133,8 @@ export function signupUser(req) {
     if (!req || !req.body) {
         return Promise.reject({
             success: false,
-            message: 'Missing required request parameter',
-            error: new Error('Missing required request paramater')
+            message: 'request parameter is required',
+            error: new Error('request parameter is required')
         });
     }
     return UserRepository.signUpUser(req.body)
