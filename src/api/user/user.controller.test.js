@@ -172,6 +172,11 @@ describe('User controller', () => {
                 id: mockUsers[0]._id
             };
 
+            req.body = {
+                email: 'thearrow@qc.com',
+                name: 'the arrow'
+            };
+
             const promise = Controller.updateUser(req);
             expect(promise).to.be.a('Promise');
 
@@ -235,6 +240,15 @@ describe('User controller', () => {
             };
 
             const promise = Controller.deleteUser(req);
+            expect(promise).to.be.a('Promise');
+
+            return promise.catch(response => {
+                expectErrorResponse(response);
+            });
+        });
+
+        it('rejects with error if req parameter is not provided', () => {
+            const promise = Controller.deleteUser();
             expect(promise).to.be.a('Promise');
 
             return promise.catch(response => {

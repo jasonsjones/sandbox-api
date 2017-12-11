@@ -64,6 +64,7 @@ export function updateUser(req) {
             };
         })
         .catch(err => {
+            console.log('catching error update user');
             return {
                 success: false,
                 message: `error updating user: ${err.message}`,

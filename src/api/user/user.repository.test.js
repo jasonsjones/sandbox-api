@@ -168,7 +168,7 @@ describe('User repository', () => {
             });
         });
 
-        it('rejects with an error if something went wrong', () => {
+        it('rejects with error if something went wrong', () => {
             UserMock.expects('find').withArgs({})
                 .chain('exec')
                 .rejects(new Error('Oops, something went wrong...'));
@@ -212,13 +212,23 @@ describe('User repository', () => {
             });
         });
 
-        it('rejects with an error if something went wrong', () => {
+        it('rejects with error if something went wrong', () => {
             const userId = mockUsers[0]._id;
             UserMock.expects('findById').withArgs(userId)
                 .chain('exec')
                 .rejects(new Error('Oops, something went wrong...'));
 
             const promise = Repository.getUser(userId);
+            expect(promise).to.be.a('Promise');
+
+            return promise.catch(err => {
+                expect(err).to.exist;
+                expect(err).to.be.an('Error');
+            });
+        });
+
+        it('rejects with error if the id param is not provided', () => {
+            const promise = Repository.getUser();
             expect(promise).to.be.a('Promise');
 
             return promise.catch(err => {
@@ -257,13 +267,23 @@ describe('User repository', () => {
             });
         });
 
-        it('rejects with an error if something went wrong', () => {
+        it('rejects with error if something went wrong', () => {
             const email = mockUsers[0].email;
             UserMock.expects('findOne').withArgs({email: email})
                 .chain('exec')
                 .rejects(new Error('Oops, something went wrong...'));
 
             const promise = Repository.lookupUserByEmail(email);
+            expect(promise).to.be.a('Promise');
+
+            return promise.catch(err => {
+                expect(err).to.exist;
+                expect(err).to.be.an('Error');
+            });
+        });
+
+        it('rejects with error if the email param is not provided', () => {
+            const promise = Repository.lookupUserByEmail();
             expect(promise).to.be.a('Promise');
 
             return promise.catch(err => {
@@ -293,6 +313,16 @@ describe('User repository', () => {
 
             const promise = Repository.deleteUser(mockUsers[1]._id);
             expect(promise).to.be.a('Promise');
+            return promise.catch(err => {
+                expect(err).to.exist;
+                expect(err).to.be.an('Error');
+            });
+        });
+
+        it('rejects with error if the id param is not provided', () => {
+            const promise = Repository.deleteUser();
+            expect(promise).to.be.a('Promise');
+
             return promise.catch(err => {
                 expect(err).to.exist;
                 expect(err).to.be.an('Error');
@@ -343,6 +373,16 @@ describe('User repository', () => {
                 stub.restore();
             });
         });
+
+        it('rejects with error if the user data is not provided', () => {
+            const promise = Repository.signUpUser();
+            expect(promise).to.be.a('Promise');
+
+            return promise.catch(err => {
+                expect(err).to.exist;
+                expect(err).to.be.an('Error');
+            });
+        });
     });
 
     describe('updateUser()', () => {
@@ -381,6 +421,30 @@ describe('User repository', () => {
                 expect(err).to.be.an('Error');
             });
 
+        });
+
+        it('rejects with error if the id param is not provided', () => {
+            const updatedData = {
+                name: "Roy (red hood) Harper",
+                email: "arsenal@qc.com"
+            };
+            const promise = Repository.updateUser(null, updatedData);
+            expect(promise).to.be.a('Promise');
+
+            return promise.catch(err => {
+                expect(err).to.exist;
+                expect(err).to.be.an('Error');
+            });
+        });
+
+        it('rejects with error if the updated user data is not provided', () => {
+            const promise = Repository.updateUser(mockUsers[0]._id);
+            expect(promise).to.be.a('Promise');
+
+            return promise.catch(err => {
+                expect(err).to.exist;
+                expect(err).to.be.an('Error');
+            });
         });
     });
 
@@ -450,6 +514,26 @@ describe('User repository', () => {
             expect(promise).to.be.a('Promise');
 
             promise.catch(err => {
+                expect(err).to.exist;
+                expect(err).to.be.an('Error');
+            });
+        });
+
+        it('rejects with error if the id param is not provided', () => {
+            const promise = Repository.uploadUserAvatar(null, file);
+            expect(promise).to.be.a('Promise');
+
+            return promise.catch(err => {
+                expect(err).to.exist;
+                expect(err).to.be.an('Error');
+            });
+        });
+
+        it('rejects with error if the avatar file is not provided', () => {
+            const promise = Repository.uploadUserAvatar(mockUsers[0]._id);
+            expect(promise).to.be.a('Promise');
+
+            return promise.catch(err => {
                 expect(err).to.exist;
                 expect(err).to.be.an('Error');
             });
