@@ -3,6 +3,17 @@
   "version": "1.0.0",
   "description": "A sandbox API built on microservices",
   "main": "index.js",
+  "nyc": {
+      "exclude": [
+          "src/api/**/*.test.js",
+          "src/api/config",
+          "src/api/graphql",
+          "src/api/dbSeed.js",
+          "src/api/server.js"
+      ],
+      "sourceMap": false,
+      "instrument": false
+  },
   "scripts": {
     "predev": "npm run dbSeed",
     "dev": "nodemon src/api/server.js --inspect=0.0.0.0:5858 --watch src/ --exec babel-node",
@@ -57,6 +68,7 @@
     "babel-core": "^6.26.0",
     "babel-eslint": "8.0.3",
     "babel-loader": "^7.1.2",
+    "babel-plugin-istanbul": "^4.1.5",
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.24.1",
     "babel-register": "^6.24.1",
