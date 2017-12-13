@@ -6,6 +6,8 @@
   "nyc": {
     "exclude": [
       "src/api/**/*.test.js",
+      "src/api/**/*.routes.js",
+      "src/api/common/auth.controller.js",
       "src/api/config",
       "src/api/graphql",
       "src/api/dbSeed.js",
