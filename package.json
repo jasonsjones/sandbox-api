@@ -4,15 +4,15 @@
   "description": "A sandbox API built on microservices",
   "main": "index.js",
   "nyc": {
-      "exclude": [
-          "src/api/**/*.test.js",
-          "src/api/config",
-          "src/api/graphql",
-          "src/api/dbSeed.js",
-          "src/api/server.js"
-      ],
-      "sourceMap": false,
-      "instrument": false
+    "exclude": [
+      "src/api/**/*.test.js",
+      "src/api/config",
+      "src/api/graphql",
+      "src/api/dbSeed.js",
+      "src/api/server.js"
+    ],
+    "sourceMap": false,
+    "instrument": false
   },
   "scripts": {
     "predev": "npm run dbSeed",
@@ -22,7 +22,7 @@
     "dbSeed": "babel-node src/api/dbSeed.js",
     "lt": "lt --port 3000 --subdomain sandboxapi",
     "lint": "eslint webpack.config.js src/**/*.js",
-    "test:api": "NODE_ENV=test nyc mocha src/api/**/*.test.js --require babel-register"
+    "test:api": "NODE_ENV=test nyc mocha src/api/**/*.test.js --exit --require babel-register"
   },
   "repository": {
     "type": "git",
