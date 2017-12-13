@@ -16,6 +16,23 @@ services:
         depends_on:
             - mongo
 
+    node-test:
+        container_name: tests
+        build:
+            context: .
+        volumes:
+            - .:/home/blacktab
+        environment:
+            - NODE_ENV=test
+            - PORT=3003
+            - DEBUG=db*
+        tty: true
+        ports:
+            - "3003:3003"
+        depends_on:
+            - mongo
+        command: ["yarn", "test:api"]
+
     mongo:
         container_name: database
         image: mongo

@@ -11,3 +11,4 @@ npm-debug.log
 .env
 .bash_history
 .nyc_output
+.node-spawn*/

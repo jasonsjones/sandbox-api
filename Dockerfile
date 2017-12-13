@@ -12,4 +12,4 @@ USER blacktab
 WORKDIR $HOME/
 RUN yarn install
 
-CMD ["npm", "run", "dev"]
+CMD ["yarn", "dev"]
