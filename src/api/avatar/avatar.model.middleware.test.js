@@ -76,9 +76,9 @@ describe('Avatar model middleware', () => {
             UserMock = sinon.mock(User);
             UserMock.expects('findById').withArgs(avatar.user)
                 .chain('exec')
-                .resolves(user);
+                .resolves(stub());
 
-            expect(user.avatar).not.to.null;
+            expect(user.avatar).not.to.be.null;
             expect(user.avatarUrl).not.to.equal(expectedAvatarUrl);
 
             const promise = AvatarMiddleware.removeAvatarRefFromUser(avatar);
