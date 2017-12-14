@@ -9,103 +9,88 @@ import * as UserRepository from '../user/user.repository';
 const env = process.env.NODE_ENV || "development";
 const config = Config[env];
 
-export function verifyToken(req, res, next) {
-    let token = req.body.token || req.query.token || req.headers['x-access-token'];
-    if (token) {
-        jwt.verify(token, config.token_secret, (err, decoded) => {
-            if (err) {
-                return res.json({
+export function verifyToken(req) {
+    return new Promise((resolve, reject) => {
+        let token = req.body.token || req.query.token || req.headers['x-access-token'];
+        if (token) {
+            try {
+                const decoded = jwt.verify(token, config.token_secret);
+                req.decoded = decoded;
+                resolve(decoded);
+            } catch (err) {
+                reject({
                     success: false,
-                    message: 'Error with the token',
-                    payload: null
+                    message: err.message,
+                    error: err
                 });
             }
-            if (decoded) {
-                req.decoded = decoded
-                next();
-            } else {
-                res.status(401);
-                res.json({
-                    success: false,
-                    message: 'invalid token provided',
-                    payload: null
-                });
-            }
-        });
-    } else {
-        res.status(401);
-        res.json({
-            success: false,
-            message: 'No token provided',
-            payload: null
-        });
-    }
-}
-
-export function protectRouteByUser(req, res, next) {
-    if (req.decoded && req.decoded.sub === req.params.userid) {
-        next();
-    } else {
-        res.status(401);
-        res.json({
-            success: false,
-            message: 'Not an authorized user for this route',
-            payload: null
-        });
-    }
-}
-
-export function adminRoute(req, res, next) {
-    User.findById(req.decoded.sub).exec()
-        .then(user => {
-            if (user.isAdmin()) {
-                next();
-            } else {
-                res.status(401);
-                res.json({
-                    success: false,
-                    message: 'Not an authorized user for this route',
-                    payload: null
-                });
-            }
-        })
-        .catch(err => {
-            console.log(err);
-            next(err);
-        });
-}
-
-export function loginUser(req, res) {
-    User.findOne({email: req.body.email}).exec()
-        .then(user => {
-            if (user && user.verifyPassword(req.body.password)) {
-                const token = AuthUtils.generateToken(user);
-                res.json({
-                    success: true,
-                    message: 'user authenticated',
-                    payload: {
-                        user,
-                        token
-                    }
-                });
-            } else {
-                res.json({
-                    success: false,
-                    message: 'invalid username or password',
-                    payload: null
-                });
-            }
-        })
-        .catch(err => {
-            console.log(err);
-            res.json({
+        } else {
+            reject({
                 success: false,
-                message: 'user not found',
-                payload: null
+                message: 'No token provided'
             });
+        }
+    });
+}
+
+export function protectRouteByUser(req) {
+    return new Promise((resolve, reject) => {
+        if (!req.decoded) {
+            reject({
+                sucess: false,
+                message: 'Token has not yet been verified'
+            });
+        }
+        if (req.decoded && req.decoded.sub === req.params.userid) {
+            resolve(true);
+        } else {
+            reject({
+                success: false,
+                message: 'Not an authorized user for this route'
+            });
+        }
+    });
+}
+
+export function adminRoute(req) {
+    return new Promise((resolve, reject) => {
+        if (!req.decoded) {
+            reject({
+                sucess: false,
+                message: 'Token has not yet been verified'
+            });
+        }
+        User.findById(req.decoded.sub).exec()
+            .then(user => {
+                if (user.isAdmin()) {
+                    resolve(true);
+                } else {
+                    reject({
+                        success: false,
+                        message: 'Not an authorized user for this route'
+                    });
+                }
+            })
+            .catch(err => reject(err));
+    });
+}
+
+export function loginUser(req) {
+    return new Promise((resolve, reject) => {
+        User.findOne({email: req.body.email}).exec()
+            .then(user => {
+                if (user && user.verifyPassword(req.body.password)) {
+                    const token = AuthUtils.generateToken(user);
+                    resolve({user, token});
+                } else {
+                    reject({message: 'invalid username or password'});
+                }
+            })
+            .catch(err => reject(err));
         });
 }
 
+/* Not sure if this will promisified... */
 export const redirectToSFDC = (req, res) => {
     const clientId = process.env.SFDC_CLIENT_ID;
     const callback = encodeURI('http://localhost:3000/auth/callback');
@@ -118,6 +103,7 @@ export const redirectToSFDC = (req, res) => {
     res.redirect(url);
 }
 
+/* Promisify later, if needed.  Will be using passport for this logic in the near future... */
 export const sfdcCallback = (req, res) => {
     let access_token;
     let clientId = process.env.SFDC_CLIENT_ID;
