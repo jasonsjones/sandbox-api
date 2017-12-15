@@ -10,11 +10,11 @@
             "request": "attach",
             "protocol": "inspector",
             "port": 5858,
-            "address": "127.0.0.1",
+            "address": "localhost",
             "restart": false,
             "sourceMaps": false,
-            "localRoot": "${workspaceRoot}",
-            "remoteRoot": "/home/blacktab"
+            "localRoot": "${workspaceFolder}",
+            "remoteRoot": "/home/blacktab/"
         }
     ]
 }
