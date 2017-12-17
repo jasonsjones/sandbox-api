@@ -6,7 +6,7 @@ import User from '../user/user.model';
 import * as AuthUtils from './auth.utils';
 import * as UserRepository from '../user/user.repository';
 
-const env = process.env.NODE_ENV || "development";
+const env = process.env.NODE_ENV || /* istanbul ignore next */ "development";
 const config = Config[env];
 
 export function verifyToken(req) {
@@ -37,7 +37,7 @@ export function protectRouteByUser(req) {
     return new Promise((resolve, reject) => {
         if (!req.decoded) {
             reject({
-                sucess: false,
+                success: false,
                 message: 'Token has not yet been verified'
             });
         }
@@ -85,8 +85,7 @@ export function adminRoute(req) {
     });
 }
 
-/* istanbul ignore next */
-export function loginUser(req) {
+export /* istanbul ignore next */ function loginUser(req) {
     return new Promise((resolve, reject) => {
         User.findOne({email: req.body.email}).exec()
             .then(user => {
@@ -102,8 +101,7 @@ export function loginUser(req) {
 }
 
 /* Not sure if this will promisified... */
-/* istanbul ignore next */
-export const redirectToSFDC = (req, res) => {
+export /* istanbul ignore next */ const redirectToSFDC = (req, res) => {
     const clientId = process.env.SFDC_CLIENT_ID;
     const callback = encodeURI('http://localhost:3000/auth/callback');
 
@@ -116,8 +114,7 @@ export const redirectToSFDC = (req, res) => {
 }
 
 /* Promisify later, if needed.  Will be using passport for this logic in the near future... */
-/* istanbul ignore next */
-export const sfdcCallback = (req, res) => {
+export /* istanbul ignore next */ const sfdcCallback = (req, res) => {
     let access_token;
     let clientId = process.env.SFDC_CLIENT_ID;
     let clientSecret = process.env.SFDC_CLIENT_SECRET;

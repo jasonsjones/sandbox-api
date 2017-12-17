@@ -216,10 +216,64 @@ describe('Auth controller', () => {
     });
 
     describe('protectRouteByUser()', () => {
-        it('resolve to true if the user action is for the user with the token');
-        it('resolve to false if the user action is NOT for the user with the token');
-        it('rejects if something went wrong getting the user');
-        it('rejects if the token had not be verified or decoded');
+        it('resolve to true if the user action is for the user with the token', () => {
+            const req = {
+                decoded: {
+                    sub: '59c44d83f2943200228467b3',
+                    email: 'roy@qc.com',
+                    iat: '1513453484',
+                    exp: '1513453484'
+                },
+                params: {
+                    userid: '59c44d83f2943200228467b3'
+                }
+            };
+
+            const promise = Controller.protectRouteByUser(req);
+            expect(promise).to.be.a('Promise');
+
+            return promise.then(response => {
+                expect(response).to.be.an('object');
+                expect(response).to.have.property('success');
+                expect(response).to.have.property('message');
+                expect(response.success).to.be.true;
+            });
+        });
+
+        it('resolve to false if the user action is NOT for the user with the token', () => {
+            const req = {
+                decoded: {
+                    sub: '59c44d83f2943200228467b3',
+                    email: 'roy@qc.com',
+                    iat: '1513453484',
+                    exp: '1513453484'
+                },
+                params: {
+                    userid: '59c44d83f2943200228467b1'
+                }
+            };
+
+            const promise = Controller.protectRouteByUser(req);
+            expect(promise).to.be.a('Promise');
+
+            return promise.then(response => {
+                expect(response).to.be.an('object');
+                expect(response).to.have.property('success');
+                expect(response).to.have.property('message');
+                expect(response.success).to.be.false;
+            });
+        });
+
+        it('rejects if the token had not be verified or decoded', () => {
+            const req = {};
+
+            const promise = Controller.protectRouteByUser(req);
+            expect(promise).to.be.a('Promise');
+
+            return promise.catch(response => {
+                expectError(response);
+            });
+        });
     });
 });
 
