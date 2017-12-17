@@ -42,9 +42,12 @@ export function protectRouteByUser(req) {
             });
         }
         if (req.decoded && req.decoded.sub === req.params.userid) {
-            resolve(true);
+            resolve({
+                success: true,
+                message: 'Authorized user for this route'
+            });
         } else {
-            reject({
+            resolve({
                 success: false,
                 message: 'Not an authorized user for this route'
             });
@@ -56,25 +59,33 @@ export function adminRoute(req) {
     return new Promise((resolve, reject) => {
         if (!req.decoded) {
             reject({
-                sucess: false,
+                success: false,
                 message: 'Token has not yet been verified'
             });
         }
         User.findById(req.decoded.sub).exec()
             .then(user => {
                 if (user.isAdmin()) {
-                    resolve(true);
+                    resolve({
+                        success: true,
+                        message: 'Authorized user for this route'
+                    });
                 } else {
-                    reject({
+                    resolve({
                         success: false,
                         message: 'Not an authorized user for this route'
                     });
                 }
             })
-            .catch(err => reject(err));
+            .catch(err => reject({
+                success: false,
+                message: err.message,
+                error: err
+            }));
     });
 }
 
+/* istanbul ignore next */
 export function loginUser(req) {
     return new Promise((resolve, reject) => {
         User.findOne({email: req.body.email}).exec()
@@ -91,6 +102,7 @@ export function loginUser(req) {
 }
 
 /* Not sure if this will promisified... */
+/* istanbul ignore next */
 export const redirectToSFDC = (req, res) => {
     const clientId = process.env.SFDC_CLIENT_ID;
     const callback = encodeURI('http://localhost:3000/auth/callback');
@@ -104,6 +116,7 @@ export const redirectToSFDC = (req, res) => {
 }
 
 /* Promisify later, if needed.  Will be using passport for this logic in the near future... */
+/* istanbul ignore next */
 export const sfdcCallback = (req, res) => {
     let access_token;
     let clientId = process.env.SFDC_CLIENT_ID;
