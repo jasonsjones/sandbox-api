@@ -9,10 +9,18 @@ const allowedRoles = ['user', 'admin', 'dev'];
 const userSchema = new Schema({
     name: {type: String, required: true},
     email: {type: String, required: true, unique: true},
-    password: {type: String, required: true},
+    password: {type: String, required: function () {
+        return this.sfdc.id === undefined;
+    }},
     roles: {type: [String], enum: allowedRoles, default: ["user"]},
     avatar: {type: Schema.Types.ObjectId, ref: 'Avatar'},
-    avatarUrl: {type: String, default: `${baseUrl}/api/avatar/default`}
+    avatarUrl: {type: String, default: `${baseUrl}/api/avatar/default`},
+    sfdc: {
+        id: {type: String},
+        accessToken: {type: String},
+        refreshToken: {type: String},
+        profile: {type: Schema.Types.Mixed}
+    }
 }, {timestamps: true});
 
 userSchema.pre('save', middleware.hashPassword);
