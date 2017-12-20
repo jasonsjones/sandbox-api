@@ -46,6 +46,13 @@ app.use('/graphql', graphqlHTTP({
     graphiql: true
 }));
 
+app.use((req, res, next) => {
+    console.log('******************')
+    console.log(`Session ID: ${req.session.id}`);
+    console.log(`user is authenticated: ${req.isAuthenticated()}`);
+    next();
+});
+
 authRoute(app, passport);
 avatarRoute(app);
 userRoute(app);
