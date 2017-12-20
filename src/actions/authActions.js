@@ -7,7 +7,7 @@ export function authenticateUser(user) {
         actionType: 'AUTHENTICATE_USER',
         data: true
     });
-    dataservice.getAuthUser(user, 'passportlogin')
+    dataservice.getAuthUser(user)
         .then(data => {
             let currentUser = {
                 id: data.payload.user._id,

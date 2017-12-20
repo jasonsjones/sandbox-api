@@ -2,12 +2,13 @@ import authStore from '../stores/authStore';
 
 const baseUrl = 'http://localhost:3000/api';
 
-export function getAuthUser(user, path) {
-    const url = `${baseUrl}/${path}`;
+export function getAuthUser(user) {
+    const url = `${baseUrl}/login`;
     if (!user.email || !user.password) return;
     return new Promise((resolve, reject) => {
         fetch(url, {
             method: 'POST',
+            credentials: 'include',
             headers: {'Content-Type': 'application/json' },
             body: JSON.stringify(user)
         })
