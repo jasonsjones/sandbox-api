@@ -41,6 +41,9 @@ class UserProfilePage extends React.Component {
                     <Link to="/editprofile">
                         <button className="slds-button slds-button_brand">Edit Profile</button>
                     </Link>
+                    <a href="/auth/sfdc">
+                        <button className="slds-button slds-button_brand">Link SFDC Profile</button>
+                    </a>
                 </div>
             </div>
         );

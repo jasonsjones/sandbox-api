@@ -1,21 +1,25 @@
-import * as AuthController from './auth.controller';
 import * as AuthUtils from './auth.utils';
 
 export default (app, passport) => {
 
-    app.get('/auth/sfdc', AuthController.redirectToSFDC);
+    app.get('/auth/sfdc',
+        passport.authenticate('forcedotcom', {
+            display: 'page',
+            prompt: '',
+            login_hint: ''
+    }));
 
-    app.get('/auth/callback', AuthController.sfdcCallback);
+    app.get('/auth/callback',
+        passport.authenticate('forcedotcom', {successRedirect: '/'}));
 
     app.get('/api/signout', (req, res) => {
+        req.logout();
         req.session.destroy(() => {
             res.redirect('/login');
         });
     });
 
-    app.post('/api/login', AuthController.loginUser);
-
-    app.post('/api/passportlogin',
+    app.post('/api/login',
         passport.authenticate('local'),
         (req, res) => {
             res.json({
@@ -27,20 +31,4 @@ export default (app, passport) => {
                 }});
         }
     );
-
-    app.get('/api/sessionUser', (req, res) => {
-        if (req.session.user && req.session.jwt) {
-            res.json({
-                success: true,
-                payload: {
-                    user: req.session.user,
-                    token: req.session.jwt
-                }
-            });
-        } else {
-            res.json({
-                success: false
-            });
-        }
-    });
 }
