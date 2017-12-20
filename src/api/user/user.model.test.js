@@ -45,6 +45,22 @@ describe('User model', () => {
         });
     });
 
+    it('it is valid if password is missing but there is a sfdc id', (done) => {
+        let user = new User({
+            name: 'Parker Harris',
+            email: 'parker@salesforce.com',
+            /* no password */
+            sfdc: {
+                id: '005360000021UcXAAU'
+            }
+        });
+        user.validate((err) => {
+            expect(err).to.not.exist;
+            done()
+        });
+
+    });
+
     it('isAdmin() is true if user has an admin role', () => {
         let user = new User({
             name: 'Oliver Queen',
