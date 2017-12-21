@@ -4,7 +4,9 @@ const baseUrl = 'http://localhost:3000/api';
 
 export function getAuthUser(user) {
     const url = `${baseUrl}/login`;
-    if (!user.email || !user.password) return;
+    if (!user.email || !user.password) {
+        return Promise.reject(new Error('Missing username or password'));
+    }
     return new Promise((resolve, reject) => {
         fetch(url, {
             method: 'POST',
