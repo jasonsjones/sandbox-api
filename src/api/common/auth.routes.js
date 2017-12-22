@@ -31,4 +31,25 @@ export default (app, passport) => {
                 }});
         }
     );
+
+    app.get('/api/sessionUser', (req, res) => {
+        const user = req.user;
+        if (user) {
+            res.json({
+                success: true,
+                message: 'session user',
+                payload: {
+                    user: user,
+                    token: AuthUtils.generateToken(user)
+                }});
+        } else {
+            res.json({
+                success: false,
+                message: 'user not logged in',
+                payload: {
+                    user: null,
+                    token: null
+                }});
+        }
+    });
 }
