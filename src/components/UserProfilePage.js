@@ -21,6 +21,7 @@ class UserProfilePage extends React.Component {
 
     render() {
         const { user } = this.props;
+        const buttonText = (user.sfdcAuth) ? 'Unlink SFDC Profile' : 'Link SFDC Profile';
 
         return (
             <div className="slds-m-around_x-large container-content">
@@ -41,9 +42,9 @@ class UserProfilePage extends React.Component {
                     <Link to="/editprofile">
                         <button className="slds-button slds-button_brand">Edit Profile</button>
                     </Link>
-                    <a href="/auth/sfdc">
-                        <button className="slds-button slds-button_brand">Link SFDC Profile</button>
-                    </a>
+                    {/* this button does not do anything yet.  TODO: add onClick to initiate
+                        the correct action whether or the not the user is already linked  */}
+                    <button className="slds-button slds-button_brand">{buttonText}</button>
                 </div>
             </div>
         );
