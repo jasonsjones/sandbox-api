@@ -28,7 +28,7 @@ class UserProfilePage extends React.Component {
 
                 <div className="slds-grid slds-m-top_large">
                     <div className="slds-m-bottom_large">
-                        <img style={avatarStyles} src={this.props.user.avatarUrl}/>
+                        <img style={avatarStyles} src={user.avatarUrl}/>
                     </div>
                     <div className="slds-grid slds-grid--vertical slds-m-left_large">
                         <h3 className="slds-text-heading_medium">{user.name}</h3>

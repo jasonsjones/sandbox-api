@@ -10,7 +10,7 @@ export default (app, passport) => {
     }));
 
     app.get('/auth/callback',
-        passport.authenticate('forcedotcom', {successRedirect: '/'}));
+        passport.authenticate('forcedotcom', {successRedirect: '/profile'}));
 
     app.get('/api/signout', (req, res) => {
         req.logout();

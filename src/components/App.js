@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter, Route, Redirect } from 'react-router-dom';
 
 import authStore from '../stores/authStore';
+import * as authactions from '../actions/authActions';
 
 import LoginPage from './LoginPage';
 import UserProfilePage from './UserProfilePage';
@@ -14,7 +15,8 @@ class App extends React.Component {
         super();
         this.state = {
             currentUser: authStore.getCurrentUser(),
-            token: authStore.getToken()
+            token: authStore.getToken(),
+            isFetching: authStore.getLoginStatus()
         };
 
         this.isUserAuthenticated = this.isUserAuthenticated.bind(this);
@@ -23,6 +25,7 @@ class App extends React.Component {
 
     componentWillMount() {
         authStore.addChangeListenter(this.updateUser);
+        authactions.getSessionUser();
     }
 
     componentWillUnmount() {
@@ -32,7 +35,8 @@ class App extends React.Component {
     updateUser() {
         this.setState({
             currentUser: authStore.getCurrentUser(),
-            token: authStore.getToken()
+            token: authStore.getToken(),
+            isFetching: authStore.getLoginStatus()
         });
     }
 
@@ -56,8 +60,9 @@ class App extends React.Component {
                     <Route exact path='/profile' render={() => (
                         isAuthenticated ? (
                             <UserProfilePage user={user}/>
-                        ) : (
-                            <Redirect to='/login'/>
+                        ) : ( !this.state.isFetching
+                                ? <Redirect to='/login'/>
+                                : null
                         )
                     )}/>
                     <Route exact path='/login' render={() => (

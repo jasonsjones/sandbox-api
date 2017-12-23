@@ -42,7 +42,7 @@ export function logoutUser(user) {
 
 export function getSessionUser() {
     AppDispatcher.handleServerAction({
-        actionType: 'GET_SESSION_USER'
+        actionType: 'AUTHENTICATE_USER'
     });
     dataservice.getSessionUser()
         .then(data => {

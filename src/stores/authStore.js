@@ -56,10 +56,10 @@ class AuthStore extends EventEmitter {
     }
 
     authenticateUser(data) {
+        this.loggingIn = false;
         this.currentUser = data.user;
         this.token = data.token;
         this.errorMsg = '';
-        this.loggingIn = false;
         // this is a good place to store the token (if sent from server)
         // and current user data in local or session storage
         localStorage.setItem('userToken', this.token);
@@ -96,6 +96,7 @@ class AuthStore extends EventEmitter {
         let payload = action.action;
         switch(payload.actionType) {
             case 'AUTHENTICATE_USER':
+            case 'GET_SESSION_USER':
                 this.userLoggingIn();
                 break;
             case 'AUTHENTICATE_USER_SUCCESS':
@@ -108,11 +109,8 @@ class AuthStore extends EventEmitter {
             case 'UPDATE_USER_PROFILE_SUCCESS':
                 this.updateUser(payload.data);
                 break;
-            case 'GET_SESSION_USER':
-                console.log('getting session user...');
-                break;
             case 'GET_SESSION_USER_COMPLETE':
-                console.log('getting session user is complete...');
+                this.loggingIn = false;
                 break;
             case 'LOGOUT_USER':
                 this.logoutUser();
