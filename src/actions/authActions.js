@@ -13,7 +13,8 @@ export function authenticateUser(user) {
                 id: data.payload.user._id,
                 name: data.payload.user.name,
                 email: data.payload.user.email,
-                avatarUrl: data.payload.user.avatarUrl
+                avatarUrl: data.payload.user.avatarUrl,
+                sfdcAuth: !!data.payload.user.sfdc
             };
             let token = data.payload.token
             AppDispatcher.handleViewAction({
@@ -51,7 +52,8 @@ export function getSessionUser() {
                     id: data.payload.user._id,
                     name: data.payload.user.name,
                     email: data.payload.user.email,
-                    avatarUrl: data.payload.user.avatarUrl
+                    avatarUrl: data.payload.user.avatarUrl,
+                    sfdcAuth: !!data.payload.user.sfdc
                 };
                 let token = data.payload.token
                 AppDispatcher.handleViewAction({

@@ -18,6 +18,5 @@ export function signupUser(user) {
         })
         .catch(err => {
             console.log(err);
-
         });
 }
