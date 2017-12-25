@@ -115,3 +115,13 @@ export function signUpUser(userData) {
     let newUser = new User(userData);
     return newUser.save();
 }
+
+export const unlinkSFDCAccount = (user) => {
+    if (!user) {
+        return Promise.reject(new Error('User not provided; unable to unlink'));
+    }
+    user.sfdc.accessToken = null;
+    user.sfdc.refreshToken = null;
+    user.sfdc.profile = {};
+    return user.save();
+}

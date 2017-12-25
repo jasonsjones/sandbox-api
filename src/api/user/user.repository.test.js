@@ -539,6 +539,72 @@ describe('User repository', () => {
             });
         });
     });
+
+    describe('unlinkSFDCAccount()', () => {
+        it('resovles to the user with an unlinked sfdc account', () => {
+            let rawUserData = mockUsers[2];
+            rawUserData.sfdc = {
+                id: '003D000004534cda',
+                accessToken: 'thisisareallylongtokenreturnedfromsfdcserver',
+                refreshToken: null,
+                profile: {
+                    'display_name': 'Jason Jones',
+                    'user_id': '003D000004534cda'
+                }
+            };
+            let user = new User(rawUserData);
+            const stub = sinon.stub(User.prototype, 'save');
+            stub.resolves(user);
+
+            const promise = Repository.unlinkSFDCAccount(user);
+            expect(promise).to.be.a('Promise');
+
+            promise.then(user => {
+                expectUserProperties(user);
+                expect(user.sfdc.id).to.equal(rawUserData.sfdc.id);
+                expect(user.sfdc.accessToken).to.equal(null);
+                expect(user.sfdc.refreshToken).to.equal(null);
+                expect(user.sfdc.profile).to.be.empty;
+                stub.restore();
+            });
+        });
+
+        it('rejects with error if the user is not provided', () => {
+            const promise = Repository.unlinkSFDCAccount();
+            expect(promise).to.be.a('Promise');
+
+            return promise.catch(err => {
+                expect(err).to.exist;
+                expect(err).to.be.an('Error');
+            });
+        });
+
+        it('rejects with error if something goes wrong saving the user', () => {
+            const stub = sinon.stub(User.prototype, 'save');
+            stub.rejects(new Error('Ooops, something went wrong when saving the user'));
+
+            let rawUserData = mockUsers[2];
+            rawUserData.sfdc = {
+                id: '003D000004534cda',
+                accessToken: 'thisisareallylongtokenreturnedfromsfdcserver',
+                refreshToken: null,
+                profile: {
+                    'display_name': 'Jason Jones',
+                    'user_id': '003D000004534cda'
+                }
+            };
+
+            let user = new User(rawUserData);
+            const promise = Repository.unlinkSFDCAccount(user);
+            expect(promise).to.be.an('Promise');
+
+            promise.catch(err => {
+                expect(err).to.exist;
+                expect(err).to.be.an('Error');
+                stub.restore();
+            });
+        });
+    });
 });
 
 const expectUserToHaveAvatar = user => {
