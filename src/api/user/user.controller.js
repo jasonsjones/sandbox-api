@@ -156,3 +156,30 @@ export function signupUser(req) {
             };
         });
 }
+
+export const unlinkSFDCAccount = (req) => {
+    if (!req || !req.user) {
+        return Promise.reject({
+            success: false,
+            message: 'request parameter is required',
+            error: new Error('request parameter is required')
+        });
+    }
+    return UserRepository.unlinkSFDCAccount(req.user)
+        .then(user => {
+            return {
+                success: true,
+                message: 'user sfdc account unlinked',
+                payload: {
+                    user
+                }
+            };
+        })
+        .catch(err => {
+            return {
+                success: false,
+                message: `error unlinking the user: ${err.message}`,
+                error: err
+            };
+        })
+}

@@ -373,6 +373,63 @@ describe('User controller', () => {
             });
         });
     });
+
+    describe('unlinkSFDCAccount', () => {
+        let req, stub;
+        beforeEach(() => {
+            stub = sinon.stub(Repository, 'unlinkSFDCAccount');
+            req = {};
+            req.user = mockUsers[2];
+            req.user.sfdc = {
+                id: '003D000004534cda',
+                accessToken: 'thisisareallylongtokenreturnedfromsfdcserver',
+                refreshToken: null,
+                profile: {
+                    'display_name': 'Jason Jones',
+                    'user_id': '003D000004534cda'
+                }
+            };
+        });
+
+        afterEach(() => {
+            stub.restore();
+            req = {};
+        });
+        it('returns a promise that resolves to the unlinked user', () => {
+            let expectedUser = mockUsers[2];
+            expectedUser.sfdc = {
+                id: '003D000004534cda',
+                accessToken: null,
+                refreshToken: null,
+                profile: {}
+            };
+            stub.resolves(expectedUser);
+
+            const promise = Controller.unlinkSFDCAccount(req);
+            expect(promise).to.be.a('Promise');
+            promise.then(response => {
+                expectUserResponse(response);
+            });
+        });
+
+        it('rejects with error if something goes wrong saving the unlinked user', () => {
+            stub.rejects(new Error('Ooops, something went wrong saving the user'));
+
+            const promise = Controller.unlinkSFDCAccount(req);
+            expect(promise).to.be.a('Promise');
+            promise.catch(response => {
+                expectErrorResponse(response);
+            });
+        });
+
+        it('rejects with error if req parameter is not provided', () => {
+            const promise = Controller.unlinkSFDCAccount();
+            expect(promise).to.be.a('Promise');
+            promise.catch(response => {
+                expectErrorResponse(response);
+            });
+        });
+    });
 });
 
 const expectErrorResponse = response => {
