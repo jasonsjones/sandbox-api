@@ -46,7 +46,14 @@ export default (app) => {
             });
     });
 
-
+    app.get('/api/unlinksfdc', (req, res) => {
+        UserController.unlinkSFDCAccount(req)
+            .then(response => res.json(response))
+            .catch(err => {
+                res.status(500);
+                res.json(err);
+            });
+    });
 
     app.post('/api/signup', (req, res) => {
         UserController.signupUser(req)

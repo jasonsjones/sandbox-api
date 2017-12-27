@@ -7,10 +7,10 @@ const ForceDotComStategy = PassportSFDC.Strategy;
 
 const createNewUser = (token, refreshToken, userData) => {
     let newUser = new User();
-    newUser.name = userData.display_name;
-    newUser.email = userData.email;
+    newUser.name = userData.displayName;
+    newUser.email = userData.emails[0].value;
     newUser.sfdc = {
-        id: userData.user_id,
+        id: userData.id,
         accessToken: token,
         refreshToken: refreshToken,
         profile: userData
@@ -22,7 +22,7 @@ const linkAccount = (req, token, refreshToken, profile) => {
     let user = req.user;
     if (user) {
         user.sfdc = {};
-        user.sfdc.id = profile.user_id;
+        user.sfdc.id = profile.id;
         user.sfdc.accessToken = token;
         user.sfdc.refreshToken = refreshToken;
         user.sfdc.profile = profile;
@@ -43,21 +43,31 @@ const opts = {
 const verifyCb = (req, token, refreshToken, profile, done) => {
     // if a user is not currently logged in
     if (!req.isAuthenticated()) {
-        const { user_id } = profile._raw;
-        User.findOne({'sfdc.id': user_id}).exec()
+        const { id } = profile;
+        User.findOne({'sfdc.id': id}).exec()
             .then(user => {
                 // check if the user is already in the db
                 if (user) {
-                    return done(null, user);
+                    // if there is a user id but no token (which means a user
+                    // was linked at one point and then removed
+                    if (!user.sfdc.accessToken) {
+                        console.log('***reconnecting the user account to sfdc profile')
+                        user.sfdc.accessToken = token;
+                        user.sfdc.refreshToken = refreshToken;
+                        user.sfdc.profile = profile;
+                        return user.save();
+                    } else {
+                        return done(null, user);
+                    }
                 // if not, create a new user and save in db
                 } else {
-                    return createNewUser(token, refreshToken, profile._raw);
+                    return createNewUser(token, refreshToken, profile);
                 }
             })
             .then(user => {
                 if (user) {
                     req.login(user, () => {
-                        console.log('new user saved and logged in...');
+                        console.log('new saved and logged in...');
                     });
                     return done(null, user);
                 }
@@ -67,7 +77,7 @@ const verifyCb = (req, token, refreshToken, profile, done) => {
     // else the user is already logged in and we might want to 'link'
     // the sfdc data to the existing account
     else {
-        linkAccount(req, token, refreshToken, profile._raw)
+        linkAccount(req, token, refreshToken, profile)
             .then(user => {
                 return done(null, user);
             })
