@@ -15,9 +15,13 @@ export function updateUserProfile(newUserData) {
                     id: response.payload.user._id,
                     name: response.payload.user.name,
                     email: response.payload.user.email,
-                    avatarUrl: response.payload.user.avatarUrl,
-                    sfdcAuth: !!response.payload.user.sfdc
+                    avatarUrl: response.payload.user.avatarUrl
                 };
+                if (response.payload.user.sfdc) {
+                    currentUser.hasSFDCProfile = !!response.payload.user.sfdc.accessToken
+                } else {
+                    currentUser.hasSFDCProfile = false;
+                }
                 AppDispatcher.handleViewAction({
                     actionType: "UPDATE_USER_PROFILE_SUCCESS",
                     data: {

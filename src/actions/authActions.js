@@ -13,9 +13,13 @@ export function authenticateUser(user) {
                 id: data.payload.user._id,
                 name: data.payload.user.name,
                 email: data.payload.user.email,
-                avatarUrl: data.payload.user.avatarUrl,
-                sfdcAuth: !!data.payload.user.sfdc
+                avatarUrl: data.payload.user.avatarUrl
             };
+            if (data.payload.user.sfdc) {
+                currentUser.hasSFDCProfile = !!data.payload.user.sfdc.accessToken
+            } else {
+                currentUser.hasSFDCProfile = false;
+            }
             let token = data.payload.token
             AppDispatcher.handleViewAction({
                 actionType: "AUTHENTICATE_USER_SUCCESS",
@@ -52,9 +56,13 @@ export function getSessionUser() {
                     id: data.payload.user._id,
                     name: data.payload.user.name,
                     email: data.payload.user.email,
-                    avatarUrl: data.payload.user.avatarUrl,
-                    sfdcAuth: !!data.payload.user.sfdc
+                    avatarUrl: data.payload.user.avatarUrl
                 };
+                if (data.payload.user.sfdc) {
+                    currentUser.hasSFDCProfile = !!data.payload.user.sfdc.accessToken
+                } else {
+                    currentUser.hasSFDCProfile = false;
+                }
                 let token = data.payload.token
                 AppDispatcher.handleViewAction({
                     actionType: "AUTHENTICATE_USER_SUCCESS",

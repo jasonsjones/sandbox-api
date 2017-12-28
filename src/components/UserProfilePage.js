@@ -21,7 +21,7 @@ class UserProfilePage extends React.Component {
 
     render() {
         const { user } = this.props;
-        const buttonText = (user.sfdcAuth) ? 'Unlink SFDC Profile' : 'Link SFDC Profile';
+        const buttonText = (user.hasSFDCProfile) ? 'Unlink SFDC Profile' : 'Link SFDC Profile';
 
         return (
             <div className="slds-m-around_x-large container-content">
