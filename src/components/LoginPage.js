@@ -138,6 +138,16 @@ export default class Login extends React.Component {
                         <div className="slds-m-top_large">
                             <CheckBox />
                         </div>
+                        <p className="slds-m-top_small slds-text-align_center">&mdash; OR &mdash;</p>
+
+                        <button type='button' className="slds-button slds-button_brand slds-m-top_medium loginButton"
+                                onClick={() => window.location.assign('http://localhost:3000/auth/sfdc')}>
+                            Log In with
+                            <svg className="slds-icon slds-icon_small slds-m-horizontal_small" aria-hidden="true">
+                                <use xlinkHref='styles/design-system/assets/icons/utility-sprite/svg/symbols.svg#salesforce1' />
+                            </svg>
+                            Salesforce
+                        </button>
                         <hr/>
                         <div className="slds-grid slds-grid_align-spread slds-m-bottom_small">
                             <a href="javascript:void(0)">Forgot Your Password?</a>
