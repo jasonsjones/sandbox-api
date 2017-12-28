@@ -190,5 +190,49 @@ describe('User model', () => {
         user.removeRole('admin');
         expect(user.roles.length).to.equal(2);
     });
+
+    it('toClientJSON() returns correctly shaped json when sfdc profile is not present', () => {
+        let user = new User({
+            name: 'Oliver Queen',
+            email: 'oliver@qc.com',
+            password: 'arrow',
+            roles: ['user', 'dev']
+        });
+        const clientJSON = user.toClientJSON();
+        expect(clientJSON).to.be.an('object');
+        expect(clientJSON).to.have.property('id');
+        expect(clientJSON).to.have.property('name');
+        expect(clientJSON).to.have.property('email');
+        expect(clientJSON).to.have.property('avatarUrl');
+        expect(clientJSON).to.have.property('roles');
+        expect(clientJSON).to.have.property('hasSFDCProfile');
+        expect(clientJSON.hasSFDCProfile).to.be.false;
+    });
+
+    it('toClientJSON() returns correctly shaped json when sfdc profile is present', () => {
+        let user = new User({
+            name: 'Oliver Queen',
+            email: 'oliver@qc.com',
+            password: 'arrow',
+            roles: ['user', 'dev'],
+            sfdc: {
+                id: '005D00000567AAC',
+                accessToken: 'eadec234aadadcefff44532.ksoeijse44.soeindijsiehahuhw1234',
+                refreshToken: null,
+                profile: {
+                    displayName: "Oliver Queen",
+                }
+            }
+        });
+        const clientJSON = user.toClientJSON();
+        expect(clientJSON).to.be.an('object');
+        expect(clientJSON).to.have.property('id');
+        expect(clientJSON).to.have.property('name');
+        expect(clientJSON).to.have.property('email');
+        expect(clientJSON).to.have.property('avatarUrl');
+        expect(clientJSON).to.have.property('roles');
+        expect(clientJSON).to.have.property('hasSFDCProfile');
+        expect(clientJSON.hasSFDCProfile).to.be.true;
+    });
 });
 

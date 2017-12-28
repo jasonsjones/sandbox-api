@@ -48,5 +48,22 @@ userSchema.methods.removeRole = function (role) {
     }
 };
 
+userSchema.methods.toClientJSON = function () {
+    let userDataForClient = {
+        id: this._id,
+        name: this.name,
+        email: this.email,
+        avatarUrl: this.avatarUrl,
+        roles: this.roles
+    };
+
+    if (this.sfdc && this.sfdc.accessToken) {
+        userDataForClient.hasSFDCProfile = true;
+    } else {
+        userDataForClient.hasSFDCProfile = false;
+    }
+    return userDataForClient;
+}
+
 const User = mongoose.model('User', userSchema);
 export default User;
