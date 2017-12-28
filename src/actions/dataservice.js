@@ -126,6 +126,25 @@ export function getSessionUser() {
     });
 }
 
+export function deleteUserAccount(id) {
+    const url = `${baseUrl}/user/${id}`;
+    return new Promise((resolve, reject) => {
+        fetch(url, {
+            method: 'DELETE',
+            credentials: 'include',
+            headers: {'Content-Type': 'application/json'},
+        })
+        .then(response => response.json())
+        .then(data => {
+            resolve(data);
+        })
+        .catch(err => {
+            console.log(err);
+            reject(err);
+        });
+    });
+}
+
 const processResponse = (response) => {
     // if the response status is 200 OK, then we know we are getting
     // a json payload back

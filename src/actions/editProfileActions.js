@@ -36,5 +36,28 @@ export function updateUserProfile(newUserData) {
                 data: err
             });
         });
+}
 
+export function deleteUserAccount(id) {
+    AppDispatcher.handleViewAction({
+        actionType: "LOGOUT_USER"
+    });
+    dataservice.deleteUserAccount(id)
+        .then(response => {
+            if (response.success) {
+                let currentUser = null;
+                AppDispatcher.handleViewAction({
+                    actionType: "UPDATE_USER_PROFILE_SUCCESS",
+                    data: {
+                        user: currentUser
+                    }
+                });
+            }
+        })
+        .catch(err => {
+            AppDispatcher.handleViewAction({
+                actionType: "UPDATE_USER_PROFILE_ERROR",
+                data: err
+            });
+        });
 }

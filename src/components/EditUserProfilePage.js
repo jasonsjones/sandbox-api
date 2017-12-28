@@ -21,6 +21,7 @@ class EditUserProfilePage extends React.Component {
         }
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleDeleteUser = this.handleDeleteUser.bind(this);
 
         this.updateState = this.updateState.bind(this);
     }
@@ -52,6 +53,9 @@ class EditUserProfilePage extends React.Component {
         editProfileActions.updateUserProfile({name: this.state.name, email: this.state.email});
     }
 
+    handleDeleteUser() {
+        editProfileActions.deleteUserAccount(this.props.user.id);
+    }
 
     render() {
         return (
@@ -72,10 +76,11 @@ class EditUserProfilePage extends React.Component {
                             <Link to="/profile">
                                 <button type='button' className="slds-button slds-button_neutral">Cancel</button>
                             </Link>
+                            <button type='button' className="slds-button slds-button_destructive" onClick={this.handleDeleteUser}>Delete Account</button>
                             <button type='submit' className="slds-button slds-button_brand">Submit</button>
                         </div>
                     </form>
-                    {this.state.userUpdated && <Redirect to='/'/>}
+                    {this.state.userUpdated && <Redirect to='/profile'/>}
                 </div>
             </div>
         );
