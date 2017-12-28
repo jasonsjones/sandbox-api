@@ -8,6 +8,7 @@ import LoginPage from './LoginPage';
 import UserProfilePage from './UserProfilePage';
 import SignupPage from './SignupPage';
 import EditUserProfilePage from './EditUserProfilePage';
+import Spinner from './Spinner';
 import './App.css';
 
 class App extends React.Component {
@@ -62,7 +63,7 @@ class App extends React.Component {
                             <UserProfilePage user={user}/>
                         ) : ( !this.state.isFetching
                                 ? <Redirect to='/login'/>
-                                : null
+                                : <Spinner />
                         )
                     )}/>
                     <Route exact path='/login' render={() => (
