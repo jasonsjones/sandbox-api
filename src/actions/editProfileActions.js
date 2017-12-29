@@ -11,21 +11,13 @@ export function updateUserProfile(newUserData) {
     dataservice.updateUserProfile(newUserData)
         .then(response => {
             if (response.success) {
-                let currentUser = {
-                    id: response.payload.user._id,
-                    name: response.payload.user.name,
-                    email: response.payload.user.email,
-                    avatarUrl: response.payload.user.avatarUrl
-                };
-                if (response.payload.user.sfdc) {
-                    currentUser.hasSFDCProfile = !!response.payload.user.sfdc.accessToken
-                } else {
-                    currentUser.hasSFDCProfile = false;
-                }
+                let user = response.payload.user;
+                let token = response.payload.token
                 AppDispatcher.handleViewAction({
-                    actionType: "UPDATE_USER_PROFILE_SUCCESS",
+                    actionType: "AUTHENTICATE_USER_SUCCESS",
                     data: {
-                        user: currentUser
+                        user,
+                        token
                     }
                 });
             }
@@ -45,11 +37,11 @@ export function deleteUserAccount(id) {
     dataservice.deleteUserAccount(id)
         .then(response => {
             if (response.success) {
-                let currentUser = null;
+                let user = null;
                 AppDispatcher.handleViewAction({
                     actionType: "UPDATE_USER_PROFILE_SUCCESS",
                     data: {
-                        user: currentUser
+                        user
                     }
                 });
             }

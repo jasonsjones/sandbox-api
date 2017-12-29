@@ -26,7 +26,7 @@ export default (app, passport) => {
                 success: true,
                 message: 'authenticated via passport',
                 payload: {
-                    user: req.user,
+                    user: req.user.toClientJSON(),
                     token: AuthUtils.generateToken(req.user)
                 }});
         }
@@ -39,7 +39,7 @@ export default (app, passport) => {
                 success: true,
                 message: 'session user',
                 payload: {
-                    user: user,
+                    user: user.toClientJSON(),
                     token: AuthUtils.generateToken(user)
                 }});
         } else {

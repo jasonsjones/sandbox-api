@@ -9,25 +9,17 @@ export function authenticateUser(user) {
     });
     dataservice.getAuthUser(user)
         .then(data => {
-            let currentUser = {
-                id: data.payload.user._id,
-                name: data.payload.user.name,
-                email: data.payload.user.email,
-                avatarUrl: data.payload.user.avatarUrl
-            };
-            if (data.payload.user.sfdc) {
-                currentUser.hasSFDCProfile = !!data.payload.user.sfdc.accessToken
-            } else {
-                currentUser.hasSFDCProfile = false;
+            if (data.success) {
+                let user = data.payload.user;
+                let token = data.payload.token
+                AppDispatcher.handleViewAction({
+                    actionType: "AUTHENTICATE_USER_SUCCESS",
+                    data: {
+                        user,
+                        token
+                    }
+                });
             }
-            let token = data.payload.token
-            AppDispatcher.handleViewAction({
-                actionType: "AUTHENTICATE_USER_SUCCESS",
-                data: {
-                    user: currentUser,
-                    token: token
-                }
-            });
         })
         .catch(err => {
             AppDispatcher.handleViewAction({
@@ -52,23 +44,13 @@ export function getSessionUser() {
     dataservice.getSessionUser()
         .then(data => {
             if (data.success) {
-                let currentUser = {
-                    id: data.payload.user._id,
-                    name: data.payload.user.name,
-                    email: data.payload.user.email,
-                    avatarUrl: data.payload.user.avatarUrl
-                };
-                if (data.payload.user.sfdc) {
-                    currentUser.hasSFDCProfile = !!data.payload.user.sfdc.accessToken
-                } else {
-                    currentUser.hasSFDCProfile = false;
-                }
+                let user = data.payload.user;
                 let token = data.payload.token
                 AppDispatcher.handleViewAction({
                     actionType: "AUTHENTICATE_USER_SUCCESS",
                     data: {
-                        user: currentUser,
-                        token: token
+                        user,
+                        token
                     }
                 });
             }
