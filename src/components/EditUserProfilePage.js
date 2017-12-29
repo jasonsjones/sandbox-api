@@ -6,6 +6,7 @@ import editUserProfileStore from '../stores/editUserProfileStore';
 import * as editProfileActions from '../actions/editProfileActions';
 import AvatarUpload from './AvatarUpload';
 import InputTextElement from './InputTextElement';
+import DeleteUserModal from './DeleteUserModal';
 
 const avatarStyles = {
     borderRadius: "50%"
@@ -17,7 +18,8 @@ class EditUserProfilePage extends React.Component {
         this.state = {
             name: this.props.user.name,
             email: this.props.user.email,
-            userUpdated: editUserProfileStore.getUserUpdateStatus()
+            userUpdated: editUserProfileStore.getUserUpdateStatus(),
+            showModal: false
         }
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -54,6 +56,9 @@ class EditUserProfilePage extends React.Component {
     }
 
     handleDeleteUser() {
+        this.setState({
+            showModal: false
+        });
         editProfileActions.deleteUserAccount(this.props.user.id);
     }
 
@@ -76,10 +81,13 @@ class EditUserProfilePage extends React.Component {
                             <Link to="/profile">
                                 <button type='button' className="slds-button slds-button_neutral">Cancel</button>
                             </Link>
-                            <button type='button' className="slds-button slds-button_destructive" onClick={this.handleDeleteUser}>Delete Account</button>
+                            <button type='button' className="slds-button slds-button_destructive" onClick={() => this.setState({showModal: true})}>Delete Account</button>
                             <button type='submit' className="slds-button slds-button_brand">Submit</button>
                         </div>
                     </form>
+                    {this.state.showModal && <DeleteUserModal title="Delete User Account?"
+                                                    onCancel={() => this.setState({showModal: false})}
+                                                    onDelete={this.handleDeleteUser}/>}
                     {this.state.userUpdated && <Redirect to='/profile'/>}
                 </div>
             </div>
