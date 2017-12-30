@@ -53,6 +53,11 @@ LoginForm.propTypes = {
 };
 
 export default class Login extends React.Component {
+
+    static propTypes = {
+        showToast: PropTypes.bool
+    };
+
     constructor(props) {
         super(props);
         this.state = {
@@ -167,8 +172,4 @@ export default class Login extends React.Component {
             </div>
         );
     }
-}
-
-LoginForm.propTypes = {
-    showToast: PropTypes.bool
 }
