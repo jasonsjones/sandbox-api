@@ -1,3 +1,4 @@
+import fs from 'fs';
 import { expect } from 'chai';
 import sinon from 'sinon';
 import 'sinon-mongoose';
@@ -43,20 +44,20 @@ const mockAvatars = [
     }
 ];
 
-describe('Avatar Repository', function () {
+describe('Avatar Repository', () => {
     let AvatarMock;
-    afterEach(function () {
+    afterEach(() => {
         AvatarMock.restore();
     });
 
-    describe('getAvatars()', function () {
-        it('resolves to an array of avatars', function () {
+    describe('getAvatars()', () => {
+        it('resolves to an array of avatars', () => {
             AvatarMock = sinon.mock(Avatar);
             AvatarMock.expects('find').withArgs({})
                 .chain('exec')
                 .resolves(mockAvatars);
 
-            const promise = AvatarRepository.getAvatars();
+            const promise = AvatarRepository.getAvatars({}, '');
             expect(promise).to.be.a('Promise');
 
             return promise.then(avatars => {
@@ -65,7 +66,7 @@ describe('Avatar Repository', function () {
             });
         });
 
-        it('rejects with an error if something went wrong', function () {
+        it('rejects with an error if something went wrong', () => {
             AvatarMock = sinon.mock(Avatar);
             AvatarMock.expects('find').withArgs({})
                 .chain('exec')
@@ -81,8 +82,8 @@ describe('Avatar Repository', function () {
         });
     });
 
-    describe('getAvatar()', function () {
-        it('with default id resolves to the default image', function () {
+    describe('getAvatar()', () => {
+        it('with default id resolves to the default image', () => {
             AvatarMock = sinon.mock(Avatar);
             AvatarMock.expects('findOne').withArgs({defaultImg: true})
                 .chain('exec')
@@ -101,7 +102,7 @@ describe('Avatar Repository', function () {
             });
         });
 
-        it('with default id rejects with error if something goes wrong', function () {
+        it('with default id rejects with error if something goes wrong', () => {
             AvatarMock = sinon.mock(Avatar);
             AvatarMock.expects('findOne').withArgs({defaultImg: true})
                 .chain('exec')
@@ -146,9 +147,18 @@ describe('Avatar Repository', function () {
                 expect(err).to.be.an('Error');
             });
         });
+
+        it('rejects with error if the id param is not provided', () => {
+            const promise = AvatarRepository.getAvatar();
+            expect(promise).to.be.a('Promise');
+            return promise.catch(err => {
+                expect(err).to.exist;
+                expect(err).to.be.an('Error');
+            });
+        });
     });
 
-    describe('deleteAvatar()', function () {
+    describe('deleteAvatar()', () => {
         it('with avatar id rejects with error if something goes wrong with the lookup', () => {
             AvatarMock = sinon.mock(Avatar);
             AvatarMock.expects('findById').withArgs(mockAvatars[3]._id)
@@ -179,10 +189,19 @@ describe('Avatar Repository', function () {
                 stub.restore();
             });
         });
+
+        it('rejects with error if the id param is not provided', () => {
+            const promise = AvatarRepository.deleteAvatar();
+            expect(promise).to.be.a('Promise');
+            return promise.catch(err => {
+                expect(err).to.exist;
+                expect(err).to.be.an('Error');
+            });
+        });
     });
 
-    describe('makeAvatarModel()', function () {
-        it('returns an avatar model', function () {
+    describe('makeAvatarModel()', () => {
+        it('returns an avatar model', () => {
             const file = {
                 originalName: 'default.png',
                 mimetype: 'image/png',
@@ -201,8 +220,8 @@ describe('Avatar Repository', function () {
         });
     });
 
-    describe('uploadAvatar()', function () {
-        let file, stub, spy;
+    describe('uploadAvatar()', () => {
+        let file, userId, stub, spy;
         beforeEach(() => {
             file = {
                 originalName: 'default.png',
@@ -210,21 +229,24 @@ describe('Avatar Repository', function () {
                 size: 62079,
                 path: __dirname + '/../../../assets/male3.png'
             };
+            userId = mockAvatars[1].user;
             stub = sinon.stub(Avatar.prototype, 'save');
             spy = sinon.spy(AvatarRepository, 'makeAvatarModel');
         });
 
         afterEach(() => {
             file = null;
+            userId = '';
             stub.restore();
             spy.restore();
         });
 
-        it('generates the avatar model and saves to db', function () {
-            const avatar = AvatarRepository.makeAvatarModel(file, mockAvatars[1].user, false);
+        it('generates the avatar model and saves to db', () => {
+            const avatar = AvatarRepository.makeAvatarModel(file, userId, false);
             stub.resolves(avatar);
+            spy.reset();
 
-            return AvatarRepository.uploadAvatar(file, null, false)
+            return AvatarRepository.uploadAvatar(file, userId, false)
                 .then(response => {
                     expect(response).to.exist;
                     expect(response).to.have.property('_id');
@@ -235,21 +257,68 @@ describe('Avatar Repository', function () {
                     expect(response).to.have.property('data');
                     expect(response.user.toString()).to.equal(mockAvatars[1].user);
 
-                    expect(spy.calledTwice).to.be.true;
-                    expect(spy.secondCall.args.length).to.equal(3);
+                    expect(spy.calledOnce).to.be.true;
+                    expect(spy.firstCall.args.length).to.equal(3);
             });
         });
 
-        it('catches an error if the avatar is unable to be saved to db', function () {
+        it('generates the avatar model and saves to db then deletes the file for fs', () => {
+            fs.copyFileSync(file.path, `${__dirname}/../../../assets/avatarCopy.png`);
+            const copyiedAvatar = {
+                originalName: 'avatarCopy.png',
+                mimetype: 'image/png',
+                size: 62079,
+                path: __dirname + '/../../../assets/avatarCopy.png'
+            };
+            const avatar = AvatarRepository.makeAvatarModel(copyiedAvatar, userId, false);
+            stub.resolves(avatar);
+            spy.reset();
+
+            return AvatarRepository.uploadAvatar(copyiedAvatar, userId)
+                .then(response => {
+                    expect(response).to.exist;
+                    expect(response).to.have.property('_id');
+                    expect(response).to.have.property('user');
+                    expect(response).to.have.property('fileSize');
+                    expect(response).to.have.property('contentType');
+                    expect(response).to.have.property('defaultImg');
+                    expect(response).to.have.property('data');
+                    expect(response.user.toString()).to.equal(mockAvatars[1].user);
+
+                    expect(spy.calledOnce).to.be.true;
+                    expect(spy.firstCall.args.length).to.equal(3);
+                    expect(fs.existsSync(copyiedAvatar.path)).to.be.false;
+            });
+        });
+
+        it('catches an error if the avatar is unable to be saved to db', () => {
             stub.rejects(new Error('Oops, unable to save avatar to db'));
 
-            return AvatarRepository.uploadAvatar(file, null, false)
+            return AvatarRepository.uploadAvatar(file, userId, false)
                 .then(() => { })
                 .catch(err => {
                     expect(spy.calledOnce).to.be.true;
                     expect(spy.firstCall.args.length).to.equal(3);
                     expect(err).to.exist;
                 });
+        });
+
+        it('rejects with error if the file param is not provided', () => {
+            const promise = AvatarRepository.uploadAvatar(null, userId, false);
+            expect(promise).to.be.a('Promise');
+            return promise.catch(err => {
+                expect(err).to.exist;
+                expect(err).to.be.an('Error');
+            });
+        });
+
+        it('rejects with error if the id param is not provided', () => {
+            const promise = AvatarRepository.uploadAvatar(file, null, false);
+            expect(promise).to.be.a('Promise');
+            return promise.catch(err => {
+                expect(err).to.exist;
+                expect(err).to.be.an('Error');
+            });
         });
     });
 });

@@ -2,12 +2,15 @@ import authStore from '../stores/authStore';
 
 const baseUrl = 'http://localhost:3000/api';
 
-export function getAuthUser(user, path) {
-    const url = `${baseUrl}/${path}`;
-    if (!user.email || !user.password) return;
+export function getAuthUser(user) {
+    const url = `${baseUrl}/login`;
+    if (!user.email || !user.password) {
+        return Promise.reject(new Error('Missing username or password'));
+    }
     return new Promise((resolve, reject) => {
         fetch(url, {
             method: 'POST',
+            credentials: 'include',
             headers: {'Content-Type': 'application/json' },
             body: JSON.stringify(user)
         })
@@ -109,6 +112,25 @@ export function getSessionUser() {
     return new Promise((resolve, reject) => {
         fetch(url, {
             method: 'GET',
+            credentials: 'include',
+            headers: {'Content-Type': 'application/json'},
+        })
+        .then(response => response.json())
+        .then(data => {
+            resolve(data);
+        })
+        .catch(err => {
+            console.log(err);
+            reject(err);
+        });
+    });
+}
+
+export function deleteUserAccount(id) {
+    const url = `${baseUrl}/user/${id}`;
+    return new Promise((resolve, reject) => {
+        fetch(url, {
+            method: 'DELETE',
             credentials: 'include',
             headers: {'Content-Type': 'application/json'},
         })

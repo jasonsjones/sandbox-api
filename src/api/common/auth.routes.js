@@ -1,46 +1,55 @@
-import * as AuthController from './auth.controller';
 import * as AuthUtils from './auth.utils';
 
 export default (app, passport) => {
 
-    app.get('/auth/sfdc', AuthController.redirectToSFDC);
+    app.get('/auth/sfdc',
+        passport.authenticate('forcedotcom', {
+            display: 'page',
+            prompt: '',
+            login_hint: ''
+    }));
 
-    app.get('/auth/callback', AuthController.sfdcCallback);
+    app.get('/auth/callback',
+        passport.authenticate('forcedotcom', {successRedirect: '/profile'}));
 
     app.get('/api/signout', (req, res) => {
+        req.logout();
         req.session.destroy(() => {
             res.redirect('/login');
         });
     });
 
-    app.post('/api/login', AuthController.loginUser);
-
-    app.post('/api/passportlogin',
+    app.post('/api/login',
         passport.authenticate('local'),
         (req, res) => {
             res.json({
                 success: true,
                 message: 'authenticated via passport',
                 payload: {
-                    user: req.user,
+                    user: req.user.toClientJSON(),
                     token: AuthUtils.generateToken(req.user)
                 }});
         }
     );
 
     app.get('/api/sessionUser', (req, res) => {
-        if (req.session.user && req.session.jwt) {
+        const user = req.user;
+        if (user) {
             res.json({
                 success: true,
+                message: 'session user',
                 payload: {
-                    user: req.session.user,
-                    token: req.session.jwt
-                }
-            });
+                    user: user.toClientJSON(),
+                    token: AuthUtils.generateToken(user)
+                }});
         } else {
             res.json({
-                success: false
-            });
+                success: false,
+                message: 'user not logged in',
+                payload: {
+                    user: null,
+                    token: null
+                }});
         }
     });
 }

@@ -102,9 +102,6 @@ export default class SignupPage extends React.Component {
                         <div className="slds-grid slds-grid_align-spread slds-grid_vertical-align-center slds-m-top_medium">
                             {button}
                             <Link to="/login">Already have account?</Link>
-                            <a href="/auth/sfdc">
-                                <button type="button" className="slds-button slds-button_brand">SFDC Oauth</button>
-                            </a>
                         </div>
                     </form>
                     {this.state.isSignupComplete && (

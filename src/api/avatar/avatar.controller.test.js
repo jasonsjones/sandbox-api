@@ -61,8 +61,8 @@ const mockAvatars = [
     }
 ];
 
-describe('Avatar controller', function () {
-    describe('getAvatars()', function () {
+describe('Avatar controller', () => {
+    describe('getAvatars()', () => {
         let stub;
         beforeEach(() => {
             stub = sinon.stub(Repository, 'getAvatars');
@@ -72,7 +72,7 @@ describe('Avatar controller', function () {
             stub.restore();
         });
 
-        it('sends a payload with an array of all avatars', function () {
+        it('sends a payload with an array of all avatars', () => {
             stub.resolves(mockAvatars);
 
             return Controller.getAvatars().then(response => {
@@ -83,20 +83,16 @@ describe('Avatar controller', function () {
             });
         });
 
-        it('sends a success false and message when error occurs', function () {
+        it('sends a success false and message when error occurs', () => {
             stub.rejects(new Error('Oops, something went wrong...'));
 
             return Controller.getAvatars().catch(response => {
-                expect(response).to.have.property('success');
-                expect(response).to.have.property('message');
-                expect(response).to.have.property('error');
-                expect(response.success).to.be.false
-                expect(response.error instanceof Error).to.be.true
+                expectErrorResponse(response);
             });
         });
     });
 
-    describe('getAvatar()', function () {
+    describe('getAvatar()', () => {
         let req, stub;
         beforeEach(() => {
             stub = sinon.stub(Repository, 'getAvatar');
@@ -108,7 +104,7 @@ describe('Avatar controller', function () {
             req = {};
         });
 
-        it('sends the avatar data in the response', function () {
+        it('sends the avatar data in the response', () => {
             stub.withArgs('default')
                 .resolves(mockAvatars[0]);
             req.params = {
@@ -121,7 +117,7 @@ describe('Avatar controller', function () {
             });
         });
 
-        it('sends a success false and message when error occurs', function () {
+        it('sends a success false and message when error occurs', () => {
             stub.withArgs(mockAvatars[1]._id)
                 .rejects(new Error('Oops, something went wrong...'));
 
@@ -130,16 +126,18 @@ describe('Avatar controller', function () {
             };
 
             return Controller.getAvatar(req).catch(response => {
-                expect(response).to.have.property('success');
-                expect(response).to.have.property('message');
-                expect(response).to.have.property('error');
-                expect(response.success).to.be.false
-                expect(response.error instanceof Error).to.be.true
+                expectErrorResponse(response);
             });
+        });
+
+        it('rejects with error when avatar id is not provided', () => {
+            return Controller.getAvatar().catch(response => {
+                    expectErrorResponse(response);
+                });
         });
     });
 
-    describe('deleteAvatar()', function () {
+    describe('deleteAvatar()', () => {
         let req, stub;
         beforeEach(() => {
             stub = sinon.stub(Repository, 'deleteAvatar');
@@ -151,7 +149,7 @@ describe('Avatar controller', function () {
             req = {};
         });
 
-        it('deletes an avatar when called with avatar id', function () {
+        it('deletes an avatar when called with avatar id', () => {
             const modelStub = sinon.stub(Avatar.prototype, 'remove');
             modelStub.resolves(new Avatar(mockAvatars[1]));
 
@@ -176,7 +174,7 @@ describe('Avatar controller', function () {
                 });
         });
 
-        it('sends a success false and message when error occurs', function () {
+        it('sends a success false and message when error occurs', () => {
             stub.withArgs(mockAvatars[1]._id)
                 .rejects(new Error('Oops, something went wrong...'));
 
@@ -185,16 +183,18 @@ describe('Avatar controller', function () {
             };
 
             return Controller.deleteAvatar(req).catch(response => {
-                expect(response).to.have.property('success');
-                expect(response).to.have.property('message');
-                expect(response).to.have.property('error');
-                expect(response.success).to.be.false
-                expect(response.error instanceof Error).to.be.true
+                expectErrorResponse(response);
             });
+        });
+
+        it('rejects with error when req is not provided', () => {
+            return Controller.deleteAvatar().catch(response => {
+                    expectErrorResponse(response);
+                });
         });
     });
 
-    describe('uploadAvatar()', function () {
+    describe('uploadAvatar()', () => {
         let stub;
         beforeEach(() => {
             stub = sinon.stub(Repository, 'uploadAvatar');
@@ -204,7 +204,7 @@ describe('Avatar controller', function () {
             stub.restore();
         });
 
-        it('returns the avatar in payload when successfully uploaded', function () {
+        it('returns the avatar in payload when successfully uploaded', () => {
             const req = {
                 file: {
                     originalName: 'male3.png',
@@ -224,7 +224,7 @@ describe('Avatar controller', function () {
             });
         });
 
-        it('sends a success false and message when error occurs', function () {
+        it('sends a success false and message when error occurs', () => {
             const req = {
                 file: {
                     originalName: 'male3.png',
@@ -238,13 +238,22 @@ describe('Avatar controller', function () {
                 .rejects(new Error('Oops, something went wrong uploading the image...'));
 
             return Controller.uploadAvatar(req).catch(response => {
-                expect(response).to.have.property('success');
-                expect(response).to.have.property('message');
-                expect(response).to.have.property('error');
-                expect(response.success).to.be.false
-                expect(response.error instanceof Error).to.be.true
+                expectErrorResponse(response);
             });
         });
 
+        it('rejects with error when req.file is not provided', () => {
+            return Controller.uploadAvatar().catch(response => {
+                    expectErrorResponse(response);
+                });
+        });
     });
 });
+
+const expectErrorResponse = response => {
+    expect(response).to.have.property('success');
+    expect(response).to.have.property('message');
+    expect(response).to.have.property('error');
+    expect(response.success).to.be.false
+    expect(response.error instanceof Error).to.be.true
+}

@@ -11,16 +11,13 @@ export function updateUserProfile(newUserData) {
     dataservice.updateUserProfile(newUserData)
         .then(response => {
             if (response.success) {
-                let currentUser = {
-                    id: response.payload.user._id,
-                    name: response.payload.user.name,
-                    email: response.payload.user.email,
-                    avatarUrl: response.payload.user.avatarUrl
-                };
+                let user = response.payload.user;
+                let token = response.payload.token
                 AppDispatcher.handleViewAction({
-                    actionType: "UPDATE_USER_PROFILE_SUCCESS",
+                    actionType: "AUTHENTICATE_USER_SUCCESS",
                     data: {
-                        user: currentUser
+                        user,
+                        token
                     }
                 });
             }
@@ -31,5 +28,28 @@ export function updateUserProfile(newUserData) {
                 data: err
             });
         });
+}
 
+export function deleteUserAccount(id) {
+    AppDispatcher.handleViewAction({
+        actionType: "LOGOUT_USER"
+    });
+    dataservice.deleteUserAccount(id)
+        .then(response => {
+            if (response.success) {
+                let user = null;
+                AppDispatcher.handleViewAction({
+                    actionType: "UPDATE_USER_PROFILE_SUCCESS",
+                    data: {
+                        user
+                    }
+                });
+            }
+        })
+        .catch(err => {
+            AppDispatcher.handleViewAction({
+                actionType: "UPDATE_USER_PROFILE_ERROR",
+                data: err
+            });
+        });
 }

@@ -35,6 +35,13 @@ ToastButtonClose.propTypes = {
 }
 
 class Toast extends React.Component {
+
+    static propTypes = {
+        theme: PropTypes.string.isRequired,
+        children: PropTypes.element.isRequired,
+        onClose: PropTypes.func
+    };
+
     constructor(props) {
         super(props);
         this.state = {
@@ -64,12 +71,6 @@ class Toast extends React.Component {
             </div>
         );
     }
-}
-
-Toast.propTypes = {
-    theme: PropTypes.string.isRequired,
-    children: PropTypes.element.isRequired,
-    onClose: PropTypes.func
 }
 
 export default Toast;

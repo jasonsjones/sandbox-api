@@ -1,168 +1,83 @@
 import jwt from 'jsonwebtoken';
-import fetch from 'node-fetch';
 
 import Config from '../config/config';
 import User from '../user/user.model';
-import * as AuthUtils from './auth.utils';
-import * as UserRepository from '../user/user.repository';
 
-const env = process.env.NODE_ENV || "development";
+const env = process.env.NODE_ENV || /* istanbul ignore next */ "development";
 const config = Config[env];
 
-export function verifyToken(req, res, next) {
-    let token = req.body.token || req.query.token || req.headers['x-access-token'];
-    if (token) {
-        jwt.verify(token, config.token_secret, (err, decoded) => {
-            if (err) {
-                return res.json({
+export function verifyToken(req) {
+    return new Promise((resolve, reject) => {
+        let token = req.body.token || req.query.token || req.headers['x-access-token'];
+        if (token) {
+            try {
+                const decoded = jwt.verify(token, config.token_secret);
+                req.decoded = decoded;
+                resolve(decoded);
+            } catch (err) {
+                reject({
                     success: false,
-                    message: 'Error with the token',
-                    payload: null
+                    message: err.message,
+                    error: err
                 });
             }
-            if (decoded) {
-                req.decoded = decoded
-                next();
-            } else {
-                res.status(401);
-                res.json({
-                    success: false,
-                    message: 'invalid token provided',
-                    payload: null
-                });
-            }
-        });
-    } else {
-        res.status(401);
-        res.json({
-            success: false,
-            message: 'No token provided',
-            payload: null
-        });
-    }
-}
-
-export function protectRouteByUser(req, res, next) {
-    if (req.decoded && req.decoded.sub === req.params.userid) {
-        next();
-    } else {
-        res.status(401);
-        res.json({
-            success: false,
-            message: 'Not an authorized user for this route',
-            payload: null
-        });
-    }
-}
-
-export function adminRoute(req, res, next) {
-    User.findById(req.decoded.sub).exec()
-        .then(user => {
-            if (user.isAdmin()) {
-                next();
-            } else {
-                res.status(401);
-                res.json({
-                    success: false,
-                    message: 'Not an authorized user for this route',
-                    payload: null
-                });
-            }
-        })
-        .catch(err => {
-            console.log(err);
-            next(err);
-        });
-}
-
-export function loginUser(req, res) {
-    User.findOne({email: req.body.email}).exec()
-        .then(user => {
-            if (user && user.verifyPassword(req.body.password)) {
-                const token = AuthUtils.generateToken(user);
-                res.json({
-                    success: true,
-                    message: 'user authenticated',
-                    payload: {
-                        user,
-                        token
-                    }
-                });
-            } else {
-                res.json({
-                    success: false,
-                    message: 'invalid username or password',
-                    payload: null
-                });
-            }
-        })
-        .catch(err => {
-            console.log(err);
-            res.json({
-                success: false,
-                message: 'user not found',
-                payload: null
-            });
-        });
-}
-
-export const redirectToSFDC = (req, res) => {
-    const clientId = process.env.SFDC_CLIENT_ID;
-    const callback = encodeURI('http://localhost:3000/auth/callback');
-
-    const url = 'https://login.salesforce.com/services/oauth2/authorize?' +
-                'response_type=code' +
-                '&client_id=' + clientId +
-                '&redirect_uri=' + callback;
-
-    res.redirect(url);
-}
-
-export const sfdcCallback = (req, res) => {
-    let access_token;
-    let clientId = process.env.SFDC_CLIENT_ID;
-    let clientSecret = process.env.SFDC_CLIENT_SECRET;
-    let callback = encodeURI('http://localhost:3000/auth/callback');
-    let code = req.query.code;
-    let bodyData = `grant_type=authorization_code&redirect_uri=${callback}&client_id=${clientId}&client_secret=${clientSecret}&code=${code}`;
-
-    let sfdcUser = null;
-
-    fetch('https://login.salesforce.com/services/oauth2/token', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body: bodyData
-    })
-    .then(res => res.json())
-    .then(json => {
-        access_token = json.access_token;
-        req.session.jwt = json.id_token;
-        return fetch(json.id, {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${access_token}`
-            }
-        });
-    })
-    .then(res => res.json())
-    .then(user => {
-        sfdcUser = user;
-        return UserRepository.lookupUserByEmail(user.email);
-    })
-    .then(localUser => {
-        if (localUser) {
-            req.session.user = localUser;
         } else {
-            req.session.user = {
-                id: sfdcUser.user_id,
-                name: sfdcUser.display_name,
-                email: sfdcUser.email,
-                avatarUrl: sfdcUser.photos.picture
-            }
+            reject({
+                success: false,
+                message: 'No token provided'
+            });
         }
-        res.redirect('/')
-    })
-    .catch(err => console.log(err));
+    });
+}
+
+export function protectRouteByUser(req) {
+    return new Promise((resolve, reject) => {
+        if (!req.decoded) {
+            reject({
+                success: false,
+                message: 'Token has not yet been verified'
+            });
+        }
+        if (req.decoded && req.decoded.sub === req.params.userid) {
+            resolve({
+                success: true,
+                message: 'Authorized user for this route'
+            });
+        } else {
+            resolve({
+                success: false,
+                message: 'Not an authorized user for this route'
+            });
+        }
+    });
+}
+
+export function adminRoute(req) {
+    return new Promise((resolve, reject) => {
+        if (!req.decoded) {
+            reject({
+                success: false,
+                message: 'Token has not yet been verified'
+            });
+        }
+        User.findById(req.decoded.sub).exec()
+            .then(user => {
+                if (user.isAdmin()) {
+                    resolve({
+                        success: true,
+                        message: 'Authorized user for this route'
+                    });
+                } else {
+                    resolve({
+                        success: false,
+                        message: 'Not an authorized user for this route'
+                    });
+                }
+            })
+            .catch(err => reject({
+                success: false,
+                message: err.message,
+                error: err
+            }));
+    });
 }

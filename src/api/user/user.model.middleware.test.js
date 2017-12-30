@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
 import 'sinon-mongoose';
+import bcrypt from 'bcrypt-nodejs';
 
 import User from './user.model';
 import Avatar from '../avatar/avatar.model';
@@ -68,8 +69,8 @@ const mockAvatars = [
     }
 ]
 
-describe("User model middleware", function () {
-    describe('checkForErrors()', function () {
+describe("User model middleware", () => {
+    describe('checkForErrors()', () => {
         let user;
         beforeEach(() => {
             user = new User({
@@ -80,7 +81,7 @@ describe("User model middleware", function () {
             });
         });
 
-        it('throws error if there are duplicate keys', function (done) {
+        it('throws error if there are duplicate keys', (done) => {
             const expectedErrorMsg = 'There was a duplicate key error';
             const error = {
                 name: 'MongoError',
@@ -93,7 +94,7 @@ describe("User model middleware", function () {
             });
         });
 
-        it('propagates any other errors', function (done) {
+        it('propagates any other errors', (done) => {
             const error = new Error('Something when wrong...');
             Middleware.checkForErrors(error, user, (err) => {
                 expect(err).to.exist;
@@ -104,14 +105,22 @@ describe("User model middleware", function () {
         });
     });
 
-    describe('hashPassword()', function () {
-        it('hashes the password to save in db', function (done) {
-            const ORIG_PWD = 'arrow';
-            let user = new User({
+    describe('hashPassword()', () => {
+        const ORIG_PWD = 'arrow';
+        let user;
+        beforeEach(() => {
+            user = new User({
                 name: 'Oliver Queen',
                 email: 'oliver@qc.com',
                 password: ORIG_PWD,
             });
+        });
+
+        afterEach(() => {
+            user = null;
+        });
+
+        it('hashes the password to save in db', (done) => {
             // need to bind the middleware function to the user to ensure the
             // proper 'this' context from within the function
             Middleware.hashPassword.bind(user, function (err, hashedUser) {
@@ -120,9 +129,53 @@ describe("User model middleware", function () {
                 done();
             })();
         });
+
+        it('does not hash the password if it has not changed', (done) => {
+            user.isModified = () => false;
+
+            // need to bind the middleware function to the user to ensure the
+            // proper 'this' context from within the function
+            Middleware.hashPassword.bind(user, function (err, hashedUser) {
+                expect(err).to.not.exist;
+                expect(hashedUser).to.not.exist;
+                done();
+            })();
+        });
+
+        it('invokes the callback with an error if there was a problem with bcrypt salt', (done) => {
+            user.isModified = () => true;
+
+            const bcryptStub = sinon.stub(bcrypt, 'genSalt');
+            bcryptStub.yields(new Error('Oops, something went wrong with the salt...'));
+
+            // need to bind the middleware function to the user to ensure the
+            // proper 'this' context from within the function
+            Middleware.hashPassword.bind(user, function (err, hashedUser) {
+                expect(err).to.exist;
+                expect(hashedUser).to.not.exist;
+                bcryptStub.restore();
+                done();
+            })();
+        });
+
+        it('invokes the callback with an error if there was a problem with bcrypt hash', (done) => {
+            user.isModified = () => true;
+
+            const bcryptStub = sinon.stub(bcrypt, 'hash');
+            bcryptStub.yields(new Error('Oops, something went wrong with the hash...'));
+
+            // need to bind the middleware function to the user to ensure the
+            // proper 'this' context from within the function
+            Middleware.hashPassword.bind(user, function (err, hashedUser) {
+                expect(err).to.exist;
+                expect(hashedUser).to.not.exist;
+                bcryptStub.restore();
+                done();
+            })();
+        });
     });
 
-    describe('removeAvatarOnDelete()', function () {
+    describe('removeAvatarOnDelete()', () => {
         let AvatarMock;
 
         beforeEach(() => {
@@ -133,7 +186,7 @@ describe("User model middleware", function () {
             AvatarMock.restore();
         });
 
-        it('removes the users custom avatar when the user is deleted', function () {
+        it('removes the users custom avatar when the user is deleted', () => {
             const stub = sinon.stub(Avatar.prototype, 'remove');
             stub.resolves(new Avatar(mockAvatars[1]));
             AvatarMock.expects('findOne').withArgs(mockUsers[2].avatar)
@@ -150,7 +203,7 @@ describe("User model middleware", function () {
             });
         });
 
-        it('rejects with an error if something goes wrong', function () {
+        it('rejects with an error if something goes wrong', () => {
             AvatarMock.expects('findOne').withArgs(mockUsers[2].avatar)
                 .chain('exec')
                 .rejects(new Error("Ooops...something went wrong!"));

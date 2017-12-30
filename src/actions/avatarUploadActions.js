@@ -6,20 +6,14 @@ export function uploadNewAvatar(image) {
     dataservice.updateUserAvatar(image)
         .then(response => {
             if (response.success) {
-                let currentUser = {
-                    id: response.payload.user._id,
-                    name: response.payload.user.name,
-                    email: response.payload.user.email,
-                    avatarUrl: response.payload.user.avatarUrl
-                };
+                let user = response.payload.user;
                 AppDispatcher.handleViewAction({
                     actionType: "UPDATE_USER_SUCCESS",
                     data: {
-                        user: currentUser
+                        user
                     }
                 });
             }
-
         })
         .catch(err => {
             console.log(err);

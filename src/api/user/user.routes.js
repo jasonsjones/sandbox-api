@@ -9,18 +9,73 @@ export default (app) => {
     app.get('/api/users',
             //  AuthController.verifyToken,
             //  AuthController.adminRoute,
-             UserController.getUsers);
+            (req, res) => {
+                UserController.getUsers()
+                    .then(response => res.json(response))
+                    .catch(err => {
+                        res.status(500);
+                        res.json(err);
+                    });
+            });
 
-    app.get('/api/user/:id', UserController.getUser);
-    app.put('/api/user/:id', UserController.updateUser);
-    app.delete('/api/user/:id', UserController.deleteUser);
+    app.get('/api/user/:id', (req, res) => {
+        UserController.getUser(req)
+            .then(response => res.json(response))
+            .catch(err => {
+                res.status(500);
+                res.json(err);
+            });
+    });
 
-    app.post('/api/signup', UserController.signupUser);
+    app.put('/api/user/:id', (req, res) => {
+        UserController.updateUser(req)
+            .then(response => res.json(response))
+            .catch(err => {
+                res.status(500);
+                res.json(err);
+            });
+
+    });
+
+    app.delete('/api/user/:id', (req, res) => {
+        UserController.deleteUser(req)
+            .then(response => res.json(response))
+            .catch(err => {
+                res.status(500);
+                res.json(err);
+            });
+    });
+
+    app.get('/api/unlinksfdc', (req, res) => {
+        UserController.unlinkSFDCAccount(req)
+            .then(response => res.json(response))
+            .catch(err => {
+                res.status(500);
+                res.json(err);
+            });
+    });
+
+    app.post('/api/signup', (req, res) => {
+        UserController.signupUser(req)
+            .then(response => res.json(response))
+            .catch(err => {
+                res.status(500);
+                res.json(err);
+            });
+    });
 
     app.post('/api/user/:userid/avatar',
             //   AuthController.verifyToken,
             //   AuthController.protectRouteByUser,
               upload.single('avatar'),
-              UserController.uploadUserAvatar
+
+              (req, res) => {
+                UserController.uploadUserAvatar(req)
+                    .then(response => res.json(response))
+                    .catch(err => {
+                        res.status(500);
+                        res.json(err);
+                    });
+              }
     );
 }

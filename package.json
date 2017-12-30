@@ -3,15 +3,27 @@
   "version": "1.0.0",
   "description": "A sandbox API built on microservices",
   "main": "index.js",
+  "nyc": {
+    "exclude": [
+      "src/api/**/*.test.js",
+      "src/api/**/*.routes.js",
+      "src/api/config",
+      "src/api/graphql",
+      "src/api/dbSeed.js",
+      "src/api/server.js"
+    ],
+    "sourceMap": false,
+    "instrument": false
+  },
   "scripts": {
     "predev": "npm run dbSeed",
-    "dev": "nodemon src/api/server.js --inspect=0.0.0.0:5858 --watch src/ --exec babel-node",
+    "dev": "nodemon src/api/server.js --inspect=0.0.0.0:5858 --watch src/ --ignore src/components --ignore src/actions --exec babel-node",
     "prebuild": "rm -f public/bundle.js* public/styles/styles.css*",
     "build": "webpack -w",
     "dbSeed": "babel-node src/api/dbSeed.js",
     "lt": "lt --port 3000 --subdomain sandboxapi",
     "lint": "eslint webpack.config.js src/**/*.js",
-    "test:api": "NODE_ENV=test nyc mocha src/api/**/*.test.js --compilers js:babel-register"
+    "test:api": "NODE_ENV=test nyc mocha src/api/**/*.test.js --exit --require babel-register"
   },
   "repository": {
     "type": "git",
@@ -46,17 +58,19 @@
     "multer": "^1.3.0",
     "node-fetch": "^1.7.2",
     "passport": "^0.4.0",
+    "passport-forcedotcom": "^0.1.4",
     "passport-local": "^1.0.0",
     "prop-types": "^15.5.10",
-    "react": "^15.6.1",
-    "react-dom": "^15.6.1",
+    "react": "16.2.0",
+    "react-dom": "16.2.0",
     "react-router-dom": "^4.2.2"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
     "babel-core": "^6.26.0",
-    "babel-eslint": "^7.2.3",
+    "babel-eslint": "8.0.3",
     "babel-loader": "^7.1.2",
+    "babel-plugin-istanbul": "^4.1.5",
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.24.1",
     "babel-register": "^6.24.1",
@@ -68,10 +82,10 @@
     "eslint-plugin-react": "^7.3.0",
     "extract-text-webpack-plugin": "^3.0.0",
     "localtunnel": "^1.8.3",
-    "mocha": "^3.5.0",
+    "mocha": "^4.0.0",
     "nodemon": "^1.11.0",
     "nyc": "^11.3.0",
-    "sinon": "^3.2.0",
+    "sinon": "4.1.3",
     "sinon-mongoose": "^2.0.2",
     "style-loader": "^0.18.2",
     "webpack": "^3.5.5"

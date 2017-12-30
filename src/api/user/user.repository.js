@@ -1,5 +1,5 @@
 import User from './user.model';
-import { makeAvatarModel } from '../avatar/avatar.repository';
+import { deleteAvatar, makeAvatarModel } from '../avatar/avatar.repository';
 
 export function getUsers(queryCondition = {}, inclAvatars = false) {
     return new Promise((resolve, reject) => {
@@ -17,6 +17,9 @@ export function getUsers(queryCondition = {}, inclAvatars = false) {
 }
 
 export function getUser(id, inclAvatar = false) {
+    if (!id) {
+        return Promise.reject(new Error('user id is required'));
+    }
     return new Promise((resolve, reject) => {
         let query;
         if (inclAvatar) {
@@ -32,6 +35,9 @@ export function getUser(id, inclAvatar = false) {
 }
 
 export function lookupUserByEmail(email, inclAvatar = false) {
+    if (!email) {
+        return Promise.reject(new Error('email is required'));
+    }
     return new Promise((resolve, reject) => {
         let query;
         if (inclAvatar) {
@@ -47,6 +53,9 @@ export function lookupUserByEmail(email, inclAvatar = false) {
 }
 
 export function deleteUser(id) {
+    if (!id) {
+        return Promise.reject(new Error('user id is required'));
+    }
     return new Promise((resolve, reject) => {
         User.findByIdAndRemove(id).exec()
             .then(user => resolve(user))
@@ -55,6 +64,12 @@ export function deleteUser(id) {
 }
 
 export function updateUser(id, userData) {
+    if (!id) {
+        return Promise.reject(new Error('user id is required'));
+    }
+    if (!userData) {
+        return Promise.reject(new Error('userData is required'));
+    }
     return new Promise((resolve, reject) => {
         User.findById(id).exec()
             .then(user => {
@@ -70,8 +85,22 @@ export function updateUser(id, userData) {
 }
 
 export function uploadUserAvatar(id, file, deleteAfterUpload = true) {
+    if (!id) {
+        return Promise.reject(new Error('user id is required'));
+    }
+    if (!file) {
+        return Promise.reject(new Error('avatar file is required'));
+    }
     return new Promise((resolve, reject) => {
         let userPromise = getUser(id);
+
+        // if the user already has a custom avatar image, delete it first
+        userPromise.then(user => {
+            if (user.hasCustomAvatar()) {
+                deleteAvatar(user.avatar);
+            }
+        });
+
         let avatarPromise = userPromise.then(user => {
             let avatar = makeAvatarModel(file, user._id, deleteAfterUpload);
             return avatar.save();
@@ -88,6 +117,19 @@ export function uploadUserAvatar(id, file, deleteAfterUpload = true) {
 }
 
 export function signUpUser(userData) {
+    if (!userData) {
+        return Promise.reject(new Error('user data is required'));
+    }
     let newUser = new User(userData);
     return newUser.save();
+}
+
+export const unlinkSFDCAccount = (user) => {
+    if (!user) {
+        return Promise.reject(new Error('User not provided; unable to unlink'));
+    }
+    user.sfdc.accessToken = null;
+    user.sfdc.refreshToken = null;
+    user.sfdc.profile = {};
+    return user.save();
 }

@@ -14,6 +14,9 @@ export function getAvatars(queryConditions = {}, selectionStr = '') {
 }
 
 export function getAvatar(id) {
+    if (!id) {
+        return Promise.reject(new Error('avatar id is required'));
+    }
     if (id === 'default') {
         return getDefaultAvatar();
     } else {
@@ -22,6 +25,9 @@ export function getAvatar(id) {
 }
 
 export function deleteAvatar(id) {
+    if (!id) {
+        return Promise.reject(new Error('avatar id is required'));
+    }
     return new Promise((resolve, reject) => {
         Avatar.findById(id,).exec()
             .then(avatar => {
@@ -34,6 +40,12 @@ export function deleteAvatar(id) {
 }
 
 export function uploadAvatar(file, userId, deleteAfter) {
+    if (!file) {
+        return Promise.reject(new Error('file is required'));
+    }
+    if (!userId) {
+        return Promise.reject(new Error('user id is required'));
+    }
     let avatar = this.makeAvatarModel(file, userId, deleteAfter);
     return avatar.save();
 }

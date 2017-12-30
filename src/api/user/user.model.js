@@ -9,10 +9,18 @@ const allowedRoles = ['user', 'admin', 'dev'];
 const userSchema = new Schema({
     name: {type: String, required: true},
     email: {type: String, required: true, unique: true},
-    password: {type: String, required: true},
+    password: {type: String, required: function () {
+        return this.sfdc.id === undefined;
+    }},
     roles: {type: [String], enum: allowedRoles, default: ["user"]},
     avatar: {type: Schema.Types.ObjectId, ref: 'Avatar'},
-    avatarUrl: {type: String, default: `${baseUrl}/api/avatar/default`}
+    avatarUrl: {type: String, default: `${baseUrl}/api/avatar/default`},
+    sfdc: {
+        id: {type: String},
+        accessToken: {type: String},
+        refreshToken: {type: String},
+        profile: {type: Schema.Types.Mixed}
+    }
 }, {timestamps: true});
 
 userSchema.pre('save', middleware.hashPassword);
@@ -39,6 +47,27 @@ userSchema.methods.removeRole = function (role) {
         this.roles.splice(roleIndex, 1);
     }
 };
+
+userSchema.methods.hasCustomAvatar = function () {
+    return !!this.avatar;
+}
+
+userSchema.methods.toClientJSON = function () {
+    let userDataForClient = {
+        id: this._id,
+        name: this.name,
+        email: this.email,
+        avatarUrl: this.avatarUrl,
+        roles: this.roles
+    };
+
+    if (this.sfdc && this.sfdc.accessToken) {
+        userDataForClient.hasSFDCProfile = true;
+    } else {
+        userDataForClient.hasSFDCProfile = false;
+    }
+    return userDataForClient;
+}
 
 const User = mongoose.model('User', userSchema);
 export default User;
