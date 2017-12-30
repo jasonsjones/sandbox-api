@@ -13,6 +13,11 @@ const avatarStyles = {
 }
 
 class EditUserProfilePage extends React.Component {
+
+    static propTypes = {
+        user: PropTypes.object
+    };
+
     constructor(props) {
         super(props);
         this.state = {
@@ -95,9 +100,5 @@ class EditUserProfilePage extends React.Component {
     }
 
 }
-
-EditUserProfilePage.propTypes = {
-    user: PropTypes.object
-};
 
 export default EditUserProfilePage;

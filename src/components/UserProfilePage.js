@@ -10,6 +10,16 @@ const avatarStyles = {
 }
 
 class UserProfilePage extends React.Component {
+
+    static propTypes = {
+        user: PropTypes.shape({
+            id: PropTypes.string.isRequired,
+            name: PropTypes.string.isRequired,
+            email: PropTypes.string.isRequired,
+            avatarUrl: PropTypes.string.isRequired
+        }).isRequired
+    };
+
     constructor(props) {
         super(props);
         this.handleClick = this.handleClick.bind(this);
@@ -50,14 +60,5 @@ class UserProfilePage extends React.Component {
         );
     }
 }
-
-UserProfilePage.propTypes = {
-    user: PropTypes.shape({
-        id: PropTypes.string.isRequired,
-        name: PropTypes.string.isRequired,
-        email: PropTypes.string.isRequired,
-        avatarUrl: PropTypes.string.isRequired
-    })
-};
 
 export default UserProfilePage;
