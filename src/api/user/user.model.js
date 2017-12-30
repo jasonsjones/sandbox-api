@@ -48,6 +48,10 @@ userSchema.methods.removeRole = function (role) {
     }
 };
 
+userSchema.methods.hasCustomAvatar = function () {
+    return !!this.avatar;
+}
+
 userSchema.methods.toClientJSON = function () {
     let userDataForClient = {
         id: this._id,

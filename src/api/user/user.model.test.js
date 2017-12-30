@@ -234,5 +234,26 @@ describe('User model', () => {
         expect(clientJSON).to.have.property('hasSFDCProfile');
         expect(clientJSON.hasSFDCProfile).to.be.true;
     });
+
+    it('hasCustomAvatar() returns false if user has default avatar', () => {
+        let user = new User({
+            name: 'Oliver Queen',
+            email: 'oliver@qc.com',
+            password: 'arrow',
+            roles: ['user', 'dev'],
+        });
+        expect(user.hasCustomAvatar()).to.be.false;
+    });
+
+    it('hasCustomAvatar() returns true if user has a custom avatar', () => {
+        let user = new User({
+            name: 'Oliver Queen',
+            email: 'oliver@qc.com',
+            password: 'arrow',
+            avatar: '5a4672606d106200aef2defb', // needs to be a valid mongo id
+            roles: ['user', 'dev'],
+        });
+        expect(user.hasCustomAvatar()).to.be.true;
+    });
 });
 
