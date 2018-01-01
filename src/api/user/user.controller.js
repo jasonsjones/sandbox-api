@@ -59,7 +59,7 @@ export function updateUser(req) {
                 success: true,
                 message: 'user updated',
                 payload: {
-                    user
+                    user: user.toClientJSON()
                 }
             };
         })
@@ -116,7 +116,7 @@ export function uploadUserAvatar(req) {
                 success: true,
                 message: 'avatar uploaded and saved',
                 payload: {
-                    user
+                    user: user.toClientJSON()
                 }
             };
         })
@@ -171,7 +171,7 @@ export const unlinkSFDCAccount = (req) => {
                 success: true,
                 message: 'user sfdc account unlinked',
                 payload: {
-                    user
+                    user: user.toClientJSON()
                 }
             };
         })
