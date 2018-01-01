@@ -88,6 +88,7 @@ export function updateUserProfile(newUserData) {
     return new Promise((resolve, reject) => {
         fetch(url, {
             method: 'PUT',
+            credentials: 'include',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(newUserData)
         })

@@ -14,7 +14,7 @@ export function updateUserProfile(newUserData) {
                 let user = response.payload.user;
                 let token = response.payload.token
                 AppDispatcher.handleViewAction({
-                    actionType: "AUTHENTICATE_USER_SUCCESS",
+                    actionType: "UPDATE_USER_PROFILE_SUCCESS",
                     data: {
                         user,
                         token
