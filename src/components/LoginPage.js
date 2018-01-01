@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 import InputTextElement from './InputTextElement';
 import authStore from '../stores/authStore';
 import * as authAction from '../actions/authActions';
-import './LoginPage.css';
 
 const CheckBox = () => {
     return (
