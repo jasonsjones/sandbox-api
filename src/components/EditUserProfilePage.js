@@ -8,6 +8,38 @@ import AvatarUpload from './AvatarUpload';
 import InputTextElement from './InputTextElement';
 import DeleteUserModal from './DeleteUserModal';
 
+const AvatarModal = (props) => {
+    return (
+        <div>
+            <section role="dialog" tabIndex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+                     aria-describedby="modal-content-id-1" className="slds-modal slds-fade-in-open">
+                <div className="slds-modal__container">
+                    <header className="slds-modal__header">
+                        <button className="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" onClick={props.onCancel} title="Close">
+                            <svg className="slds-button__icon slds-button__icon_large" aria-hidden="true">
+                                <use xlinkHref="styles/design-system/assets/icons/utility-sprite/svg/symbols.svg#close" />
+                            </svg>
+                            <span className="slds-assistive-text">Close</span>
+                        </button>
+                        <h2 id="modal-heading-01" className="slds-text-heading_medium slds-hyphenate">Change Profile Picture</h2>
+                    </header>
+                    <div className="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                        <AvatarUpload onUpload={props.onCancel}/>
+                    </div>
+                    <footer className="slds-modal__footer">
+                        <button className="slds-button slds-button_neutral" onClick={props.onCancel}>Cancel</button>
+                    </footer>
+                </div>
+            </section>
+            <div className="slds-backdrop slds-backdrop_open"></div>
+        </div>
+    );
+}
+
+AvatarModal.propTypes = {
+    onCancel: PropTypes.func.isRequired
+}
+
 const avatarStyles = {
     borderRadius: "50%"
 }
@@ -24,7 +56,8 @@ class EditUserProfilePage extends React.Component {
             name: this.props.user.name,
             email: this.props.user.email,
             userUpdated: editUserProfileStore.getUserUpdateStatus(),
-            showModal: false
+            showDeleteModal: false,
+            showAvatarModal: false
         }
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -62,39 +95,50 @@ class EditUserProfilePage extends React.Component {
 
     handleDeleteUser() {
         this.setState({
-            showModal: false
+            showDeleteModal: false
         });
         editProfileActions.deleteUserAccount(this.props.user.id);
     }
 
     render() {
         return (
-            <div className="slds-grid">
-                <div className="container-content">
-                    <h1 className="slds-text-heading_large slds-text-align_center">Edit User Profile Page</h1>
-                    <div className="slds-m-top_large">
-                        <div className="slds-m-bottom_large">
-                            <img style={avatarStyles} src={this.props.user.avatarUrl}/>
+            <div className="container-content">
+                <h1 className="slds-text-heading_large slds-text-align_center">Edit User Profile Page</h1>
+
+                <div className="slds-grid slds-grid_vertical-align-center">
+
+                    <div className="slds-col">
+                        <div className="slds-m-top_large">
+                            <div className="slds-grid slds-grid_align-center slds-m-bottom_large">
+                                <img style={avatarStyles} src={this.props.user.avatarUrl}/>
+                            </div>
                         </div>
-                        <AvatarUpload/>
+                        <div className="slds-grid slds-grid_align-center">
+                            <button type='button' className="slds-button slds-button_brand"
+                                    onClick={() => this.setState({showAvatarModal: true})}>Change Profile Picture</button>
+                        </div>
                     </div>
-                    <hr/>
-                    <form className="slds-form slds-form_stacked" onSubmit={this.handleSubmit}>
-                        <InputTextElement type="text" name="name" label="Name" variant="large" value={this.state.name} handleChange={this.handleChange}/>
-                        <InputTextElement type="text" name="email" label="Email" variant="large" value={this.state.email} handleChange={this.handleChange}/>
-                        <div className="slds-grid slds-grid_align-spread slds-grid_vertical-align-center slds-m-top_medium">
-                            <Link to="/profile">
-                                <button type='button' className="slds-button slds-button_neutral">Cancel</button>
-                            </Link>
-                            <button type='button' className="slds-button slds-button_destructive" onClick={() => this.setState({showModal: true})}>Delete Account</button>
-                            <button type='submit' className="slds-button slds-button_brand">Submit</button>
-                        </div>
-                    </form>
-                    {this.state.showModal && <DeleteUserModal title="Delete User Account?"
-                                                    onCancel={() => this.setState({showModal: false})}
-                                                    onDelete={this.handleDeleteUser}/>}
-                    {this.state.userUpdated && <Redirect to='/profile'/>}
+
+                    <div className="slds-col">
+                        <form className="slds-form slds-form_stacked" onSubmit={this.handleSubmit}>
+                            <InputTextElement type="text" name="name" label="Name" variant="large" value={this.state.name} handleChange={this.handleChange}/>
+                            <InputTextElement type="text" name="email" label="Email" variant="large" value={this.state.email} handleChange={this.handleChange}/>
+                            <div className="slds-grid slds-grid_align-spread slds-grid_vertical-align-center slds-m-top_medium">
+                                <Link to="/profile">
+                                    <button type='button' className="slds-button slds-button_neutral">Cancel</button>
+                                </Link>
+                                <button type='button' className="slds-button slds-button_destructive" onClick={() => this.setState({showDeleteModal: true})}>Delete Account</button>
+                                <button type='submit' className="slds-button slds-button_brand">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+
                 </div>
+                {this.state.showAvatarModal && <AvatarModal onCancel={() => this.setState({showAvatarModal: false})}/>}
+                {this.state.showDeleteModal && <DeleteUserModal title="Delete User Account?"
+                                                onCancel={() => this.setState({showDeleteModal: false})}
+                                                onDelete={this.handleDeleteUser}/>}
+                {this.state.userUpdated && <Redirect to='/profile'/>}
             </div>
         );
     }

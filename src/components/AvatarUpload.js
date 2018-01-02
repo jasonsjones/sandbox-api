@@ -1,12 +1,19 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import * as avatarUploadActions from '../actions/avatarUploadActions';
 
 class AvatarUpload extends React.Component {
+
+    static propTypes = {
+        onUpload: PropTypes.func
+    };
+
     constructor(props) {
         super(props);
         this.state = {
-            newAvatarFile: null
+            newAvatarFile: null,
+            previewSrc: 'https://dummyimage.com/180x180/6b6d70/aaa.png'
         };
 
         this.handleAvatarChange = this.handleAvatarChange.bind(this);
@@ -20,6 +27,7 @@ class AvatarUpload extends React.Component {
         this.setState({
             newAvatarFile: null
         });
+        this.props.onUpload();
     }
 
     handleAvatarChange(e) {
@@ -27,6 +35,15 @@ class AvatarUpload extends React.Component {
         let fileList = e.target.files;
         this.setState({
             newAvatarFile: fileList[0]
+        }, () => {
+            this.renderPreviewImage();
+        });
+    }
+
+    resetState = () => {
+        this.setState({
+            newAvatarFile: null,
+            previewSrc: 'https://dummyimage.com/180x180/6b6d70/aaa.png'
         });
     }
 
@@ -40,38 +57,69 @@ class AvatarUpload extends React.Component {
         }
     }
 
+    renderChangeButton() {
+        return (
+            <div className="slds-m-top_large">
+                <p className="slds-text-color_weak">Selected Avatar: </p>
+                <p>{this.state.newAvatarFile.name}
+                    <span className="slds-m-left_x-large">{this.returnFileSize(this.state.newAvatarFile.size)}</span>
+                    <span style={{cursor: 'pointer'}} className="slds-icon_container slds-icon-utility-delete"
+                          title="Description of icon when needed"
+                          onClick={this.resetState}>
+                        <svg className="slds-m-left_large slds-icon slds-icon_x-small slds-icon-text-default" aria-hidden="true">
+                            <use xlinkHref="styles/design-system/assets/icons/utility-sprite/svg/symbols.svg#delete" />
+                        </svg>
+                        <span className="slds-assistive-text">Description of icon</span>
+                    </span>
+                </p>
+                <button className="slds-button slds-button_brand slds-m-top_large" onClick={this.handleAvatarSubmit}>Change Image</button>
+            </div>
+        );
+    }
+
+    renderFileSelector() {
+        return (
+            <div className="slds-file-selector slds-file-selector_images" style={{width: '180px', height: '180px'}}>
+                <div className="slds-file-selector__dropzone">
+                    <input type="file" className="slds-file-selector__input slds-assistive-text" onChange={this.handleAvatarChange}
+                        accept="image/png, image/jpg" id="file-upload-input" name="avatar"
+                        aria-labelledby="file-selector-primary-label file-selector-secondary-label" />
+                    <label className="slds-file-selector__body" htmlFor="file-upload-input" id="file-selector-secondary-label">
+                        <span className="slds-file-selector__button slds-button slds-button_neutral">
+                            <svg className="slds-button__icon slds-button__icon_left" aria-hidden="true">
+                                <use xlinkHref="styles/design-system/assets/icons/utility-sprite/svg/symbols.svg#upload" />
+                            </svg>Upload New Avatar</span>
+                        <span className="slds-file-selector__text slds-medium-show">or Drop Files</span>
+                    </label>
+                </div>
+            </div>
+        );
+    }
+
+    renderPreviewImage() {
+            let reader = new FileReader();
+            reader.onload = () => {
+                this.setState({
+                    previewSrc: reader.result
+                })
+            };
+            reader.readAsDataURL(this.state.newAvatarFile);
+    }
+
     render() {
         return (
-            <form className="slds-form slds-form_stacked">
-                <div className="slds-form-element">
-                    <span className="slds-form-element__label" id="file-selector-primary-label">Change Avatar</span>
-                    <div className="slds-form-element__control">
-                        <div className="slds-file-selector slds-file-selector_files">
-                            <div className="slds-file-selector__dropzone">
-                                <input type="file" className="slds-file-selector__input slds-assistive-text" onChange={this.handleAvatarChange}
-                                    accept="image/png, image/jpg" id="file-upload-input" name="avatar"
-                                    aria-labelledby="file-selector-primary-label file-selector-secondary-label" />
-                                <label className="slds-file-selector__body" htmlFor="file-upload-input" id="file-selector-secondary-label">
-                                    <span className="slds-file-selector__button slds-button slds-button_neutral">
-                                        <svg className="slds-button__icon slds-button__icon_left" aria-hidden="true">
-                                            <use xlinkHref="styles/design-system/assets/icons/utility-sprite/svg/symbols.svg#upload" />
-                                        </svg>Upload New Avatar</span>
-                                    <span className="slds-file-selector__text slds-medium-show">or Drop Files</span>
-                                </label>
-                            </div>
+            <div className="slds-grid slds-grid_align-space">
+                <form className="slds-form slds-form_stacked">
+                    <div className="slds-form-element">
+                        <span className="slds-form-element__label" id="file-selector-primary-label">Change Avatar</span>
+                        <div className="slds-form-element__control">
+                            {!this.state.newAvatarFile && this.renderFileSelector()}
                         </div>
-                        {this.state.newAvatarFile && (
-                            <div>
-                                <div className="slds-m-top_large slds-m-left_medium">
-                                    <p className="slds-text-color_weak">Selected Avatar: </p>
-                                    <p>{this.state.newAvatarFile.name} <span className="slds-m-left_x-large">{this.returnFileSize(this.state.newAvatarFile.size)}</span></p>
-                                </div>
-                                <button className="slds-button slds-button_brand slds-m-top_medium" onClick={this.handleAvatarSubmit}>Change</button>
-                            </div>
-                        )}
+                        {this.state.newAvatarFile && this.renderChangeButton()}
                     </div>
-                </div>
-            </form>
+                </form>
+                <img style={{width: '180px', height: '180px', marginTop: '1.5rem', borderRadius: '50%'}} src={this.state.previewSrc} alt="preview image"/>
+            </div>
         );
     }
 }
