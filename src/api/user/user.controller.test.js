@@ -156,7 +156,7 @@ describe('User controller', () => {
                 name: 'the arrow'
             };
 
-            stub.resolves(Object.assign({}, mockUsers[1], req.body));
+            stub.resolves(new User(Object.assign({}, mockUsers[1], req.body)));
             // stub.resolves({...mockUsers[1], ...req.body});
             const promise = Controller.updateUser(req);
             expect(promise).to.be.a('Promise');
@@ -279,7 +279,7 @@ describe('User controller', () => {
             req.params = {
                 userid: mockUsers[1]._id
             };
-            stub.resolves(mockUsers[1]);
+            stub.resolves(new User(mockUsers[1]));
 
             const promise = Controller.uploadUserAvatar(req);
             expect(promise).to.be.a('Promise');
@@ -396,7 +396,7 @@ describe('User controller', () => {
             req = {};
         });
         it('returns a promise that resolves to the unlinked user', () => {
-            let expectedUser = mockUsers[2];
+            let expectedUser = new User(mockUsers[2]);
             expectedUser.sfdc = {
                 id: '003D000004534cda',
                 accessToken: null,
