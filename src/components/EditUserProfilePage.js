@@ -102,7 +102,7 @@ class EditUserProfilePage extends React.Component {
 
     render() {
         return (
-            <div className="container-content">
+            <div className="container-content container-content_wide">
                 <h1 className="slds-text-heading_large slds-text-align_center">Edit User Profile Page</h1>
 
                 <div className="slds-grid slds-grid_vertical-align-center">

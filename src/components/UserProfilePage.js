@@ -34,14 +34,14 @@ class UserProfilePage extends React.Component {
         const buttonText = (user.hasSFDCProfile) ? 'Unlink SFDC Profile' : 'Link SFDC Profile';
 
         return (
-            <div className="slds-m-around_x-large container-content">
+            <div className="slds-m-around_x-large container-content container-content_narrow">
                 <h1 className="slds-text-heading_large slds-text-align_center">User Profile Page</h1>
 
-                <div className="slds-grid slds-m-top_large">
-                    <div className="slds-m-bottom_large">
+                <div className="slds-grid slds-grid_align-space slds-m-vertical_large">
+                    <div>
                         <img style={avatarStyles} src={user.avatarUrl}/>
                     </div>
-                    <div className="slds-grid slds-grid--vertical slds-m-left_large">
+                    <div className="slds-grid slds-grid--vertical">
                         <h3 className="slds-text-heading_medium">{user.name}</h3>
                         <p className="slds-text-body_regular slds-text-color_weak slds-m-top_medium">{user.email}</p>
                     </div>
