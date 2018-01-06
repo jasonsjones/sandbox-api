@@ -17,7 +17,7 @@
   },
   "scripts": {
     "predev": "npm run dbSeed",
-    "dev": "nodemon src/api/server.js --inspect=0.0.0.0:5858 --watch src/ --ignore src/components --ignore src/actions --exec babel-node",
+    "dev": "nodemon src/api/server.js --inspect=0.0.0.0:5858 --watch src/ --ignore src/components --ignore src/actions --ignore src/stores --exec babel-node",
     "prebuild": "rm -f public/bundle.js* public/styles/styles.css*",
     "build": "webpack",
     "build:watch": "npm run build -- --watch",
