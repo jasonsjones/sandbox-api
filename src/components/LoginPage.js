@@ -105,6 +105,10 @@ export default class Login extends React.Component {
         });
     }
 
+    initiateSFDCOAuthFlow = () => {
+        authAction.initiateSFDCOAuthFlow();
+    }
+
     handleSubmit(e) {
         e.preventDefault();
         const { email, password } = this.state;
@@ -145,7 +149,7 @@ export default class Login extends React.Component {
                         <p className="slds-m-top_small slds-text-align_center">&mdash; OR &mdash;</p>
 
                         <button type='button' className="slds-button slds-button_brand slds-m-top_medium loginButton"
-                                onClick={() => window.location.assign('http://localhost:3000/auth/sfdc')}>
+                                onClick={this.initiateSFDCOAuthFlow}>
                             Log In with
                             <svg className="slds-icon slds-icon_small slds-m-horizontal_small" aria-hidden="true">
                                 <use xlinkHref='styles/design-system/assets/icons/utility-sprite/svg/symbols.svg#salesforce1' />
