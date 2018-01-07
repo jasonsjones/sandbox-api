@@ -65,3 +65,10 @@ export function getSessionUser() {
             });
         });
 }
+
+export function initiateSFDCOAuthFlow() {
+    AppDispatcher.handleViewAction({
+        actionType: "INITIATE_OAUTH_FLOW"
+    });
+    window.location = "http://localhost:3000/auth/sfdc";
+}
