@@ -28,6 +28,25 @@ export function getAuthUser(user) {
     });
 }
 
+export const getUser = (id) => {
+    const url = `${baseUrl}/user/${id}`;
+    return new Promise((resolve, reject) => {
+        fetch(url, {
+            method: 'GET',
+            headers: {'Content-Type': 'application/json' },
+            credentials: 'include',
+        })
+        .then(response => response.json())
+        .then(data => {
+            resolve(data);
+        })
+        .catch(err => {
+            console.log(err);
+            reject(err);
+        });
+    });
+};
+
 export function signupUser(user) {
     const url = `${baseUrl}/signup`;
     return new Promise((resolve, reject) => {
