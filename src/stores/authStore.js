@@ -9,6 +9,7 @@ class AuthStore extends EventEmitter {
         this.token = null;
         this.errorMsg = '';
         this.loggingIn = false;
+        this.fetchUserRequired = false;
     }
 
     addChangeListenter(callback) {
@@ -47,12 +48,15 @@ class AuthStore extends EventEmitter {
         return this.loggingIn;
     }
 
-
     getDataFromLocalStorage() {
         return {
             user: localStorage.getItem('currentUser'),
             userToken: localStorage.getItem('userToken')
         }
+    }
+
+    isFetchUserRequired() {
+        return this.isFetchUserRequired;
     }
 
     authenticateUser(data) {
@@ -78,6 +82,12 @@ class AuthStore extends EventEmitter {
         localStorage.removeItem('currentUser');
         this.token = '';
         this.currentUser = {};
+        this.emitChange();
+    }
+
+    setFetchUserStatus(status) {
+        console.log('changing fetch user status to ', status);
+        this.fetchUserRequired = status;
         this.emitChange();
     }
 
@@ -111,9 +121,13 @@ class AuthStore extends EventEmitter {
                 break;
             case 'GET_SESSION_USER_COMPLETE':
                 this.loggingIn = false;
+                this.setFetchUserStatus(false);
                 break;
             case 'LOGOUT_USER':
                 this.logoutUser();
+                break;
+            case 'INITIATE_OAUTH_FLOW':
+                this.setFetchUserStatus(true);
                 break;
             default:
         }
