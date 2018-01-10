@@ -605,6 +605,51 @@ describe('User repository', () => {
             });
         });
     });
+
+    describe('changePassword()', () => {
+        it('rejects with Error if the user payload is not provided', () => {
+            const promise = Repository.changePassword();
+            expect(promise).to.be.a('Promise');
+
+            return promise.catch(err => {
+                expect(err).to.exist;
+                expect(err).to.be.an('Error');
+            });
+        });
+
+        it('rejects with Error if the user email is not provided', () => {
+            const promise = Repository.changePassword({currentPassword: 'password',
+                                                       newPassword: 'newPassword'});
+            expect(promise).to.be.a('Promise');
+
+            return promise.catch(err => {
+                expect(err).to.exist;
+                expect(err).to.be.an('Error');
+            });
+        });
+
+        it('rejects with Error if the current password is not provided', () => {
+            const promise = Repository.changePassword({email: 'oliver@qc.com',
+                                                       newPassword: 'newPassword'});
+            expect(promise).to.be.a('Promise');
+
+            return promise.catch(err => {
+                expect(err).to.exist;
+                expect(err).to.be.an('Error');
+            });
+        });
+
+        it('rejects with Error if the new password is not provided', () => {
+            const promise = Repository.changePassword({email: 'oliver@qc.com',
+                                                       currentPassword: 'password'});
+            expect(promise).to.be.a('Promise');
+
+            return promise.catch(err => {
+                expect(err).to.exist;
+                expect(err).to.be.an('Error');
+            });
+        });
+    });
 });
 
 const expectUserToHaveAvatar = user => {

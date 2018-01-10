@@ -116,6 +116,18 @@ export function uploadUserAvatar(id, file, deleteAfterUpload = true) {
     });
 }
 
+export function changePassword(userData) {
+    if (!userData) {
+        return Promise.reject(new Error('user data is required'));
+    }
+
+    const { email, currentPassword, newPassword } = userData;
+
+    if (!email || !currentPassword || !newPassword) {
+        return Promise.reject(new Error('user email is required'));
+    }
+}
+
 export function signUpUser(userData) {
     if (!userData) {
         return Promise.reject(new Error('user data is required'));
