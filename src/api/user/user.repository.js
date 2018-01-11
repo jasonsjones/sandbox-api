@@ -126,6 +126,16 @@ export function changePassword(userData) {
     if (!email || !currentPassword || !newPassword) {
         return Promise.reject(new Error('user email is required'));
     }
+
+    return this.lookupUserByEmail(email, false)
+        .then(user => {
+            if (user.verifyPassword(currentPassword)) {
+                user.password = newPassword;
+                return user.save();
+            } else {
+                return Promise.reject(new Error('user unauthorized to change password'));
+            }
+        });
 }
 
 export function signUpUser(userData) {
