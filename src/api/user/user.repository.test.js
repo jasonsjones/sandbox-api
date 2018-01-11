@@ -649,6 +649,24 @@ describe('User repository', () => {
                 expect(err).to.be.an('Error');
             });
         });
+
+        it('rejects with Error if the current password is not correct', () => {
+            let userData = {
+                email: 'oliver@qc.com',
+                currentPassword: 'isWrong',
+                newPassword: 'doesnotmatter'
+            };
+            UserMock.expects('findOne').withArgs({email: userData.email})
+                .chain('exec')
+                .resolves(new User(mockUsers[1]));
+            const userStub = sinon.stub(User.prototype, 'verifyPassword').returns(false);
+            const promise = Repository.changePassword(userData);
+            return promise.catch(err => {
+                expect(err).to.exist;
+                expect(err).to.be.an('Error');
+                userStub.restore();
+            });
+        });
     });
 });
 
