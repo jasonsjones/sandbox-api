@@ -2,36 +2,29 @@ import User from './user.model';
 import { deleteAvatar, makeAvatarModel } from '../avatar/avatar.repository';
 
 export function getUsers(queryCondition = {}, inclAvatars = false) {
-    return new Promise((resolve, reject) => {
-        let query;
-        if (inclAvatars) {
-            query = User.find(queryCondition).populate('avatar', '-data');
-        } else {
-            query = User.find(queryCondition);
-        }
+    let query;
+    if (inclAvatars) {
+        query = User.find(queryCondition).populate('avatar', '-data');
+    } else {
+        query = User.find(queryCondition);
+    }
 
-        query.exec()
-            .then(users => resolve(users))
-            .catch(err => reject(err));
-    });
+    return query.exec();
 }
 
 export function getUser(id, inclAvatar = false) {
     if (!id) {
         return Promise.reject(new Error('user id is required'));
     }
-    return new Promise((resolve, reject) => {
-        let query;
-        if (inclAvatar) {
-            query = User.findById(id).populate('avatar', '-data');
-        } else {
-            query = User.findById(id);
-        }
 
-        query.exec()
-            .then(user => resolve(user))
-            .catch(err => reject(err));
-    });
+    let query;
+    if (inclAvatar) {
+        query = User.findById(id).populate('avatar', '-data');
+    } else {
+        query = User.findById(id);
+    }
+
+    return query.exec();
 }
 
 export function lookupUserByEmail(email, inclAvatar = false) {
