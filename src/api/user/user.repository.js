@@ -66,11 +66,7 @@ export function updateUser(id, userData) {
     return new Promise((resolve, reject) => {
         User.findById(id).exec()
             .then(user => {
-                for (let prop in userData) {
-                    if (user[prop]) {
-                        user[prop] = userData[prop];
-                    }
-                }
+                Object.assign(user, userData);
                 resolve(user.save());
             })
             .catch(err => reject(err));
