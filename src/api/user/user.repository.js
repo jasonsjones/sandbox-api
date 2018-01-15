@@ -49,11 +49,7 @@ export function deleteUser(id) {
     if (!id) {
         return Promise.reject(new Error('user id is required'));
     }
-    return new Promise((resolve, reject) => {
-        User.findByIdAndRemove(id).exec()
-            .then(user => resolve(user))
-            .catch(err => reject(err));
-    });
+        return User.findByIdAndRemove(id).exec();
 }
 
 export function updateUser(id, userData) {
