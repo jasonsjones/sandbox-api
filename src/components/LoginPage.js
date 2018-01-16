@@ -6,6 +6,9 @@ import InputTextElement from './InputTextElement';
 import authStore from '../stores/authStore';
 import * as authAction from '../actions/authActions';
 
+import logo from 'sldsImages/logo-noname.svg';
+import cloud from 'sldsIcons/utility/salesforce1.svg';
+
 const CheckBox = () => {
     return (
         <div className="slds-form-element">
@@ -137,7 +140,7 @@ export default class Login extends React.Component {
                 ref={(element) => { this.loginForm = element }}>
                 <div className="slds-size--1-of-2 slds-p-horizontal--medium loginform-left">
                     <div className="loginform-container">
-                    <img className="loginLogo" src="styles/design-system/assets/images/logo-noname.svg" />
+                    <img className="loginLogo" src={logo} />
                     <div className="slds-m-top_large loginform">
                         {errorText}
                         <LoginForm handleSubmit={this.handleSubmit}
@@ -151,9 +154,9 @@ export default class Login extends React.Component {
                         <button type='button' className="slds-button slds-button_brand slds-m-top_medium loginButton"
                                 onClick={this.initiateSFDCOAuthFlow}>
                             Log In with
-                            <svg className="slds-icon slds-icon_small slds-m-horizontal_small" aria-hidden="true">
-                                <use xlinkHref='styles/design-system/assets/icons/utility-sprite/svg/symbols.svg#salesforce1' />
-                            </svg>
+                            <span className="slds-m-horizontal_small" aria-hidden="true">
+                                <img style={{width: 24, height: 24}} src={cloud} />
+                            </span>
                             Salesforce
                         </button>
                         <hr/>
