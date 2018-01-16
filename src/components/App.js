@@ -10,6 +10,7 @@ import SignupPage from './SignupPage';
 import EditUserProfilePage from './EditUserProfilePage';
 import Spinner from './Spinner';
 import './App.css';
+import 'sldsCss';
 
 class App extends React.Component {
     constructor() {
