@@ -1,7 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import SVGInline from 'react-svg-inline';
 
 import * as avatarUploadActions from '../actions/avatarUploadActions';
+import deleteSvg from 'sldsIcons/utility/delete.svg';
+import upload from 'sldsIcons/utility/upload.svg';
 
 class AvatarUpload extends React.Component {
 
@@ -58,21 +61,21 @@ class AvatarUpload extends React.Component {
     }
 
     renderChangeButton() {
+        const { newAvatarFile } = this.state;
         return (
             <div className="slds-m-top_large">
                 <p className="slds-text-color_weak">Selected Avatar: </p>
-                <p>{this.state.newAvatarFile.name}
-                    <span className="slds-m-left_x-large">{this.returnFileSize(this.state.newAvatarFile.size)}</span>
-                    <span style={{cursor: 'pointer'}} className="slds-icon_container slds-icon-utility-delete"
-                          title="Description of icon when needed"
+                <div className="slds-grid slds-grid_vertical-align-center">
+                    <div>{newAvatarFile.name}</div>
+                    <div className="slds-m-left_x-large">{this.returnFileSize(newAvatarFile.size)}</div>
+                    <div style={{cursor: 'pointer'}}
+                          title="Remove selected image file" className="slds-m-left_large slds-m-bottom_small"
                           onClick={this.resetState}>
-                        <svg className="slds-m-left_large slds-icon slds-icon_x-small slds-icon-text-default" aria-hidden="true">
-                            <use xlinkHref="styles/design-system/assets/icons/utility-sprite/svg/symbols.svg#delete" />
-                        </svg>
-                        <span className="slds-assistive-text">Description of icon</span>
-                    </span>
-                </p>
-                <button className="slds-button slds-button_brand slds-m-top_large" onClick={this.handleAvatarSubmit}>Change Image</button>
+                        <SVGInline svg={deleteSvg} fill='#333' width='16' height='16' cleanup={true}/>
+                        <span className="slds-assistive-text">Remove selected image file</span>
+                    </div>
+                </div>
+                <button className="slds-button slds-button_brand slds-m-top_x-large" onClick={this.handleAvatarSubmit}>Change Image</button>
             </div>
         );
     }
@@ -86,9 +89,9 @@ class AvatarUpload extends React.Component {
                         aria-labelledby="file-selector-primary-label file-selector-secondary-label" />
                     <label className="slds-file-selector__body" htmlFor="file-upload-input" id="file-selector-secondary-label">
                         <span className="slds-file-selector__button slds-button slds-button_neutral">
-                            <svg className="slds-button__icon slds-button__icon_left" aria-hidden="true">
-                                <use xlinkHref="styles/design-system/assets/icons/utility-sprite/svg/symbols.svg#upload" />
-                            </svg>Upload New Avatar</span>
+                            <SVGInline className="slds-m-right_xx-small slds-m-bottom_xx-small" fill='#0070d2' svg={upload}  width='16' height='16' cleanup={true}/>
+                            Upload New Avatar
+                        </span>
                         <span className="slds-file-selector__text slds-medium-show">or Drop Files</span>
                     </label>
                 </div>

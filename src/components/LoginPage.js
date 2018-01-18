@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import SVGInline from 'react-svg-inline';
 
 import InputTextElement from './InputTextElement';
 import authStore from '../stores/authStore';
@@ -140,7 +141,7 @@ export default class Login extends React.Component {
                 ref={(element) => { this.loginForm = element }}>
                 <div className="slds-size--1-of-2 slds-p-horizontal--medium loginform-left">
                     <div className="loginform-container">
-                    <img className="loginLogo" src={logo} />
+                    <SVGInline svg={logo} className="loginLogo" width="50%" />
                     <div className="slds-m-top_large loginform">
                         {errorText}
                         <LoginForm handleSubmit={this.handleSubmit}
@@ -154,9 +155,7 @@ export default class Login extends React.Component {
                         <button type='button' className="slds-button slds-button_brand slds-m-top_medium loginButton"
                                 onClick={this.initiateSFDCOAuthFlow}>
                             Log In with
-                            <span className="slds-m-horizontal_small" aria-hidden="true">
-                                <img style={{width: 24, height: 24}} src={cloud} />
-                            </span>
+                            <SVGInline svg={cloud} className="slds-m-horizontal_x-small" fill='#fff' width='32' height='32' cleanup={true}/>
                             Salesforce
                         </button>
                         <hr/>
