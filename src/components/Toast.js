@@ -1,5 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import SVGInline from 'react-svg-inline';
+
+import closeSvg from 'sldsIcons/utility/close.svg';
 
 const ToastIcon  = (props) => {
     return (
@@ -22,9 +25,7 @@ ToastIcon.propTypes = {
 const ToastButtonClose = (props) => {
     return (
         <button className="slds-button slds-button_icon slds-notify__close slds-button_icon-inverse" onClick={props.onClose} title="Close">
-            <svg className="slds-button__icon slds-button__icon_large" aria-hidden="true">
-                <use xlinkHref="styles/design-system/assets/icons/utility-sprite/svg/symbols.svg#close" />
-            </svg>
+            <SVGInline svg={closeSvg} width="28" />
             <span className="slds-assistive-text">Close</span>
         </button>
     );

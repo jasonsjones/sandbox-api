@@ -1,12 +1,15 @@
 import React from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import SVGInline from 'react-svg-inline';
 
 import editUserProfileStore from '../stores/editUserProfileStore';
 import * as editProfileActions from '../actions/editProfileActions';
 import AvatarUpload from './AvatarUpload';
 import InputTextElement from './InputTextElement';
 import DeleteUserModal from './DeleteUserModal';
+
+import closeSvg from 'sldsIcons/utility/close.svg';
 
 const AvatarModal = (props) => {
     return (
@@ -16,9 +19,7 @@ const AvatarModal = (props) => {
                 <div className="slds-modal__container">
                     <header className="slds-modal__header">
                         <button className="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" onClick={props.onCancel} title="Close">
-                            <svg className="slds-button__icon slds-button__icon_large" aria-hidden="true">
-                                <use xlinkHref="styles/design-system/assets/icons/utility-sprite/svg/symbols.svg#close" />
-                            </svg>
+                            <SVGInline svg={closeSvg} width="32" />
                             <span className="slds-assistive-text">Close</span>
                         </button>
                         <h2 id="modal-heading-01" className="slds-text-heading_medium slds-hyphenate">Change Profile Picture</h2>
