@@ -59,14 +59,12 @@ export function updateUser(id, userData) {
     if (!userData) {
         return Promise.reject(new Error('userData is required'));
     }
-    return new Promise((resolve, reject) => {
-        User.findById(id).exec()
+    return User.findById(id).exec()
             .then(user => {
                 Object.assign(user, userData);
-                resolve(user.save());
+                return user.save();
             })
-            .catch(err => reject(err));
-            });
+            .catch(err => Promise.reject(err));
 }
 
 export function uploadUserAvatar(id, file, deleteAfterUpload = true) {
@@ -76,29 +74,27 @@ export function uploadUserAvatar(id, file, deleteAfterUpload = true) {
     if (!file) {
         return Promise.reject(new Error('avatar file is required'));
     }
-    return new Promise((resolve, reject) => {
-        let userPromise = getUser(id);
+    let userPromise = getUser(id);
 
-        // if the user already has a custom avatar image, delete it first
-        userPromise.then(user => {
-            if (user.hasCustomAvatar()) {
-                deleteAvatar(user.avatar);
-            }
-        });
-
-        let avatarPromise = userPromise.then(user => {
-            let avatar = makeAvatarModel(file, user._id, deleteAfterUpload);
-            return avatar.save();
-        });
-
-        Promise.all([userPromise, avatarPromise]).then(values => {
-            let [user, img] = values;
-            user.avatar = img._id;
-            user.avatarUrl = `http://localhost:3000/api/avatar/${img._id}`;
-            resolve(user.save());
-        })
-        .catch(err => reject(err));
+    // if the user already has a custom avatar image, delete it first
+    userPromise.then(user => {
+        if (user.hasCustomAvatar()) {
+            deleteAvatar(user.avatar);
+        }
     });
+
+    let avatarPromise = userPromise.then(user => {
+        let avatar = makeAvatarModel(file, user._id, deleteAfterUpload);
+        return avatar.save();
+    });
+
+    return Promise.all([userPromise, avatarPromise]).then(values => {
+        let [user, img] = values;
+        user.avatar = img._id;
+        user.avatarUrl = `http://localhost:3000/api/avatar/${img._id}`;
+        return user.save();
+    })
+    .catch(err => Promise.reject(err));
 }
 
 export function changePassword(userData) {
