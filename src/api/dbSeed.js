@@ -11,6 +11,9 @@ const config = Config[env];
 const log = debug('db:seed');
 const dbConn = db(config);
 
+const assetPath = `${__dirname}/../../assets`;
+const avatarFile = `${assetPath}/sfdc_default_avatar.png`;
+
 const initialUsers = [
     {
         name: "Oliver Queen",
@@ -87,19 +90,19 @@ function seedDefaultAvatar() {
 function createDefaultAvatar() {
     const avatar = new Avatar({
         contentType: "image/png",
-        fileSize: fs.statSync(__dirname + '/../../assets/sfdc_default_avatar.png').size,
-        data: fs.readFileSync(__dirname + '/../../assets/sfdc_default_avatar.png'),
+        fileSize: fs.statSync(avatarFile).size,
+        data: fs.readFileSync(avatarFile),
         defaultImg: true
     });
     return avatar;
 }
 
 function makeCustomAvatar(userId, filename) {
-    let filepath = `/../../assets/${filename}`
+    let filepath = `${assetPath}/${filename}`
     const avatar = new Avatar({
         contentType: "image/png",
-        fileSize: fs.statSync(__dirname + filepath).size,
-        data: fs.readFileSync(__dirname + filepath),
+        fileSize: fs.statSync(filepath).size,
+        data: fs.readFileSync(filepath),
         user: userId,
         defaultImg: false
     });
