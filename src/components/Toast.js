@@ -3,16 +3,34 @@ import PropTypes from 'prop-types';
 import SVGInline from 'react-svg-inline';
 
 import closeSvg from 'sldsIcons/utility/close.svg';
+import infoSvg from 'sldsIcons/utility/info.svg';
+import successSvg from 'sldsIcons/utility/success.svg';
+import warningSvg from 'sldsIcons/utility/warning.svg';
+import errorSvg from 'sldsIcons/utility/error.svg';
 
 const ToastIcon  = (props) => {
+    let themeSvg;
+    switch (props.theme) {
+        case 'info':
+            themeSvg = infoSvg;
+            break;
+        case 'success':
+            themeSvg = successSvg;
+            break;
+        case 'warning':
+            themeSvg = warningSvg;
+            break;
+        case 'error':
+            themeSvg = errorSvg;
+            break;
+    }
+
     return (
         <div>
             <span className="slds-assistive-text">{props.theme}</span>
             <span className="slds-icon_container slds-icon-utility-info slds-m-right_small slds-no-flex slds-align-top"
-                title="Description of icon when needed">
-                <svg className="slds-icon slds-icon_small" aria-hidden="true">
-                    <use xlinkHref={`styles/design-system/assets/icons/utility-sprite/svg/symbols.svg#${props.theme}`} />
-                </svg>
+                title={`${props.theme} icon`}>
+                <SVGInline svg={themeSvg} width="28" />
             </span>
         </div>
     );
