@@ -195,6 +195,17 @@ describe('User controller', () => {
         });
     });
 
+    describe('changePassword()', () => {
+        it('rejects with error if req parameter is not provided', () => {
+            const promise = Controller.changePassword();
+            expect(promise).to.be.a('Promise');
+
+            return promise.catch(response => {
+                expectErrorResponse(response);
+            });
+        });
+    });
+
     describe('deleteUser()', () => {
         let req, stub;
         beforeEach(() => {

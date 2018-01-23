@@ -183,3 +183,13 @@ export const unlinkSFDCAccount = (req) => {
             };
         })
 }
+
+export function changePassword(req) {
+    if (!req) {
+        return Promise.reject({
+            success: false,
+            message: 'request parameter is required',
+            error: new Error('request parameter is required')
+        });
+    }
+}
