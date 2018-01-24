@@ -204,6 +204,31 @@ describe('User controller', () => {
                 expectErrorResponse(response);
             });
         });
+
+        it('rejects with error if req.body is not provided', () => {
+            const req = {};
+            const promise = Controller.changePassword(req);
+            expect(promise).to.be.a('Promise');
+
+            return promise.catch(response => {
+                expectErrorResponse(response);
+            });
+        });
+
+        it('rejects with error if req.body.email is not provided', () => {
+            const req = {
+                body: {
+                    currentPassword: 'password',
+                    newPassword: 'newPassword'
+                }
+            };
+            const promise = Controller.changePassword(req);
+            expect(promise).to.be.a('Promise');
+
+            return promise.catch(response => {
+                expectErrorResponse(response);
+            });
+        });
     });
 
     describe('deleteUser()', () => {

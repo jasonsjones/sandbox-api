@@ -192,4 +192,12 @@ export function changePassword(req) {
             error: new Error('request parameter is required')
         });
     }
+
+    if (!req.body || !req.body.email || !req.body.currentPassword || !req.body.newPassword) {
+        return Promise.reject({
+            success: false,
+            message: 'request body is required',
+            error: new Error('request body parameter is required')
+        });
+    }
 }
