@@ -196,6 +196,15 @@ describe('User controller', () => {
     });
 
     describe('changePassword()', () => {
+        let req
+        beforeEach(() => {
+            req = {};
+        });
+
+        afterEach(() => {
+            req = {};
+        });
+
         it('rejects with error if req parameter is not provided', () => {
             const promise = Controller.changePassword();
             expect(promise).to.be.a('Promise');
@@ -206,7 +215,6 @@ describe('User controller', () => {
         });
 
         it('rejects with error if req.body is not provided', () => {
-            const req = {};
             const promise = Controller.changePassword(req);
             expect(promise).to.be.a('Promise');
 
@@ -216,11 +224,35 @@ describe('User controller', () => {
         });
 
         it('rejects with error if req.body.email is not provided', () => {
-            const req = {
-                body: {
-                    currentPassword: 'password',
-                    newPassword: 'newPassword'
-                }
+            req.body = {
+                currentPassword: 'password',
+                newPassword: 'newPassword'
+            };
+            const promise = Controller.changePassword(req);
+            expect(promise).to.be.a('Promise');
+
+            return promise.catch(response => {
+                expectErrorResponse(response);
+            });
+        });
+
+        it('rejects with error if req.body.currentPassword is not provided', () => {
+            req.body = {
+                email: 'oliver@qc.com',
+                newPassword: 'newPassword'
+            };
+            const promise = Controller.changePassword(req);
+            expect(promise).to.be.a('Promise');
+
+            return promise.catch(response => {
+                expectErrorResponse(response);
+            });
+        });
+
+        it('rejects with error if req.body.newPassword is not provided', () => {
+            req.body = {
+                email: 'oliver@qc.com',
+                currentPassword: 'password'
             };
             const promise = Controller.changePassword(req);
             expect(promise).to.be.a('Promise');
