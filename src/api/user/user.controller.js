@@ -181,7 +181,7 @@ export const unlinkSFDCAccount = (req) => {
                 message: `error unlinking the user: ${err.message}`,
                 error: err
             };
-        })
+        });
 }
 
 export function changePassword(req) {
@@ -200,4 +200,21 @@ export function changePassword(req) {
             error: new Error('request body parameter is required')
         });
     }
+
+    return UserRepository.changePassword(req.body)
+        .then(user => {
+            if (user) {
+                return {
+                    success: true,
+                    message: 'user password changed'
+                }
+            }
+        })
+        .catch(err => {
+            return {
+                success: false,
+                message: `error changing the password: ${err.message}`,
+                error: err
+            };
+        });
 }

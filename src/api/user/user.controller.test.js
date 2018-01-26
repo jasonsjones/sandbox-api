@@ -196,12 +196,14 @@ describe('User controller', () => {
     });
 
     describe('changePassword()', () => {
-        let req
+        let req, stub;
         beforeEach(() => {
+            stub = sinon.stub(Repository, 'changePassword');
             req = {};
         });
 
         afterEach(() => {
+            stub.restore();
             req = {};
         });
 
@@ -260,6 +262,37 @@ describe('User controller', () => {
             return promise.catch(response => {
                 expectErrorResponse(response);
             });
+        });
+
+        it('rejects with error if something goes wrong changing the password', () => {
+            stub.rejects(new Error('Oops, something went wrong updating the user.'));
+            req.body = {
+                email: 'oliver@qc.com',
+                currentPassword: 'password',
+                newPassword: 'newPassword'
+            };
+            const promise = Controller.changePassword(req);
+            expect(promise).to.be.a('Promise');
+            return promise.catch(response => {
+                expectErrorResponse(response);
+            });
+        });
+
+        it('returns a promise that resolves with a payload', () => {
+            req.body = {
+                email: 'oliver@qc.com',
+                currentPassword: 'password',
+                newPassword: 'newPassword'
+            };
+            stub.resolves(new User(mockUsers[1]));
+            const promise = Controller.changePassword(req);
+            expect(promise).to.be.a('Promise');
+            return promise.then(response => {
+                expect(response).to.be.an('object');
+                expect(response).to.have.property('success');
+                expect(response).to.have.property('message');
+                expect(response.success).to.be.true;
+            })
         });
     });
 
