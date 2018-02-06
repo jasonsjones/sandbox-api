@@ -8,21 +8,21 @@ import successSvg from 'sldsIcons/utility/success.svg';
 import warningSvg from 'sldsIcons/utility/warning.svg';
 import errorSvg from 'sldsIcons/utility/error.svg';
 
-const ToastIcon  = (props) => {
+const ToastIcon = (props) => {
     let themeSvg;
     switch (props.theme) {
-        case 'info':
-            themeSvg = infoSvg;
-            break;
-        case 'success':
-            themeSvg = successSvg;
-            break;
-        case 'warning':
-            themeSvg = warningSvg;
-            break;
-        case 'error':
-            themeSvg = errorSvg;
-            break;
+    case 'info':
+        themeSvg = infoSvg;
+        break;
+    case 'success':
+        themeSvg = successSvg;
+        break;
+    case 'warning':
+        themeSvg = warningSvg;
+        break;
+    case 'error':
+        themeSvg = errorSvg;
+        break;
     }
 
     return (
@@ -34,11 +34,11 @@ const ToastIcon  = (props) => {
             </span>
         </div>
     );
-}
+};
 
 ToastIcon.propTypes = {
     theme: PropTypes.string
-}
+};
 
 const ToastButtonClose = (props) => {
     return (
@@ -47,11 +47,11 @@ const ToastButtonClose = (props) => {
             <span className="slds-assistive-text">Close</span>
         </button>
     );
-}
+};
 
 ToastButtonClose.propTypes = {
     onClose: PropTypes.func
-}
+};
 
 class Toast extends React.Component {
 

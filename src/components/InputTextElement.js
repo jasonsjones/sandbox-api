@@ -4,12 +4,12 @@ import PropTypes from 'prop-types';
 const InputTextElement = (props) => {
     let variantClass = '';
     switch (props.variant) {
-        case 'large':
-            variantClass = 'input-text-element_large';
-            break;
-        case '':
-        default:
-            break;
+    case 'large':
+        variantClass = 'input-text-element_large';
+        break;
+    case '':
+    default:
+        break;
     }
 
     return (
@@ -21,7 +21,7 @@ const InputTextElement = (props) => {
             </div>
         </div>
     );
-}
+};
 
 /* slds-input loginform-text-input */
 

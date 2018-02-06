@@ -7,7 +7,7 @@ import * as authAction from '../actions/authActions';
 const avatarStyles = {
     borderRadius: "50%",
     width: "200px"
-}
+};
 
 class UserProfilePage extends React.Component {
 

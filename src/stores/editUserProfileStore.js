@@ -26,12 +26,12 @@ class EditUserProfileStore extends EventEmitter {
     handleActions(action) {
         let payload = action.action;
         switch(payload.actionType) {
-            case 'UPDATE_USER_PROFILE_SUCCESS':
-                this.userUpdated = true;
-                this.emitChange();
-                break;
-            default:
-                break;
+        case 'UPDATE_USER_PROFILE_SUCCESS':
+            this.userUpdated = true;
+            this.emitChange();
+            break;
+        default:
+            break;
         }
     }
 }

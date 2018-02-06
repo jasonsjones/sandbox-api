@@ -11,7 +11,7 @@ export function authenticateUser(user) {
         .then(data => {
             if (data.success) {
                 let user = data.payload.user;
-                let token = data.payload.token
+                let token = data.payload.token;
                 AppDispatcher.handleViewAction({
                     actionType: "AUTHENTICATE_USER_SUCCESS",
                     data: {
@@ -45,7 +45,7 @@ export function getSessionUser() {
         .then(data => {
             if (data.success) {
                 let user = data.payload.user;
-                let token = data.payload.token
+                let token = data.payload.token;
                 AppDispatcher.handleViewAction({
                     actionType: "AUTHENTICATE_USER_SUCCESS",
                     data: {

@@ -52,11 +52,11 @@ class AvatarUpload extends React.Component {
 
     returnFileSize(number) {
         if(number < 1024) {
-          return number + 'bytes';
+            return number + 'bytes';
         } else if(number > 1024 && number < 1048576) {
-          return (number/1024).toFixed(1) + 'KB';
+            return (number/1024).toFixed(1) + 'KB';
         } else if(number > 1048576) {
-          return (number/1048576).toFixed(1) + 'MB';
+            return (number/1048576).toFixed(1) + 'MB';
         }
     }
 
@@ -69,8 +69,8 @@ class AvatarUpload extends React.Component {
                     <div>{newAvatarFile.name}</div>
                     <div className="slds-m-left_x-large">{this.returnFileSize(newAvatarFile.size)}</div>
                     <div style={{cursor: 'pointer'}}
-                          title="Remove selected image file" className="slds-m-left_large slds-m-bottom_small"
-                          onClick={this.resetState}>
+                        title="Remove selected image file" className="slds-m-left_large slds-m-bottom_small"
+                        onClick={this.resetState}>
                         <SVGInline svg={deleteSvg} fill='#333' width='16' height='16' cleanup={true}/>
                         <span className="slds-assistive-text">Remove selected image file</span>
                     </div>
@@ -89,7 +89,7 @@ class AvatarUpload extends React.Component {
                         aria-labelledby="file-selector-primary-label file-selector-secondary-label" />
                     <label className="slds-file-selector__body" htmlFor="file-upload-input" id="file-selector-secondary-label">
                         <span className="slds-file-selector__button slds-button slds-button_neutral">
-                            <SVGInline className="slds-m-right_xx-small slds-m-bottom_xx-small" fill='#0070d2' svg={upload}  width='16' height='16' cleanup={true}/>
+                            <SVGInline className="slds-m-right_xx-small slds-m-bottom_xx-small" fill='#0070d2' svg={upload} width='16' height='16' cleanup={true}/>
                             Upload New Avatar
                         </span>
                         <span className="slds-file-selector__text slds-medium-show">or Drop Files</span>
@@ -100,13 +100,13 @@ class AvatarUpload extends React.Component {
     }
 
     renderPreviewImage() {
-            let reader = new FileReader();
-            reader.onload = () => {
-                this.setState({
-                    previewSrc: reader.result
-                })
-            };
-            reader.readAsDataURL(this.state.newAvatarFile);
+        let reader = new FileReader();
+        reader.onload = () => {
+            this.setState({
+                previewSrc: reader.result
+            });
+        };
+        reader.readAsDataURL(this.state.newAvatarFile);
     }
 
     render() {

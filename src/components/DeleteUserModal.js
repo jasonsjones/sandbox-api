@@ -29,7 +29,7 @@ const DeleteUserModal = (props) => {
             <div className="slds-backdrop slds-backdrop_open"></div>
         </div>
     );
-}
+};
 
 DeleteUserModal.propTypes = {
     title: PropTypes.string.isRequired,

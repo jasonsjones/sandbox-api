@@ -31,17 +31,17 @@ class SignupStore extends EventEmitter {
     handleActions(action) {
         let payload = action.action;
         switch(payload.actionType) {
-            case 'SIGNUP_USER':
-                this.signingUp = true;
-                this.emitChange();
-                break;
-            case 'SIGNUP_USER_SUCCESS':
-                this.signingUp = false;
-                this.signupComplete = true;
-                this.emitChange();
-                break;
-            default:
-                break;
+        case 'SIGNUP_USER':
+            this.signingUp = true;
+            this.emitChange();
+            break;
+        case 'SIGNUP_USER_SUCCESS':
+            this.signingUp = false;
+            this.signupComplete = true;
+            this.emitChange();
+            break;
+        default:
+            break;
         }
     }
 }

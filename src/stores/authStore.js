@@ -52,7 +52,7 @@ class AuthStore extends EventEmitter {
         return {
             user: localStorage.getItem('currentUser'),
             userToken: localStorage.getItem('userToken')
-        }
+        };
     }
 
     isFetchUserRequired() {
@@ -105,31 +105,31 @@ class AuthStore extends EventEmitter {
     handleActions(action) {
         let payload = action.action;
         switch(payload.actionType) {
-            case 'AUTHENTICATE_USER':
-            case 'GET_SESSION_USER':
-                this.userLoggingIn();
-                break;
-            case 'AUTHENTICATE_USER_SUCCESS':
-                this.authenticateUser(payload.data);
-                break;
-            case 'AUTHENTICATE_USER_ERROR':
-                this.authenticatUserError(payload.data);
-                break;
-            case 'UPDATE_USER_SUCCESS':
-            case 'UPDATE_USER_PROFILE_SUCCESS':
-                this.updateUser(payload.data);
-                break;
-            case 'GET_SESSION_USER_COMPLETE':
-                this.loggingIn = false;
-                this.setFetchUserStatus(false);
-                break;
-            case 'LOGOUT_USER':
-                this.logoutUser();
-                break;
-            case 'INITIATE_OAUTH_FLOW':
-                this.setFetchUserStatus(true);
-                break;
-            default:
+        case 'AUTHENTICATE_USER':
+        case 'GET_SESSION_USER':
+            this.userLoggingIn();
+            break;
+        case 'AUTHENTICATE_USER_SUCCESS':
+            this.authenticateUser(payload.data);
+            break;
+        case 'AUTHENTICATE_USER_ERROR':
+            this.authenticatUserError(payload.data);
+            break;
+        case 'UPDATE_USER_SUCCESS':
+        case 'UPDATE_USER_PROFILE_SUCCESS':
+            this.updateUser(payload.data);
+            break;
+        case 'GET_SESSION_USER_COMPLETE':
+            this.loggingIn = false;
+            this.setFetchUserStatus(false);
+            break;
+        case 'LOGOUT_USER':
+            this.logoutUser();
+            break;
+        case 'INITIATE_OAUTH_FLOW':
+            this.setFetchUserStatus(true);
+            break;
+        default:
         }
     }
 }
