@@ -8,6 +8,6 @@ const Spinner = () => {
             <div className="slds-spinner__dot-b"></div>
         </div>
     );
-}
+};
 
 export default Spinner;

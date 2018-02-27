@@ -12,7 +12,7 @@ export function updateUserProfile(newUserData) {
         .then(response => {
             if (response.success) {
                 let user = response.payload.user;
-                let token = response.payload.token
+                let token = response.payload.token;
                 AppDispatcher.handleViewAction({
                     actionType: "UPDATE_USER_PROFILE_SUCCESS",
                     data: {

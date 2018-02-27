@@ -1,10 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import SVGInline from 'react-svg-inline';
 
 import InputTextElement from './InputTextElement';
 import authStore from '../stores/authStore';
 import * as authAction from '../actions/authActions';
+
+import logo from 'sldsImages/logo-noname.svg';
+import cloud from 'sldsIcons/utility/salesforce1.svg';
 
 const CheckBox = () => {
     return (
@@ -20,14 +24,14 @@ const CheckBox = () => {
             </div>
         </div>
     );
-}
+};
 
 const LoginForm = (props) => {
     let button;
     if (props.value.isLoggingIn) {
-        button = <button type='submit' className="slds-button slds-button_neutral slds-m-top_medium loginButton">Logging in...</button>
+        button = <button type='submit' className="slds-button slds-button_neutral slds-m-top_medium loginButton">Logging in...</button>;
     } else {
-        button = <button type='submit' className="slds-button slds-button_brand slds-m-top_medium loginButton">Log In</button>
+        button = <button type='submit' className="slds-button slds-button_brand slds-m-top_medium loginButton">Log In</button>;
     }
 
     return (
@@ -39,7 +43,7 @@ const LoginForm = (props) => {
             {button}
         </form>
     );
-}
+};
 
 LoginForm.propTypes = {
     value: PropTypes.shape({
@@ -105,6 +109,10 @@ export default class Login extends React.Component {
         });
     }
 
+    initiateSFDCOAuthFlow = () => {
+        authAction.initiateSFDCOAuthFlow();
+    }
+
     handleSubmit(e) {
         e.preventDefault();
         const { email, password } = this.state;
@@ -125,45 +133,43 @@ export default class Login extends React.Component {
         let errorText = null;
         if (this.state.errorMsg) {
             errorText = <p className="slds-text-color_error slds-text-heading_small slds-m-top_medium">
-                        {this.state.errorMsg}</p>
+                {this.state.errorMsg}</p>;
         }
 
         return (
             <div className="slds-grid slds-grid--frame slds-grid--pull-padded-medium"
-                ref={(element) => { this.loginForm = element }}>
+                ref={(element) => { this.loginForm = element; }}>
                 <div className="slds-size--1-of-2 slds-p-horizontal--medium loginform-left">
                     <div className="loginform-container">
-                    <img className="loginLogo" src="styles/design-system/assets/images/logo-noname.svg" />
-                    <div className="slds-m-top_large loginform">
-                        {errorText}
-                        <LoginForm handleSubmit={this.handleSubmit}
-                            handleChange={this.handleChange}
-                            value={this.state} />
-                        <div className="slds-m-top_large">
-                            <CheckBox />
-                        </div>
-                        <p className="slds-m-top_small slds-text-align_center">&mdash; OR &mdash;</p>
+                        <SVGInline svg={logo} className="loginLogo" width="50%" />
+                        <div className="slds-m-top_large loginform">
+                            {errorText}
+                            <LoginForm handleSubmit={this.handleSubmit}
+                                handleChange={this.handleChange}
+                                value={this.state} />
+                            <div className="slds-m-top_large">
+                                <CheckBox />
+                            </div>
+                            <p className="slds-m-top_small slds-text-align_center">&mdash; OR &mdash;</p>
 
-                        <button type='button' className="slds-button slds-button_brand slds-m-top_medium loginButton"
-                                onClick={() => window.location.assign('http://localhost:3000/auth/sfdc')}>
+                            <button type='button' className="slds-button slds-button_brand slds-m-top_medium loginButton"
+                                onClick={this.initiateSFDCOAuthFlow}>
                             Log In with
-                            <svg className="slds-icon slds-icon_small slds-m-horizontal_small" aria-hidden="true">
-                                <use xlinkHref='styles/design-system/assets/icons/utility-sprite/svg/symbols.svg#salesforce1' />
-                            </svg>
+                                <SVGInline svg={cloud} className="slds-m-horizontal_x-small" fill='#fff' width='32' height='32' cleanup={true}/>
                             Salesforce
-                        </button>
-                        <hr/>
-                        <div className="slds-grid slds-grid_align-spread slds-m-bottom_small">
-                            <a href="javascript:void(0)">Forgot Your Password?</a>
-                            <a href="javascript:void(0)">Use Custom Domain</a>
+                            </button>
+                            <hr/>
+                            <div className="slds-grid slds-grid_align-spread slds-m-bottom_small">
+                                <a href="javascript:void(0)">Forgot Your Password?</a>
+                                <a href="javascript:void(0)">Use Custom Domain</a>
+                            </div>
                         </div>
-                    </div>
-                    <div className="slds-grid slds-grid_align-space slds-grid_vertical-align-center slds-m-top_large">
-                        <p>Not a Customer?</p>
-                        <Link to="/signup">
-                            <button type='button' className="slds-button slds-button_neutral tryButton">Try for Free</button>
-                        </Link>
-                    </div>
+                        <div className="slds-grid slds-grid_align-space slds-grid_vertical-align-center slds-m-top_large">
+                            <p>Not a Customer?</p>
+                            <Link to="/signup">
+                                <button type='button' className="slds-button slds-button_neutral tryButton">Try for Free</button>
+                            </Link>
+                        </div>
                     </div>
                 </div>
                 <div className="slds-size--1-of-2 slds-p-horizontal--medium loginpage-right">

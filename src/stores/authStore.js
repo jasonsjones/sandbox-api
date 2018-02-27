@@ -9,6 +9,7 @@ class AuthStore extends EventEmitter {
         this.token = null;
         this.errorMsg = '';
         this.loggingIn = false;
+        this.fetchUserRequired = false;
     }
 
     addChangeListenter(callback) {
@@ -47,12 +48,15 @@ class AuthStore extends EventEmitter {
         return this.loggingIn;
     }
 
-
     getDataFromLocalStorage() {
         return {
             user: localStorage.getItem('currentUser'),
             userToken: localStorage.getItem('userToken')
-        }
+        };
+    }
+
+    isFetchUserRequired() {
+        return this.isFetchUserRequired;
     }
 
     authenticateUser(data) {
@@ -81,6 +85,12 @@ class AuthStore extends EventEmitter {
         this.emitChange();
     }
 
+    setFetchUserStatus(status) {
+        console.log('changing fetch user status to ', status);
+        this.fetchUserRequired = status;
+        this.emitChange();
+    }
+
     userLoggingIn() {
         this.loggingIn = true;
         this.emitChange();
@@ -95,27 +105,31 @@ class AuthStore extends EventEmitter {
     handleActions(action) {
         let payload = action.action;
         switch(payload.actionType) {
-            case 'AUTHENTICATE_USER':
-            case 'GET_SESSION_USER':
-                this.userLoggingIn();
-                break;
-            case 'AUTHENTICATE_USER_SUCCESS':
-                this.authenticateUser(payload.data);
-                break;
-            case 'AUTHENTICATE_USER_ERROR':
-                this.authenticatUserError(payload.data);
-                break;
-            case 'UPDATE_USER_SUCCESS':
-            case 'UPDATE_USER_PROFILE_SUCCESS':
-                this.updateUser(payload.data);
-                break;
-            case 'GET_SESSION_USER_COMPLETE':
-                this.loggingIn = false;
-                break;
-            case 'LOGOUT_USER':
-                this.logoutUser();
-                break;
-            default:
+        case 'AUTHENTICATE_USER':
+        case 'GET_SESSION_USER':
+            this.userLoggingIn();
+            break;
+        case 'AUTHENTICATE_USER_SUCCESS':
+            this.authenticateUser(payload.data);
+            break;
+        case 'AUTHENTICATE_USER_ERROR':
+            this.authenticatUserError(payload.data);
+            break;
+        case 'UPDATE_USER_SUCCESS':
+        case 'UPDATE_USER_PROFILE_SUCCESS':
+            this.updateUser(payload.data);
+            break;
+        case 'GET_SESSION_USER_COMPLETE':
+            this.loggingIn = false;
+            this.setFetchUserStatus(false);
+            break;
+        case 'LOGOUT_USER':
+            this.logoutUser();
+            break;
+        case 'INITIATE_OAUTH_FLOW':
+            this.setFetchUserStatus(true);
+            break;
+        default:
         }
     }
 }

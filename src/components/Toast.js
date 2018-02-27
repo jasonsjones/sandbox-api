@@ -1,38 +1,57 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import SVGInline from 'react-svg-inline';
 
-const ToastIcon  = (props) => {
+import closeSvg from 'sldsIcons/utility/close.svg';
+import infoSvg from 'sldsIcons/utility/info.svg';
+import successSvg from 'sldsIcons/utility/success.svg';
+import warningSvg from 'sldsIcons/utility/warning.svg';
+import errorSvg from 'sldsIcons/utility/error.svg';
+
+const ToastIcon = (props) => {
+    let themeSvg;
+    switch (props.theme) {
+    case 'info':
+        themeSvg = infoSvg;
+        break;
+    case 'success':
+        themeSvg = successSvg;
+        break;
+    case 'warning':
+        themeSvg = warningSvg;
+        break;
+    case 'error':
+        themeSvg = errorSvg;
+        break;
+    }
+
     return (
         <div>
             <span className="slds-assistive-text">{props.theme}</span>
             <span className="slds-icon_container slds-icon-utility-info slds-m-right_small slds-no-flex slds-align-top"
-                title="Description of icon when needed">
-                <svg className="slds-icon slds-icon_small" aria-hidden="true">
-                    <use xlinkHref={`styles/design-system/assets/icons/utility-sprite/svg/symbols.svg#${props.theme}`} />
-                </svg>
+                title={`${props.theme} icon`}>
+                <SVGInline svg={themeSvg} width="28" />
             </span>
         </div>
     );
-}
+};
 
 ToastIcon.propTypes = {
     theme: PropTypes.string
-}
+};
 
 const ToastButtonClose = (props) => {
     return (
         <button className="slds-button slds-button_icon slds-notify__close slds-button_icon-inverse" onClick={props.onClose} title="Close">
-            <svg className="slds-button__icon slds-button__icon_large" aria-hidden="true">
-                <use xlinkHref="styles/design-system/assets/icons/utility-sprite/svg/symbols.svg#close" />
-            </svg>
+            <SVGInline svg={closeSvg} width="28" />
             <span className="slds-assistive-text">Close</span>
         </button>
     );
-}
+};
 
 ToastButtonClose.propTypes = {
     onClose: PropTypes.func
-}
+};
 
 class Toast extends React.Component {
 

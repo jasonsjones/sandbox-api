@@ -605,6 +605,94 @@ describe('User repository', () => {
             });
         });
     });
+
+    describe('changePassword()', () => {
+        it('rejects with Error if the user payload is not provided', () => {
+            const promise = Repository.changePassword();
+            expect(promise).to.be.a('Promise');
+
+            return promise.catch(err => {
+                expect(err).to.exist;
+                expect(err).to.be.an('Error');
+            });
+        });
+
+        it('rejects with Error if the user email is not provided', () => {
+            const promise = Repository.changePassword({currentPassword: 'password',
+                                                       newPassword: 'newPassword'});
+            expect(promise).to.be.a('Promise');
+
+            return promise.catch(err => {
+                expect(err).to.exist;
+                expect(err).to.be.an('Error');
+            });
+        });
+
+        it('rejects with Error if the current password is not provided', () => {
+            const promise = Repository.changePassword({email: 'oliver@qc.com',
+                                                       newPassword: 'newPassword'});
+            expect(promise).to.be.a('Promise');
+
+            return promise.catch(err => {
+                expect(err).to.exist;
+                expect(err).to.be.an('Error');
+            });
+        });
+
+        it('rejects with Error if the new password is not provided', () => {
+            const promise = Repository.changePassword({email: 'oliver@qc.com',
+                                                       currentPassword: 'password'});
+            expect(promise).to.be.a('Promise');
+
+            return promise.catch(err => {
+                expect(err).to.exist;
+                expect(err).to.be.an('Error');
+            });
+        });
+
+        it('rejects with Error if the current password is not correct', () => {
+            let userData = {
+                email: 'oliver@qc.com',
+                currentPassword: 'isWrong',
+                newPassword: 'doesnotmatter'
+            };
+            UserMock.expects('findOne').withArgs({email: userData.email})
+                .chain('exec')
+                .resolves(new User(mockUsers[1]));
+            const userStub = sinon.stub(User.prototype, 'verifyPassword').returns(false);
+            const promise = Repository.changePassword(userData);
+            expect(promise).to.be.a('Promise');
+            return promise.catch(err => {
+                expect(err).to.exist;
+                expect(err).to.be.an('Error');
+                userStub.restore();
+            });
+        });
+
+        it('resolves with user after updating the users password', () => {
+            let returnedUser = new User(mockUsers[1]);
+            let userData = {
+                email: 'oliver@qc.com',
+                currentPassword: 'thearrow',
+                newPassword: 'iamaqueen'
+            };
+            UserMock.expects('findOne').withArgs({email: userData.email})
+                .chain('exec')
+                .resolves(returnedUser);
+            const userStub = sinon.stub(User.prototype, 'verifyPassword').returns(true);
+            const userSaveStub = sinon.stub(User.prototype, 'save').resolves(
+              returnedUser
+            );
+            const promise = Repository.changePassword(userData);
+            expect(promise).to.be.a('Promise');
+            return promise.then(user => {
+                expectUserProperties(user);
+                expect(user.password).to.equal(userData.newPassword);
+                userStub.restore();
+                userSaveStub.restore();
+            });
+        });
+    });
 });
 
 const expectUserToHaveAvatar = user => {

@@ -1,6 +1,6 @@
 {
   "name": "microservices-api",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "A sandbox API built on microservices",
   "main": "index.js",
   "nyc": {
@@ -17,11 +17,12 @@
   },
   "scripts": {
     "predev": "npm run dbSeed",
-    "dev": "nodemon src/api/server.js --inspect=0.0.0.0:5858 --watch src/ --ignore src/components --ignore src/actions --exec babel-node",
+    "dev": "nodemon src/api/server.js --inspect=0.0.0.0:5858 --watch src/ --ignore src/components --ignore src/actions --ignore src/stores --exec babel-node",
     "prebuild": "rm -f public/bundle.js* public/styles/styles.css*",
     "build": "webpack",
     "build:watch": "npm run build -- --watch",
     "dbSeed": "babel-node src/api/dbSeed.js",
+    "security-check": "nsp check",
     "lt": "lt --port 3000 --subdomain sandboxapi",
     "lint": "eslint webpack.config.js src/**/*.js",
     "test:api": "NODE_ENV=test nyc mocha src/api/**/*.test.js --exit --require babel-register"
@@ -64,7 +65,8 @@
     "prop-types": "^15.5.10",
     "react": "16.2.0",
     "react-dom": "16.2.0",
-    "react-router-dom": "^4.2.2"
+    "react-router-dom": "^4.2.2",
+    "react-svg-inline": "^2.0.1"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
@@ -83,13 +85,17 @@
     "eslint": "^4.4.1",
     "eslint-plugin-react": "^7.3.0",
     "extract-text-webpack-plugin": "^3.0.0",
+    "file-loader": "^1.1.6",
     "localtunnel": "^1.8.3",
     "mocha": "^4.0.0",
     "nodemon": "^1.11.0",
+    "nsp": "^3.1.0",
     "nyc": "^11.3.0",
+    "raw-loader": "^0.5.1",
     "sinon": "4.1.3",
     "sinon-mongoose": "^2.0.2",
     "style-loader": "^0.18.2",
+    "url-loader": "^0.6.2",
     "webpack": "^3.5.5"
   }
 }

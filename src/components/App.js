@@ -10,6 +10,7 @@ import SignupPage from './SignupPage';
 import EditUserProfilePage from './EditUserProfilePage';
 import Spinner from './Spinner';
 import './App.css';
+import 'sldsCss';
 
 class App extends React.Component {
     constructor() {
@@ -62,8 +63,8 @@ class App extends React.Component {
                         isAuthenticated ? (
                             <UserProfilePage user={user}/>
                         ) : ( !this.state.isFetching
-                                ? <Redirect to='/login'/>
-                                : <Spinner />
+                            ? <Redirect to='/login'/>
+                            : <Spinner />
                         )
                     )}/>
                     <Route exact path='/login' render={() => (

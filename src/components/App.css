@@ -1,6 +1,13 @@
 .container-content {
-    margin: 75px auto;
-    width: 70%;
+    margin: 75px auto 10px;
+}
+
+.container-content_wide {
+    width: 960px;
+}
+
+.container-content_narrow {
+    width: 540px;
 }
 
 .input-text-element_large {
@@ -31,8 +38,7 @@
 }
 
 .loginLogo {
-    width: 40%;
-    margin: 0 30%;
+    margin: 0 25%;
 }
 
 .tryButton {

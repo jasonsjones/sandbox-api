@@ -4,6 +4,8 @@ uploads/
 public/
 npm-debug.log
 .config/
+.cache/
+.npm/
 .DS_Store
 *.swp
 .v8flags*

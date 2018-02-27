@@ -14,19 +14,38 @@ export function getAuthUser(user) {
             headers: {'Content-Type': 'application/json' },
             body: JSON.stringify(user)
         })
-        .then(processResponse)
-        .then(data => {
-            if (data.success) {
-                resolve(data);
-            } else {
-                reject(data);
-            }
-        })
-        .catch(err => {
-            reject(err);
-        });
+            .then(processResponse)
+            .then(data => {
+                if (data.success) {
+                    resolve(data);
+                } else {
+                    reject(data);
+                }
+            })
+            .catch(err => {
+                reject(err);
+            });
     });
 }
+
+export const getUser = (id) => {
+    const url = `${baseUrl}/user/${id}`;
+    return new Promise((resolve, reject) => {
+        fetch(url, {
+            method: 'GET',
+            headers: {'Content-Type': 'application/json' },
+            credentials: 'include',
+        })
+            .then(response => response.json())
+            .then(data => {
+                resolve(data);
+            })
+            .catch(err => {
+                console.log(err);
+                reject(err);
+            });
+    });
+};
 
 export function signupUser(user) {
     const url = `${baseUrl}/signup`;
@@ -36,18 +55,18 @@ export function signupUser(user) {
             headers: {'Content-Type': 'application/json' },
             body: JSON.stringify(user)
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                resolve(data);
-            } else {
-                reject(data.message);
-            }
-        })
-        .catch(err => {
-            console.log(err);
-            reject(err);
-        });
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    resolve(data);
+                } else {
+                    reject(data.message);
+                }
+            })
+            .catch(err => {
+                console.log(err);
+                reject(err);
+            });
 
     });
 }
@@ -66,18 +85,18 @@ export function updateUserAvatar(newAvatar) {
             headers: {'x-access-token': token},
             body: formData
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                resolve(data);
-            } else {
-                reject(data.message);
-            }
-        })
-        .catch(err => {
-            console.log(err);
-            reject(err);
-        });
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    resolve(data);
+                } else {
+                    reject(data.message);
+                }
+            })
+            .catch(err => {
+                console.log(err);
+                reject(err);
+            });
 
     });
 }
@@ -92,18 +111,18 @@ export function updateUserProfile(newUserData) {
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(newUserData)
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                resolve(data);
-            } else {
-                reject(data.message);
-            }
-        })
-        .catch(err => {
-            console.log(err);
-            reject(err);
-        });
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    resolve(data);
+                } else {
+                    reject(data.message);
+                }
+            })
+            .catch(err => {
+                console.log(err);
+                reject(err);
+            });
     });
 
 }
@@ -116,14 +135,14 @@ export function getSessionUser() {
             credentials: 'include',
             headers: {'Content-Type': 'application/json'},
         })
-        .then(response => response.json())
-        .then(data => {
-            resolve(data);
-        })
-        .catch(err => {
-            console.log(err);
-            reject(err);
-        });
+            .then(response => response.json())
+            .then(data => {
+                resolve(data);
+            })
+            .catch(err => {
+                console.log(err);
+                reject(err);
+            });
     });
 }
 
@@ -135,14 +154,14 @@ export function deleteUserAccount(id) {
             credentials: 'include',
             headers: {'Content-Type': 'application/json'},
         })
-        .then(response => response.json())
-        .then(data => {
-            resolve(data);
-        })
-        .catch(err => {
-            console.log(err);
-            reject(err);
-        });
+            .then(response => response.json())
+            .then(data => {
+                resolve(data);
+            })
+            .catch(err => {
+                console.log(err);
+                reject(err);
+            });
     });
 }
 
@@ -158,6 +177,6 @@ const processResponse = (response) => {
             success: false,
             message: msg,
             payload: null
-        }
+        };
     });
 };

@@ -78,4 +78,15 @@ export default (app) => {
                     });
               }
     );
+
+    app.post('/api/user/changepassword',
+        (req, res) => {
+            UserController.changePassword(req)
+                .then(response => res.json(response))
+                .catch(err => {
+                        res.status(500);
+                        res.json(err);
+                });
+        }
+    );
 }

@@ -181,5 +181,40 @@ export const unlinkSFDCAccount = (req) => {
                 message: `error unlinking the user: ${err.message}`,
                 error: err
             };
+        });
+}
+
+export function changePassword(req) {
+    if (!req) {
+        return Promise.reject({
+            success: false,
+            message: 'request parameter is required',
+            error: new Error('request parameter is required')
+        });
+    }
+
+    if (!req.body || !req.body.email || !req.body.currentPassword || !req.body.newPassword) {
+        return Promise.reject({
+            success: false,
+            message: 'request body is required',
+            error: new Error('request body parameter is required')
+        });
+    }
+
+    return UserRepository.changePassword(req.body)
+        .then(user => {
+            if (user) {
+                return {
+                    success: true,
+                    message: 'user password changed'
+                }
+            }
         })
+        .catch(err => {
+            return {
+                success: false,
+                message: `error changing the password: ${err.message}`,
+                error: err
+            };
+        });
 }

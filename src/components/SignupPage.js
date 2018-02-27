@@ -58,7 +58,7 @@ export default class SignupPage extends React.Component {
             name: this.state.name,
             email: this.state.email,
             password: this.state.password
-        }
+        };
 
         if (this.isFormFilled() && this.verifyPasswords()) {
             this.resetForm();
@@ -86,13 +86,13 @@ export default class SignupPage extends React.Component {
     render() {
         let button;
         if (this.state.isSigningUp) {
-            button = <button type='submit' className="slds-button slds-button_neutral">Signing Up...</button>
+            button = <button type='submit' className="slds-button slds-button_neutral">Signing Up...</button>;
         } else {
-            button = <button type='submit' className="slds-button slds-button_brand">Sign Up</button>
+            button = <button type='submit' className="slds-button slds-button_brand">Sign Up</button>;
         }
         return (
             <div className="slds-grid slds-grid--vertical">
-                <div className="container-content">
+                <div className="container-content container-content_narrow">
                     <h1 className="slds-text-heading_large">Signup for free account</h1>
                     <form className="slds-form slds-form_stacked" onSubmit={this.handleSubmit}>
                         <InputTextElement type="text" name="name" label="Name" variant="large" value={this.state.name} handleChange={this.handleChange} />
